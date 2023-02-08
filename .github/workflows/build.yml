@@ -1,0 +1,37 @@
+# .github/workflows/build.yml
+# GitHub Actions configuration file for latex
+# See https://github.com/xu-cheng/latex-action for details
+
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  run:
+    name: Build LaTeX document
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate PDF document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: optimset.tex
+          args: -file-line-error -halt-on-error -interaction=nonstopmode
+          pre_compile: tlmgr update --self && tlmgr update --all
+
+      - name: Rename PDF document
+        run: mv optimset.pdf optimset_${GITHUB_ACTOR}_$(date "+%FT%H-%M-%S%Z").pdf
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: optimset.pdf
+          if-no-files-found: error
