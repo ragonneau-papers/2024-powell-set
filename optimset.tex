@@ -1,29 +1,74 @@
 %% Makefile
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
-\documentclass[twoside]{article}
+\documentclass[draft]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper]{geometry}
+\usepackage{microtype}
 
 % Font and font encoding
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 
-\usepackage{hyperref}
+% Line spacing
+\usepackage{setspace}
+\onehalfspacing
+
+% Cross-referencing
+\usepackage[pdfusetitle]{hyperref}
 \usepackage{url}
 \hypersetup{
+    final,
     colorlinks=true,
     allcolors=black,
 }
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 \newcommand{\orcid}[1]{\href{https://orcid.org/#1}{#1}}
 
+% Glossaries
+\usepackage[acronym]{glossaries}
+\newacronym{dfo}{DFO}{derivative-free optimization}
+
+% Line numbering in draft mode
+\usepackage{lineno}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{ifdraft}
+\renewcommand{\linenumberfont}{\normalfont\footnotesize\ttfamily\color{gray}}
+\ifdraft{\linenumbers}{}
+
+% To-do notes in draft mode
+\usepackage[
+    obeyDraft,
+    colorinlistoftodos,
+    color=OliveGreen!40,
+    textsize=scriptsize,
+]{todonotes}
+
+% Modify the typesets of the `\maketitle' and `\thanks' commands
+\usepackage{titling}
+\setlength{\thanksmargin}{0pt}
+
+% Exceptions for American English hyphenation patterns
+\input{ushyphex}
+
+% Document metadata
 \title{An Optimal Initial Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
-    Tom M. Ragonneau\thanks{Email: \email{tom.ragonneau@polyu.edu.hk}, ORCID: \orcid{0000-0003-2717-2876}.}
-    \and
-    Zaikun Zhang\thanks{Email: \email{zaikun.zhang@polyu.edu.hk}, ORCID: \orcid{0000-0001-8934-8190}.}
+    Tom M. Ragonneau\thanks{
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Email: \email{tom.ragonneau@polyu.edu.hk}\\
+        ORCID: \orcid{0000-0003-2717-2876}
+    } \and
+    Zaikun Zhang\thanks{
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Email: \email{zaikun.zhang@polyu.edu.hk}\\
+        ORCID: \orcid{0000-0001-8934-8190}
+    }
 }
 \date{\today}
+\hypersetup{
+    pdfsubject={},
+    pdfkeywords={},
+}
 
 \begin{document}
 
@@ -35,11 +80,15 @@
 
 \section{Introduction}
 
-\begin{itemize}
-    \item Set adapted from~\cite{Powell_2006}.
-\end{itemize}
+It is challenging to design optimization methods that do not rely on classical or generalized derivative information of the problems they solve, namely \gls{dfo} methods.\todo{Add examples}
+
+\section{Description of the initial interpolation set}
+
+\todo[noline]{Adapted from~\cite{Powell_2006}}
 
 \bibliographystyle{plain}
 \bibliography{\jobname}
+
+\listoftodos
 
 \end{document}
