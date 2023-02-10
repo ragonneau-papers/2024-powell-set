@@ -13,4 +13,4 @@ $dvi_mode = 0;
 $bibtex_use = 2;
 
 # Extra extensions to remove on clean up
-$clean_ext = "synctex.gz";
+$clean_ext = "synctex.gz tdo";
