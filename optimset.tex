@@ -55,12 +55,12 @@
 \title{An Optimal Initial Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
     Tom M. Ragonneau\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
         Email: \email{tom.ragonneau@polyu.edu.hk}\\
         ORCID: \orcid{0000-0003-2717-2876}
     } \and
     Zaikun Zhang\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
         Email: \email{zaikun.zhang@polyu.edu.hk}\\
         ORCID: \orcid{0000-0001-8934-8190}
     }
@@ -81,16 +81,18 @@
 
 \section{Introduction}
 
-It is challenging to design optimization methods that do not rely on classical or generalized derivative information of the problems they solve, namely \gls{dfo} methods.
-However, these methods are necessary for solving problems whose derivatives are not available or too expensive to compute.
-There are many examples of applications of this kind, such as hyperparameter tuning in machine learning~\cite{Ghanbari_Scheinberg_2017}, derivative-free reinforcement learning~\cite{Qian_Yu_2021}.
-\todo{Add more examples}
+It is challenging to develop \gls{dfo} methods, i.e., optimization methods that do not rely on derivatives of the problems they solve.
+However, such methods are required to solve optimization problems when classical or generalized derivatives of the objective and constraint functions are unavailable or too expensive to evaluate.
+There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
+
+Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search~\cite{Kolda_Lewis_Torczon_2003} and model-based methods.
+Direct-search methods sample the objective function around the current iterate, and select the next iterate among the sample points based on simple comparisons.
 
 \section{Description of the initial interpolation set}
 
 To do.\todo{Adapted from~\cite{Powell_2006}}
 
-\bibliographystyle{plain}
+\bibliographystyle{amsplain}
 \bibliography{\jobname}
 
 \listoftodos
