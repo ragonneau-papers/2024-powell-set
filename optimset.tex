@@ -37,12 +37,7 @@
 \ifdraft{\linenumbers}{}
 
 % To-do notes in draft mode
-\usepackage[
-    obeyDraft,
-    colorinlistoftodos,
-    color=OliveGreen!40,
-    textsize=scriptsize,
-]{todonotes}
+\usepackage{fixme}
 
 % Modify the typesets of the `\maketitle' and `\thanks' commands
 \usepackage{titling}
@@ -76,7 +71,7 @@
 \maketitle
 
 \begin{abstract}
-    To do.\todo{Do the abstract}
+    \fxnote*{Do the abstract}{To do.}
 \end{abstract}
 
 \section{Introduction}
@@ -90,11 +85,11 @@ Direct-search methods sample the objective function around the current iterate, 
 
 \section{Description of the initial interpolation set}
 
-To do.\todo{Adapted from~\cite{Powell_2006}}
+\fxnote*{Adapted from~\cite{Powell_2006}}{To do.}
 
 \bibliographystyle{amsplain}
 \bibliography{\jobname}
 
-\listoftodos
+\listoffixmes
 
 \end{document}
