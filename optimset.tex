@@ -13,16 +13,29 @@
 \usepackage{setspace}
 \onehalfspacing
 
+% Font Awesome 5
+\usepackage{fontawesome5}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{ORCIDGreen}{HTML}{A6CE39}
+
 % Cross-referencing
 \usepackage[pdfusetitle]{hyperref}
 \usepackage{url}
 \hypersetup{
     final,
     colorlinks=true,
-    allcolors=black,
+    linkcolor=black,
+    anchorcolor=black,
+    citecolor=MidnightBlue,
+    filecolor=black,
+    menucolor=black,
+    runcolor=black,
+    urlcolor=black,
 }
-\newcommand{\email}[1]{\href{mailto:#1}{#1}}
-\newcommand{\orcid}[1]{\href{https://orcid.org/#1}{#1}}
+\newcommand{\email}[2][inbox]{\faIcon{#1} \href{mailto:#2}{#2}}
+\newcommand{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
+\newcommand{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
+\newcommand{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
 
 % Glossaries
 \usepackage[acronym]{glossaries}
@@ -31,13 +44,15 @@
 
 % Line numbering in draft mode
 \usepackage{lineno}
-\usepackage[dvipsnames]{xcolor}
 \usepackage{ifdraft}
 \renewcommand{\linenumberfont}{\normalfont\footnotesize\ttfamily\color{gray}}
 \ifdraft{\linenumbers}{}
 
 % To-do notes in draft mode
-\usepackage{fixme}
+\usepackage[
+    marginface=\linespread{1}\scriptsize\sffamily,
+    author={},
+]{fixme}
 
 % Modify the typesets of the `\maketitle' and `\thanks' commands
 \usepackage{titling}
@@ -46,19 +61,21 @@
 % Exceptions for American English hyphenation patterns
 \input{ushyphex}
 
+% Control sequences, macros, and definitions
+\usepackage{xspace}
+\newcommand{\solvername}[1]{\textsc{#1}\xspace}
+
 % Document metadata
 \title{An Optimal Initial Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
     Tom M. Ragonneau\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        Email: \email{tom.ragonneau@polyu.edu.hk}\\
-        ORCID: \orcid{0000-0003-2717-2876}
-    } \and
+        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com}
+    }\orcid{0000-0003-2717-2876} \and
     Zaikun Zhang\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        Email: \email{zaikun.zhang@polyu.edu.hk}\\
-        ORCID: \orcid{0000-0001-8934-8190}
-    }
+        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net}
+    }\orcid{0000-0001-8934-8190}
 }
 \date{\today}
 \hypersetup{
@@ -71,7 +88,7 @@
 \maketitle
 
 \begin{abstract}
-    \fxnote*{Do the abstract}{To do.}
+    \fxnote*{Write down the abstract}{To do.}
 \end{abstract}
 
 \section{Introduction}
@@ -80,12 +97,19 @@ It is challenging to develop \gls{dfo} methods, i.e., optimization methods that 
 However, such methods are required to solve optimization problems when classical or generalized derivatives of the objective and constraint functions are unavailable or too expensive to evaluate.
 There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
 
-Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search~\cite{Kolda_Lewis_Torczon_2003} and model-based methods.
-Direct-search methods sample the objective function around the current iterate, and select the next iterate among the sample points based on simple comparisons.
+Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
+Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate, and select the next iterate among these points based on simple comparisons.
+Examples of famous direct-search methods include the Hooke-Jeeves method~\cite{Hooke_Jeeves_1961}, the Nelder-Mead method~\cite{Nelder_Mead_1965}, the \solvername{gps} method~\cite{Booker_Etal_1999}, the \solvername{mads} method~\cite{Audet_Dennis_2006}, and \solvername{bfo}~\cite{Porcelli_Toint_2017,Porcelli_Toint_2022}.
+Meanwhile, \fxnote*{Find a citation that introduces the concept of model-based methods}{model-based methods} approximate the objective and constraint functions by simple models around the current iterate, and select the next iterate by examining these approximations.
+Examples includes the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022}.
+There also exist hybrid methods that combine the two approaches, such as implicit filtering~\cite{Kelley_2011}.
+
+Model-based \gls{dfo} methods often employ polynomial interpolation to approximate the objective and constraint functions.
+In particular, this is the case for the Powell's \gls{dfo} methods.
 
 \section{Description of the initial interpolation set}
 
-\fxnote*{Adapted from~\cite{Powell_2006}}{To do.}
+\fxnote*{The interpolation set is adapted from~\cite{Powell_2006}}{To do.}
 
 \bibliographystyle{amsplain}
 \bibliography{\jobname}
