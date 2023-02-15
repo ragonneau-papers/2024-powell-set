@@ -10,7 +10,7 @@
 \usepackage[T1]{fontenc}
 
 % Line spacing
-\usepackage{setspace}
+\usepackage[nodisplayskipstretch]{setspace}
 \onehalfspacing
 
 % Font Awesome 5
@@ -19,12 +19,16 @@
 \definecolor{ORCIDGreen}{HTML}{A6CE39}
 
 % Cross-referencing
-\usepackage[pdfusetitle]{hyperref}
+\usepackage[
+    pdfusetitle,
+    hyperfootnotes=false,
+]{hyperref}
 \usepackage{url}
 \hypersetup{
     final,
     colorlinks=true,
-    linkcolor=black,
+    linktoc=page,
+    linkcolor=OliveGreen,
     anchorcolor=black,
     citecolor=MidnightBlue,
     filecolor=black,
@@ -42,15 +46,26 @@
 \glsdisablehyper
 \newacronym{dfo}{DFO}{derivative-free optimization}
 
+% Mathematics
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[bb=dsfontserif]{mathalfa}
+\numberwithin{equation}{section}
+
 % Line numbering in draft mode
 \usepackage{lineno}
 \usepackage{ifdraft}
-\renewcommand{\linenumberfont}{\normalfont\footnotesize\ttfamily\color{gray}}
+\renewcommand{\linenumberfont}{\normalfont\scriptsize\sffamily\color{gray}}
 \ifdraft{\linenumbers}{}
+
+% Show labels in draft mode
+\ifdraft{}{\PassOptionsToPackage{final}{showlabels}}
+\usepackage{showlabels}
+\renewcommand{\showlabelfont}{\linespread{1}\scriptsize\sffamily\color{gray}}
 
 % To-do notes in draft mode
 \usepackage[
-    marginface=\linespread{1}\scriptsize\sffamily,
+    marginface=\linespread{1}\scriptsize\sffamily\color{gray},
     author={},
 ]{fixme}
 
@@ -58,12 +73,39 @@
 \usepackage{titling}
 \setlength{\thanksmargin}{0pt}
 
+% Page headers and footers
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \fancyfoot[C]{Page \thepage\ of \pageref*{LastPage}}
+}
+\pagestyle{plain}
+
 % Exceptions for American English hyphenation patterns
 \input{ushyphex}
 
+% Mathematical environments (theorems, proofs, ...)
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
 % Control sequences, macros, and definitions
+\usepackage{etoolbox}
 \usepackage{xspace}
+\DeclareMathOperator{\bigo}{\mathcal{O}}
+\DeclareMathOperator{\card}{card}
+\newcommand{\abs}[2][]{#1\lvert#2#1\rvert}
+\newcommand{\fset}{\Omega}
+\newcommand{\lagp}[1][]{L\ifblank{#1}{}{_{#1}}}
+\newcommand{\norm}[2][]{#1\lVert#2#1\rVert}
+\newcommand{\obj}{f}
+\newcommand{\objm}[1][]{\hat{\obj}\ifblank{#1}{}{^{#1}}}
+\newcommand{\qpoly}{\mathcal{Q}_n}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\set}[2][]{#1\{#2#1\}}
 \newcommand{\solvername}[1]{\textsc{#1}\xspace}
+\newcommand{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 
 % Document metadata
 \title{An Optimal Initial Interpolation Set for Model-Based Derivative-Free Optimization Methods}
@@ -94,22 +136,153 @@
 \section{Introduction}
 
 It is challenging to develop \gls{dfo} methods, i.e., optimization methods that do not rely on derivatives of the problems they solve.
-However, such methods are required to solve optimization problems when classical or generalized derivatives of the objective and constraint functions are unavailable or too expensive to evaluate.
+However, such methods are required to solve the optimization problem
+\begin{equation}
+    \label{eq:nlp}
+    \begin{aligned}
+        \min_{x \in \R^n}   & \quad \obj(x)\\
+        \text{s.t.}         & \quad x \in \fset,
+    \end{aligned}
+\end{equation}
+when classical or generalized derivatives of the objective function~$\obj : \R^n \to \R$ (and possibly the constraint functions underlying the feasible~$\fset \subseteq \R^n$) are unavailable or too expensive to evaluate.
 There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
 
 Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate, and select the next iterate among these points based on simple comparisons.
 Examples of famous direct-search methods include the Hooke-Jeeves method~\cite{Hooke_Jeeves_1961}, the Nelder-Mead method~\cite{Nelder_Mead_1965}, the \solvername{gps} method~\cite{Booker_Etal_1999}, the \solvername{mads} method~\cite{Audet_Dennis_2006}, and \solvername{bfo}~\cite{Porcelli_Toint_2017,Porcelli_Toint_2022}.
 Meanwhile, \fxnote*{Find a citation that introduces the concept of model-based methods}{model-based methods} approximate the objective and constraint functions by simple models around the current iterate, and select the next iterate by examining these approximations.
-Examples includes the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022}.
-There also exist hybrid methods that combine the two approaches, such as implicit filtering~\cite{Kelley_2011}.
+Since these approximations are local, the methods are embedded in globalization strategies to ensure convergence.
+The trust-region framework~\cite{Conn_Gould_Toint_2000} is a popular choice for this purpose, and is the one under consideration in this paper.
+Examples of well-known trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+% There also exist hybrid methods that combine the two approaches, such as implicit filtering~\cite{Kelley_2011}.
 
-Model-based \gls{dfo} methods often employ polynomial interpolation to approximate the objective and constraint functions.
-In particular, this is the case for the Powell's \gls{dfo} methods.
+Model-based \gls{dfo} methods and in particular trust-region \gls{dfo} methods often employ polynomial interpolation schemes to approximate the objective and constraint functions.
+% In particular, this is the case for the Powell's \gls{dfo} methods and \solvername{cobyqa}.
+These methods maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
+\begin{equation}
+    \label{eq:intp-cond}
+    \objm[k](y) = \obj(y), \quad y \in \xpt[k].
+\end{equation}
+% Note that the methods must ensure that the interpolation conditions~\eqref{eq:intp-cond} do not contradict each others.
+We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
+Such models are often employed in practice, for example by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}~\cite{Wild_2008}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each others and
+\begin{equation*}
+    \card\xpt[k] = \dim\qpoly = \frac{1}{2} (n + 1) (n + 2),
+\end{equation*}
+then~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond}.
+This scheme, referred to as \emph{fully-determined interpolation}, is the one employed by \solvername{uobyqa}.
+However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
+This is impracticable in practice unless~$n$ is small.
+Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called \emph{underdetermined interpolation}.
+To uniquely define~$\objm[k]$ in this case, it is frequently set to a solution to a variational problem of the form
+\begin{equation}
+    \label{eq:intp-var}
+    \begin{aligned}
+        \min_{Q \in \qpoly} & \quad \mathcal{F}^k(Q)\\
+        \text{s.t.}         & \quad Q(y) = \obj(y), \quad y \in \xpt[k],
+    \end{aligned}
+\end{equation}
+where~$\mathcal{F}^k$ is a functional that promotes a desired regularity of~$\objm[k]$.
+For example, \solvername{mnh} employs
+\begin{equation}
+    \label{eq:mnh}
+    \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q}_{\mathsf{F}}^2,
+\end{equation}
+where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm, and \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} employ
+\begin{equation}
+    \label{eq:df-psb}
+    \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\mathsf{F}}^2,
+\end{equation}
+with~$\objm[-1] = 0$.
+The latter functional is inspired by least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
+Moreover, these two underdetermined interpolation scheme assume that
+\begin{equation*}
+    n + 1 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
+\end{equation*}
+Otherwise,~$\objm[k]$ could not be defined uniquely (or even not defined at all).
+In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as otherwise, all the models~$\objm[k]$ would be linear.
+% Quadratic models of~$\con$ can be built in a similar way.
+Moreover, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, model-based \gls{dfo} methods usually approximates them using similar techniques.
 
-\section{Description of the initial interpolation set}
+Interpolation-based \gls{dfo} methods normally recycle points from~$\xpt[k]$ to build~$\xpt[k + 1]$ and avoid performing unnecessary function evaluations.
+For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's \gls{dfo} methods and \solvername{cobyqa} usually.
+It is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for many iterations.
+This paper shows that the default initial interpolation set employed by Powell's \gls{dfo} methods and \solvername{cobyqa} is optimal when building~$\objm[0]$ by~\eqref{eq:intp-var} and either~\eqref{eq:mnh} or~\eqref{eq:df-psb}, as they are equivalent at the first iteration.
 
-\fxnote*{The interpolation set is adapted from~\cite{Powell_2006}}{To do.}
+This paper is organized as follows.\fxnote{Write down the organization of the paper}
+
+\section{Optimality of an initial interpolation set}
+
+In what follows, we present an initial interpolation set and its optimality in a sense describe in Section~\ref{subsec:well-poisedness}.
+
+\subsection{Description of the initial interpolation sets}
+
+The initial interpolation set we consider in this paper is defined as follows.
+Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \in \R^n$ be
+\begin{equation*}
+    y^i =
+    \begin{cases}
+        0,                      & \text{if} ~ i = 1,\\
+        \Delta e_{i - 1},       & \text{if} ~ 2 \le i \le n + 1,\\
+        -\Delta e_{i - n - 1},  & \text{otherwise},
+    \end{cases}
+\end{equation*}
+where~$e_i \in \R^n$ denotes the $i$th standard coordinate vector.
+We then define the initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ by
+\begin{equation*}
+    \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
+\end{equation*}
+Under these notations, the interpolation conditions~\eqref{eq:intp-cond} provide
+\begin{equation}
+    \label{eq:intp-cond-0}
+    \objm[0](y^i) = \obj(y^i), \quad i \in \set{1, 2, \dots, m}.
+\end{equation}
+% In the unconstrained case, Powell's \gls{dfo} methods and \solvername{cobyqa} use the initial interpolation set~$\xpt[0] = \xpt[0]_{2n + 1}$, i.e., they employ the value~$m = 2n + 1$ by default.
+% This is natural, as the corresponding initial interpolation set is appealing.
+% This paper shows that the value~$m = 2n + 1$ is indeed optimal in a sense described in the following section.
+
+\subsection{Well-poisedness of interpolation sets}
+\label{subsec:well-poisedness}
+
+In this part, we fix an~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$.
+We will study properties of the initial interpolation set~$\xpt[0]_m$ in $\mathcal{B}_p(\Delta)$, the~$\ell_p$-norm ball of radius~$\Delta$, for~$p \in [1, \infty]$.
+Note that we allow~$p = \infty$.
+It is natural to focus on this region.
+Indeed, the initial interpolation set is contained in~$\mathcal{B}_p(\Delta)$ and more importantly, this is the region of interest when employing the initial interpolation set~$\xpt[0]_m$ in a trust-region framework.\fxnote{Introduce the trust-region framework before.}
+
+We first introduce the concept of minimum Frobenius norm Lagrange polynomials associated with the interpolation conditions~\eqref{eq:intp-cond-0}.
+
+\begin{definition}[Minimum Frobenius norm Lagrange polynomials]
+    For each~$i \in \set{1, 2, \dots, m}$, the~$i$th minimum Frobenius norm Lagrange polynomial~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-0} is the unique quadratic polynomial that solves
+    \begin{equation*}
+        \begin{aligned}
+            \min_{Q \in \qpoly} & \quad \norm{\nabla^2 Q}_{\mathsf{F}}\\
+            \text{s.t.}         & \quad Q(y^j) = \delta_{i, j},\\
+        \end{aligned}
+    \end{equation*}
+    where~$\delta_{i, j}$ denotes the Kronecker delta.
+\end{definition}
+
+We now present the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
+
+\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Def.~5.6]{Conn_Scheinberg_Vicente_2009}}]
+    An interpolation set~$\xpt[0]_m$ is said to be~$\Lambda$-poised in the minimum Frobenius norm sense in~$\mathcal{B}_p(\Delta)$, for some~$\Lambda > 0$, if
+    \begin{equation*}
+        \Lambda \ge \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)},
+    \end{equation*}
+    where~$\lagp[i]$ denotes the~$i$th minimum Frobenius norm Lagrange polynomials.
+\end{definition}
+
+If~$\xpt[0]_m$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense, it is obviously~$\Lambda$-poised in the minimum Frobenius norm sense for all~$\Lambda \ge \Lambda_0$.
+Moreover, one can show that the set~$\xpt[0]_m$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} (with~$\mathcal{F}^k$ defined by either~\eqref{eq:mnh} or~\eqref{eq:df-psb}) is bounded by some terms proportional to~$\Lambda$~\cite[Thm.~5.8]{Conn_Scheinberg_Vicente_2009}.
+
+
+\subsection{Optimality in the well-poisedness sense}
+
+These methods are trust-region methods and~$\Delta$ represent the initial trust-region radius.
+
+\section{Conclusion}
 
 \bibliographystyle{amsplain}
 \bibliography{\jobname}
