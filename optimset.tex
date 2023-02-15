@@ -255,7 +255,7 @@ As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
 \end{equation*}
 Moreover, observe that the KKT system for the variational problem~\eqref{eq:intp-var} is linear with respect to the coefficient of~$\objm$.
 Hence, the poisedness of~$\xpt$ is related to the nonsingularity of the coefficient matrix of this KKT system.
-Intuitively, the interpolation set~$\xpt$ can be said well-poised if the determinant of this matrix is large enough.
+Intuitively, the interpolation set~$\xpt$ can be said well-poised if this matrix is well-conditioned.
 To formalize this intuition, we first introduce the notion of minimum Frobenius norm Lagrange polynomials.
 
 \subsection{Minimum Frobenius norm Lagrange polynomials}
@@ -265,7 +265,7 @@ To formally define a measure of well-poisedness of~$\xpt$, we first need to exte
 
 \begin{definition}[Minimum Frobenius norm Lagrange polynomials]
     \label{def:min-norm-lagp}
-    For each~$i \in \set{1, 2, \dots, m}$, the~$i$th minimum Frobenius norm Lagrange polynomial~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen} is the unique quadratic polynomial solving
+    For each~$i \in \set{1, 2, \dots, m}$, the~$i$th \emph{minimum Frobenius norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen} is the unique quadratic polynomial solving
     \begin{equation*}
         \begin{aligned}
             \min_{Q \in \qpoly} & \quad \norm{\nabla^2 Q}_{\mathsf{F}}\\
@@ -276,8 +276,26 @@ To formally define a measure of well-poisedness of~$\xpt$, we first need to exte
 \end{definition}
 
 Remark that if~$m = (n + 1) (n + 2) / 2$, then Definition~\ref{def:min-norm-lagp} reduces to the classical definition of the Lagrange polynomials.
+Moveover, it can be shown that~$\objm$ is given by
+\begin{equation*}
+    \objm(x) = \sum_{i = 1}^m \obj(y^i) \lagp[i](x),
+\end{equation*}
+for any~$x \in \R^n$.
 
 \subsection{Well-poisedness in the minimum Frobenius norm sense}
+
+We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
+
+\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Def.~5.6]{Conn_Scheinberg_Vicente_2009}}]
+    The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum Frobenius norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
+    \begin{equation*}
+        \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} \abs{\lagp[i](x)}.
+    \end{equation*}
+\end{definition}
+
+If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$ for all~$\Lambda \ge \Lambda_0$.
+Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Thm.~5.8]{Conn_Scheinberg_Vicente_2009}.
+Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
 
 \section{Optimality of Powell's initial interpolation set}
 
