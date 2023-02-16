@@ -366,7 +366,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
 \begin{equation*}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation*}
-where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$, as detailed in Definition~\ref{def:min-norm-lagp}.
+where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ (see Definition~\ref{def:min-norm-lagp}) for~$i \in \set{1, 2, \dots, m}$.
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
 These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
@@ -519,7 +519,7 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
 
 \begin{proof}
     If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2(\Delta)$.
-    Therefore, Lemma~\ref{lem:lambda-p} directly provides the desired result~$\Lambda_2 = 1$.
+    Therefore, Lemma~\ref{lem:lambda-p} provides the desired result~$\Lambda_2 = 1$.
     We now focus on the case with~$n + 2 \le m < 2n + 1$.
 
     According to Theorem~\ref{thm:lambda-p},~$\Lambda_2$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
@@ -568,7 +568,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq-1} holds.
 
     We now consider the case where~$p < q$.
-    Let~$e \in \R^n$ be the all-one vector,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
+    Let~$e \in \R^n$ denote the all-ones vector,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
     For~$x \in \mathcal{B}_q(1)$, define~$y = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
@@ -614,7 +614,7 @@ In addition,~$m = 2n + 1$ is optimal for~$\xpt[0]_m$ in the sense that~$\Lambda_
 We conjecture that~$\Lambda_p$ is minimized at the value~$m = 2n + 1$ for any~$p \ge 1$, but we do not have any proof of such a statement yet.
 
 Note that the definition of~$\xpt[0]_m$ in~\eqref{eq:set-def} and~\eqref{eq:set-def-m} assumes that~$m \le 2n + 1$.
-Powell~\cite{Powell_2006} proposed an extension of~$\xpt[0]_m$ in the case~$m > 2n + 1$, and hence,~$\xpt[0]_m$ is defined for any~$m \in \set{1, 2, \dots, (n + 1) (n + 2) / 2}$.
+Powell~\cite{Powell_2006} proposed an extension of~$\xpt[0]_m$ in the case~$m > 2n + 1$, and hence,~$\xpt[0]_m$ is defined for any number of interpolation points~$m \in \set{1, 2, \dots, (n + 1) (n + 2) / 2}$.
 With such an extension, it is interesting to ask whether~$m = 2n + 1$ still minimizes~$\Lambda_p$, which seems to be true according to some numerical experiments.
 We leave this problem open and expect the analysis to be more challenging than what we have done.
 One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case~$m > 2n + 1$, and hence, the calculations will become more involving.
