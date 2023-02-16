@@ -153,7 +153,9 @@
 \maketitle
 
 \begin{abstract}
-    \fxnote*{Write down the abstract (200 words)}{To do.}
+    This paper shows that an interpolation set proposed by Powell and employed by numerous derivative-free trust-region optimization methods based on underdetermined quadratic interpolation is optimal in the sense that it minimizes the least constant of~$\Lambda$-poisedness in the initial trust region.
+    Indeed, no other interpolation set can achieve a lower constant of~$\Lambda$-poisedness in the initial trust region.
+    This analysis justifies a natural choice for the default number of interpolation points employed by many derivative-free optimization solvers, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
 \end{abstract}
 
 \keywords{Derivative-free optimization \and Model-based methods \and Underdetermined quadratic interpolation \and Derivative-free symmetric Broyden update \and \texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
@@ -616,7 +618,8 @@ One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case
 
 \section{Conclusion}
 
-\fxnote*{Write down the conclusion}{To do.}
+This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
+In particular, we showed that an interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of~$\Lambda$-poisedness in the initial trust region.
 
 % \paragraph*{Acknowledgements}
 % Prof.\ X. Chen.
