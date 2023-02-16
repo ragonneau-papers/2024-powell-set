@@ -19,6 +19,7 @@
 \definecolor{ORCIDGreen}{HTML}{A6CE39}
 
 % Cross-referencing
+\usepackage{textgreek}
 \usepackage[
     pdfusetitle,
     hyperfootnotes=false,
@@ -48,6 +49,7 @@
 
 % Mathematics
 \usepackage{mathtools}
+\usepackage{cases}
 \usepackage[bb=dsfontserif]{mathalfa}
 \numberwithin{equation}{section}
 
@@ -87,20 +89,13 @@
 
 % Mathematical environments (theorems, proofs, ...)
 \usepackage{amsthm}
-\usepackage{mdframed}
-\mdfdefinestyle{defaultstyle}{
-    bottomline=false,
-    innertopmargin=0pt,
-    innerrightmargin=0pt,
-    linecolor=gray,
-    linewidth=1pt,
-    rightline=false,
-    rightmargin=0pt,
-    topline=false,
-}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
-\surroundwithmdframed[style=defaultstyle]{definition}
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
 
 % Control sequences, macros, and definitions
 \usepackage{etoolbox}
@@ -117,10 +112,11 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\set}[2][]{#1\{#2#1\}}
 \newcommand{\solvername}[1]{\textsc{#1}\xspace}
+\newcommand{\T}{\mathsf{T}}
 \newcommand{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 
 % Document metadata
-\title{An Optimal Initial Interpolation Set for Model-Based Derivative-Free Optimization Methods}
+\title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
     Tom M. Ragonneau\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
@@ -145,6 +141,12 @@
     \fxnote*{Write down the abstract}{To do.}
 \end{abstract}
 
+\paragraph*{Keywords}
+Derivative-free optimization $\cdot$ Model-based methods $\cdot$ Underdetermined quadratic interpolation $\cdot$ Derivative-free symmetric Broyden update $\cdot$ $\Lambda$-poisedness
+
+\paragraph*{Mathematics Subject Classification (2010)}
+90C56 $\cdot$ 41A10 $\cdot$ 65K05 $\cdot$
+
 \section{Introduction}
 
 It is challenging to develop \gls{dfo} methods, i.e., optimization methods that do not rely on derivatives of the problems they solve.
@@ -162,7 +164,7 @@ There are many examples of applications of this kind, such as machine learning~\
 Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate, and select the next iterate among these points based on simple comparisons.
 Examples of famous direct-search methods include the Hooke-Jeeves method~\cite{Hooke_Jeeves_1961}, the Nelder-Mead method~\cite{Nelder_Mead_1965}, the \solvername{gps} method~\cite{Booker_Etal_1999}, the \solvername{mads} method~\cite{Audet_Dennis_2006}, and \solvername{bfo}~\cite{Porcelli_Toint_2017,Porcelli_Toint_2022}.
-Meanwhile, \fxnote*{Find a citation that introduces the concept of model-based methods}{model-based methods} approximate the objective and constraint functions by simple models around the current iterate, and select the next iterate by examining these approximations.
+Meanwhile, model-based methods~\cite[Part~4]{Audet_Hare_2017} approximate the objective and constraint functions by simple models around the current iterate, and select the next iterate by examining these approximations.
 Since these approximations are local, the methods are embedded in globalization strategies to ensure convergence.
 The trust-region framework~\cite{Conn_Gould_Toint_2000} is a popular choice for this purpose, and is the one under consideration in this paper.
 Examples of well-known trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
@@ -286,7 +288,8 @@ for any~$x \in \R^n$.
 
 We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
 
-\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Def.~5.6]{Conn_Scheinberg_Vicente_2009}}]
+\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Definition~5.6]{Conn_Scheinberg_Vicente_2009}}]
+    \label{def:lambda-poisedness}
     The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum Frobenius norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
     \begin{equation*}
         \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} \abs{\lagp[i](x)}.
@@ -294,82 +297,291 @@ We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum F
 \end{definition}
 
 If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$ for all~$\Lambda \ge \Lambda_0$.
-Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Thm.~5.8]{Conn_Scheinberg_Vicente_2009}.
+Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
 Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
 
 \section{Optimality of Powell's initial interpolation set}
 
+Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods and in particular trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and in the unconstrained case, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
+This section first presents this interpolation set, and then shows that it is optimal in term of the least constant of~$\Lambda$-poisedness.
+
+\subsection{Description of the initial interpolation set}
+
+The initial interpolation set for unconstrained optimization proposed by Powell is defined as follows.
+Without loss of generality, we assume that the calculations are shifted to the origin.
+Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \in \R^n$ be
+\begin{equation}
+    \label{eq:set-def}
+    y^i =
+    \begin{cases}
+        0,                      & \text{if~$i = 1$,}\\
+        \Delta e_{i - 1},       & \text{if~$2 \le i \le n + 1$,}\\
+        -\Delta e_{i - n - 1},  & \text{otherwise},
+    \end{cases}
+\end{equation}
+where~$e_i \in \R^n$ denotes the $i$th standard coordinate vector in~$\R^n$.
+The initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ are then defined by
+\begin{equation*}
+    \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
+\end{equation*}
+The default value for~$m$ proposed by Powell is~$2n + 1$.
+This is a natural choice, as the corresponding interpolation set is geometrically appealing.
+It consist indeed of the origin and equidistant points to the origin on the positive and negative coordinate directions.
+In what follows, we provide a theory that justifies this natural choice.
+
+\subsection{Optimality of the interpolation set}
+
+All the methods presented above that are using the initial interpolation set~$\xpt[0]_{2n + 1}$ are trust-region methods, and~$\Delta$ denotes the initial trust-region radius.
+Therefore, it is legitimate to study the properties of~$\xpt[0]_m$ for different values of~$m$ in the closed~$\ell_p$-norm ball of radius~$\Delta$, namely
+\begin{equation*}
+    \mathcal{B}_p(\Delta) = \set{x \in \R^n : \norm{x}_p \le \Delta},
+\end{equation*}
+with~$p \in [1, \infty]$.
+Note that we allow~$p = \infty$.
+In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
+
+\subsubsection{Formulation of the Lagrange polynomials}
+
+According to Definition~\ref{def:lambda-poisedness}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense with
+\begin{equation*}
+    \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)},
+\end{equation*}
+where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
+
+To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
+These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
+
+\begin{lemma}
+    \label{lem:lagp}
+    For each~$m \in \set{n + 2, n + 3, \dots,  2n + 1}$ and all~$x \in \R^n$, we have
+    \begin{equation*}
+        \lagp[i](x) =
+        \begin{cases}
+            \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j,  & \text{if~$i = 1$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                        & \text{if~$2 \le i \le m - n$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                         & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta}.                                        & \text{otherwise.}
+        \end{cases}
+    \end{equation*}
+    In the formulation of~$\lagp[1]$, if~$m = 2n + 1$, we define~$\sum_{j = m - n}^n x_j = 0$.
+\end{lemma}
+
+\begin{proof}
+    Let~$i \in \set{1, 2, \dots, m}$ be fixed and let~$\lagp$ be a quadratic polynomial that satisfies
+    \begin{equation}
+        \label{eq:lagp-proof}
+        \lagp(y^j) = \delta_{i, j}, \quad j \in \set{1, 2, \dots, m}.
+    \end{equation}
+    First, it is straightforward to verify that~$\lagp[i]$ satisfies the interpolation conditions~\eqref{eq:lagp-proof}.
+    Hence, it suffices to show that the Frobenius norm of its Hessian matrix is least.
+    According to the equation~\eqref{eq:set-def}, we have~$y^1 = 0$, and for any~$j \in \set{1, 2, \dots, m - n - 1}$, we have~$y^{j + 1} = \Delta e_j$ and~$y^{n + j + 1} = -\Delta e_j$.
+    Therefore,
+    \begin{equation*}
+        \begin{cases}
+            \displaystyle \lagp(y^{j + 1}) = \lagp(y^1) + \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} (\nabla^2 \lagp) e_j,\\[2ex]
+            \displaystyle \lagp(y^{n + j + 1}) = \lagp(y^1) - \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} (\nabla^2 \lagp) e_j,
+        \end{cases}
+    \end{equation*}
+    and hence,
+    \begin{equation*}
+        e_j^{\T} (\nabla^2 \lagp) e_j = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2}.
+    \end{equation*}
+    This fixes the first~$m - n - 1$ diagonal entries of~$\nabla^2 \lagp$, which are exactly those of~$\nabla^2 \lagp[i]$.
+    Since all the other entries of~$\nabla^2 \lagp[i]$ are zero, we have
+    \begin{equation*}
+        \norm[\big]{\nabla^2 \lagp[i]}_{\mathsf{F}}^2 \le \norm[\big]{\nabla^2 \lagp}_{\mathsf{F}}^2,
+    \end{equation*}
+    which completes the proof.
+\end{proof}
+
+\subsubsection{Bounds for the~\texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
+
+The next lemma simplifies the value of~$\Lambda_p$ for further computations.
+
+\begin{lemma}
+    \label{lem:lambda-p}
+    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ and any~$p \in [1, \infty]$, we have
+    \begin{equation}
+        \label{eq:lambda-p}
+        \Lambda_p = \max_{\norm{x}_p \le \Delta} \abs{\lagp[1](x)}.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    For each~$i \in \set{2, 3, \dots, n + 1}$, according to Lemma~\ref{lem:lagp},~$\lagp[i](x)$ depends only on~$x_{i - 1}$ for all~$x \in \R^n$, and hence
+    \begin{equation*}
+        \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs{\lagp[i](t e_{i - 1})} = 1.
+    \end{equation*}
+    Similarly, for each~$i \in \set{n + 2, n + 3, \dots, m}$, since~$\lagp[i](x)$ depends only on~$x_{i - n - 1}$ for all~$x \in \R^n$, we have
+    \begin{equation*}
+        \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs{\lagp[i](t e_{i - n - 1})} = 1.
+    \end{equation*}
+    Noting that~$\lagp[1](y^1) = 1$ and~$y^1 \in \mathcal{B}_p(\Delta)$, this shows that~\eqref{eq:lambda-p} holds.
+\end{proof}
+
+We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
+
+\begin{theorem}
+    \label{thm:lambda-p-bounds}
+    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ and any~$p \in [1, \infty]$, we have
+    \begin{equation*}
+        1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n,
+    \end{equation*}
+    where we assume that~$0^0 = 0$ and that the lower bound is~$2n + 2 - m$ for~$p = \infty$.
+\end{theorem}
+
+\begin{proof}
+    We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
+    For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ components are zeros and whose remaining~$2n + 1 - m$ components are equal, we have
+    \begin{equation*}
+        \Lambda_p \ge \max_{t \in \R} \set{1 - \frac{t}{\Delta} (2n + 1 - m) : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+    \end{equation*}
+
+    We now prove the upper bound.
+    Note that for any~$p \ge 1$, we have~$\mathcal{B}_p(\Delta) \subseteq \mathcal{B}_{\infty}(\Delta)$, so that~$\Lambda_p \le \Lambda_{\infty}$.
+    Therefore, we only need to show that~$\Lambda_{\infty} \le n$.
+    Considering both~$\lagp[1]$ and~$-\lagp[1]$, we obtain
+    \begin{equation*}
+        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs{\lagp[1](x)} = \max \set{2n + 2 - m, n - 1} \le n.
+    \end{equation*}
+\end{proof}
+
+\subsubsection{Some special cases}
+
+We now calculate the exact value of~$\Lambda_p$ in some special cases.
+
+\begin{proposition}
+    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$, we have
+    \begin{equation}
+        \label{eq:lambda-p-1}
+        \Lambda_1 =
+        \begin{cases}
+            2,  & \text{if~$n + 2 \le m \le 2n$,}\\
+            1,  & \text{otherwise.}
+        \end{cases}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    According to Theorem~\ref{thm:lambda-p-bounds},~$\Lambda_1$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-1}.
+    Therefore, we only need to prove that this right-hand side is also a lower bound for~$\Lambda_1$, using the formulation in Lemma~\ref{lem:lambda-p}.
+
+    For any~$x \in \mathcal{B}_1(\Delta)$, we have
+    \begin{equation*}
+        \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \abs{x_j}.
+    \end{equation*}
+    Therefore,
+    \begin{equation}
+        \label{eq:lambda-p-1-proof-1}
+        \lagp[1](x) \le
+        \begin{cases}
+            2,  & \quad \text{if~$n + 2 \le m \le 2n$,}\\
+            1,  & \quad \text{otherwise.}
+        \end{cases}
+    \end{equation}
+    On the other hand,
+    \begin{equation}
+        \label{eq:lambda-p-1-proof-2}
+        \lagp[1](x) = 1 - \sum_{j = 1}^{m - n - 1} \frac{x_j^2}{\Delta^2} - \sum_{j = m - n}^n \frac{x_j}{\Delta} \ge 1 - \sum_{j = 1}^{m - n - 1} \frac{\abs{x_j}}{\Delta} - \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \ge 1 - \frac{\norm{x}_1}{\Delta} \ge 0.
+    \end{equation}
+    We conclude the proof by combining~\eqref{eq:lambda-p-1-proof-1} and~\eqref{eq:lambda-p-1-proof-2} with Lemma~\ref{lem:lambda-p}.
+\end{proof}
+
+\begin{proposition}
+    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$, we have
+    \begin{equation}
+        \label{eq:lambda-p-2}
+        \Lambda_2 = 1 + \sqrt{2n + 1 - m}.
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2{\Delta}$.
+    Therefore, Lemma~\ref{lem:lambda-p} directly provides the desired result~$\Lambda_2 = 1$.
+    We now focus on the case with~$n + 2 \le m < 2n + 1$.
+
+    According to Theorem~\ref{thm:lambda-p-bounds},~$\Lambda_2$ is lower bounded by the right-hand side of~\ref{eq:lambda-p-2}.
+    Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_2$, using the formulation in Lemma~\ref{lem:lambda-p}.
+
+    For any~$x \in \mathcal{B}_2{\Delta}$, we have
+    \begin{align}
+        \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j \nonumber\\
+                    &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
+                    &\ge \min_{y \in \mathcal{B}_2(1)} \sum_{j = m - n}^n y_j (1 - y_j). \label{eq:lambda-p-2-proof}
+    \end{align}
+    Let~$y^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-proof}.
+    The first-order necessary condition ensures that there exists a Lagrange multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 y_j^{\ast} + 2 \lambda^{\ast} y_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
+    Therefore, the last~$(2n + 1 - m)$ components of~$y^{\ast}$ are equal, and hence,
+    \begin{align*}
+        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n y_j (1 - y_j)    & = \min_{t \in \R} \set{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
+                                                                                    & = -1 - \sqrt{2n + 1 - m}.
+    \end{align*}
+
+    Furthermore,
+    \begin{equation*}
+        \lagp[1](x) \le 1 + \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \le 1 + \sqrt{2n + 1 - m} \sum_{j = m - n}^n \frac{x_j^2}{\Delta^2} \le 1 + \sqrt{2n + 1 - m}.
+    \end{equation*}
+    Therefore,~$\abs{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m}$, and hence, according to Lemma~\ref{lem:lambda-p} and Theorem~\ref{thm:lambda-p-bounds}, we have
+    \begin{equation*}
+        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs{\lagp[1](x)} = 1 + \sqrt{2n + 1 - m},
+    \end{equation*}
+    which concludes the proof.
+\end{proof}
+
+Before developing the last special value of~$\Lambda_p$ we introduce the following lemma.
+
+\begin{lemma}
+    \label{lem:max-norm-pq}
+    For any~$p \ge 1$ and~$q \ge 1$, we have
+    \begin{subequations}
+        \begin{numcases}{\max_{\norm{x}_q \le 1} \norm{x}_p =}
+            1,                      & \text{if~$p \ge q$,} \label{eq:max-norm-pq-1}\\
+            n^{\frac{q - p}{pq}},   & \text{otherwise.} \label{eq:max-norm-pq-2}
+        \end{numcases}
+    \end{subequations}
+\end{lemma}
+
+\begin{proof}
+    Let us first consider the case where~$p \ge q$.
+    For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq-1} holds.
+
+    We now consider the case where~$p < q$.
+    Let~$e \in \R^n$ be the all-one vector,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
+    For~$x \in \mathcal{B}_q(1)$, define~$y = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
+    According to the H{\"{o}}lder inequality, we have
+    \begin{equation*}
+        \norm{x}_p  = (e^{\T} y)^{\frac{1}{p}} \le (\norm{e}_s \norm{y}_r)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+    \end{equation*}
+    Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}e$, which proves~\eqref{eq:max-norm-pq-2}.
+\end{proof}
+
+\begin{proposition}
+    For any~$p \ge 1$, if~$m = 2n + 1$, then
+    \begin{equation*}
+        \Lambda_p = \max \set[\big]{1, n^{\frac{p - 2}{p}} - 1}.
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    It is clear that
+    \begin{equation}
+        \label{eq:lambda-p-infty-proof-1}
+        \max_{\norm{x}_p \le \Delta} \lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( 1 - \frac{\norm{x}_2^2}{\delta^2} \bigg) = 1.
+    \end{equation}
+    Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
+    \begin{equation}
+        \label{eq:lambda-p-infty-proof-2}
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \frac{\norm{x}_2^2}{\delta^2} - 1 =
+        \begin{cases}
+            0,                          & \quad \text{if~$p \le 2$,}\\
+            n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
+        \end{cases}
+    \end{equation}
+    The desired result is obtained by combining~\eqref{eq:lambda-p-infty-proof-1} and~\eqref{eq:lambda-p-infty-proof-2} with Lemma~\ref{lem:lambda-p}.
+\end{proof}
+
 \section{Conclusion}
-
-% \section{Optimality of an initial interpolation set}
-
-% In what follows, we present an initial interpolation set and its optimality in a sense describe in Subsection~\ref{subsec:well-poisedness}.
-
-% \subsection{Description of the initial interpolation sets}
-
-% The initial interpolation set we consider in this paper is defined as follows.
-% Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \in \R^n$ be
-% \begin{equation*}
-%     y^i =
-%     \begin{cases}
-%         0,                      & \text{if} ~ i = 1,\\
-%         \Delta e_{i - 1},       & \text{if} ~ 2 \le i \le n + 1,\\
-%         -\Delta e_{i - n - 1},  & \text{otherwise},
-%     \end{cases}
-% \end{equation*}
-% where~$e_i \in \R^n$ denotes the $i$th standard coordinate vector.
-% We then define the initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ by
-% \begin{equation*}
-%     \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
-% \end{equation*}
-% Under these notations, the interpolation conditions~\eqref{eq:intp-cond} provide
-% \begin{equation}
-%     \label{eq:intp-cond-0}
-%     \objm[0](y^i) = \obj(y^i), \quad i \in \set{1, 2, \dots, m}.
-% \end{equation}
-% % In the unconstrained case, Powell's \gls{dfo} methods and \solvername{cobyqa} use the initial interpolation set~$\xpt[0] = \xpt[0]_{2n + 1}$, i.e., they employ the value~$m = 2n + 1$ by default.
-% % This is natural, as the corresponding initial interpolation set is appealing.
-% % This paper shows that the value~$m = 2n + 1$ is indeed optimal in a sense described in the following section.
-
-% \subsection{Well-poisedness of interpolation sets}
-% \label{subsec:well-poisedness}
-
-% In this part, we fix an~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$.
-% We will study properties of the initial interpolation set~$\xpt[0]_m$ in $\mathcal{B}_p(\Delta)$, the~$\ell_p$-norm ball of radius~$\Delta$, for~$p \in [1, \infty]$.
-% Note that we allow~$p = \infty$.
-% It is natural to focus on this region.
-% Indeed, the initial interpolation set is contained in~$\mathcal{B}_p(\Delta)$ and more importantly, this is the region of interest when employing the initial interpolation set~$\xpt[0]_m$ in a trust-region framework.\fxnote{Introduce the trust-region framework before.}
-
-% We first introduce the concept of minimum Frobenius norm Lagrange polynomials associated with the interpolation conditions~\eqref{eq:intp-cond-0}.
-
-% \begin{definition}[Minimum Frobenius norm Lagrange polynomials]
-%     For each~$i \in \set{1, 2, \dots, m}$, the~$i$th minimum Frobenius norm Lagrange polynomial~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-0} is the unique quadratic polynomial that solves
-%     \begin{equation*}
-%         \begin{aligned}
-%             \min_{Q \in \qpoly} & \quad \norm{\nabla^2 Q}_{\mathsf{F}}\\
-%             \text{s.t.}         & \quad Q(y^j) = \delta_{i, j},\\
-%         \end{aligned}
-%     \end{equation*}
-%     where~$\delta_{i, j}$ denotes the Kronecker delta.
-% \end{definition}
-
-% We now present the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
-
-% \begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Def.~5.6]{Conn_Scheinberg_Vicente_2009}}]
-%     An interpolation set~$\xpt[0]_m$ is said to be~$\Lambda$-poised in the minimum Frobenius norm sense in~$\mathcal{B}_p(\Delta)$, for some~$\Lambda > 0$, if
-%     \begin{equation*}
-%         \Lambda \ge \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)},
-%     \end{equation*}
-%     where~$\lagp[i]$ denotes the~$i$th minimum Frobenius norm Lagrange polynomials.
-% \end{definition}
-
-% If~$\xpt[0]_m$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense, it is obviously~$\Lambda$-poised in the minimum Frobenius norm sense for all~$\Lambda \ge \Lambda_0$.
-% Moreover, one can show that the set~$\xpt[0]_m$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} (with~$\mathcal{F}^k$ defined by either~\eqref{eq:mnh} or~\eqref{eq:df-psb}) is bounded by some terms proportional to~$\Lambda$~\cite[Thm.~5.8]{Conn_Scheinberg_Vicente_2009}.
-
-
-% \subsection{Optimality in the well-poisedness sense}
-
-% These methods are trust-region methods and~$\Delta$ represent the initial trust-region radius.
 
 \bibliographystyle{amsplain}
 \bibliography{\jobname}
