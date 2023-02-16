@@ -37,10 +37,10 @@
     runcolor=black,
     urlcolor=black,
 }
-\newcommand{\email}[2][inbox]{\faIcon{#1} \href{mailto:#2}{#2}}
-\newcommand{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
-\newcommand{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
-\newcommand{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
+\newcommand*{\email}[2][inbox]{\faIcon{#1} \href{mailto:#2}{#2}}
+\newcommand*{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
+\newcommand*{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
+\newcommand*{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
 
 % Glossaries
 \usepackage[acronym]{glossaries}
@@ -97,23 +97,42 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 
+% `\keywords' and `\msc' commands
+% TODO: The two commands below can be abstracted into a single command
+\newcommand*{\keywords}[1]{
+    \begingroup
+    \def\and{ ; }
+    \hypersetup{pdfkeywords={#1}}
+    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
+    \paragraph*{Keywords} #1
+    \endgroup
+}
+\newcommand*{\msc}[1]{
+    \begingroup
+    \def\and{ ; }
+    \hypersetup{pdfsubject={#1}}
+    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
+    \paragraph*{Mathematics Subject Classification (2010)} #1
+    \endgroup
+}
+
 % Control sequences, macros, and definitions
 \usepackage{etoolbox}
 \usepackage{xspace}
 \DeclareMathOperator{\bigo}{\mathcal{O}}
 \DeclareMathOperator{\card}{card}
-\newcommand{\abs}[2][]{#1\lvert#2#1\rvert}
-\newcommand{\fset}{\Omega}
-\newcommand{\lagp}[1][]{L\ifblank{#1}{}{_{#1}}}
-\newcommand{\norm}[2][]{#1\lVert#2#1\rVert}
-\newcommand{\obj}{f}
-\newcommand{\objm}[1][]{\hat{\obj}\ifblank{#1}{}{^{#1}}}
-\newcommand{\qpoly}{\mathcal{Q}_n}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\set}[2][]{#1\{#2#1\}}
-\newcommand{\solvername}[1]{\textsc{#1}\xspace}
-\newcommand{\T}{\mathsf{T}}
-\newcommand{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
+\newcommand*{\abs}[2][]{#1\lvert#2#1\rvert}
+\newcommand*{\fset}{\Omega}
+\newcommand*{\lagp}[1][]{L\ifblank{#1}{}{_{#1}}}
+\newcommand*{\norm}[2][]{#1\lVert#2#1\rVert}
+\newcommand*{\obj}{f}
+\newcommand*{\objm}[1][]{\hat{\obj}\ifblank{#1}{}{^{#1}}}
+\newcommand*{\qpoly}{\mathcal{Q}_n}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\set}[2][]{#1\{#2#1\}}
+\newcommand*{\solvername}[1]{\textsc{#1}\xspace}
+\newcommand*{\T}{\mathsf{T}}
+\newcommand*{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 
 % Document metadata
 \title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
@@ -128,24 +147,18 @@
     }\orcid{0000-0001-8934-8190}
 }
 \date{\today}
-\hypersetup{
-    pdfsubject={},
-    pdfkeywords={},
-}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-    \fxnote*{Write down the abstract}{To do.}
+    \fxnote*{Write down the abstract (200 words)}{To do.}
 \end{abstract}
 
-\paragraph*{Keywords}
-Derivative-free optimization $\cdot$ Model-based methods $\cdot$ Underdetermined quadratic interpolation $\cdot$ Derivative-free symmetric Broyden update $\cdot$ $\Lambda$-poisedness
+\keywords{Derivative-free optimization \and Model-based methods \and Underdetermined quadratic interpolation \and Derivative-free symmetric Broyden update \and \texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
 
-\paragraph*{Mathematics Subject Classification (2010)}
-90C56 $\cdot$ 41A10 $\cdot$ 65K05 $\cdot$ 90C30
+\msc{90C56 \and 41A10 \and 65K05 \and 90C30}
 
 \section{Introduction}
 
@@ -325,7 +338,7 @@ The initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n
     \label{eq:set-def-m}
     \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
 \end{equation}
-The default value for~$m$ proposed by Powell is~$2n + 1$.
+The default value for~$m$ proposed by Powell is~$2n + 1$, i.e.,~$\xpt[0] = \xpt[0]_{2n + 1}$.
 This is a natural choice, as the corresponding interpolation set is geometrically appealing.
 It consist indeed of the origin and equidistant points to the origin on the positive and negative coordinate directions.
 In what follows, we provide a theory that justifies this natural choice.
@@ -348,7 +361,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
 \begin{equation*}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)},
 \end{equation*}
-where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
+where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$, as detailed in Definition~\ref{def:min-norm-lagp}.
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
 These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
@@ -362,7 +375,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
             \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j,  & \text{if~$i = 1$,}\\[2ex]
             \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                        & \text{if~$2 \le i \le m - n$,}\\[2ex]
             \displaystyle \frac{x_{i - 1}}{\Delta},                                                                         & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta}.                                        & \text{otherwise.}
+            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta},                                        & \text{otherwise.}
         \end{cases}
     \end{equation*}
     In the formulation of~$\lagp[1]$, if~$m = 2n + 1$, we define~$\sum_{j = m - n}^n x_j = 0$.
@@ -436,7 +449,7 @@ We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ components are zeros and whose remaining~$2n + 1 - m$ components are equal, we have
     \begin{equation*}
-        \Lambda_p \ge \max_{t \in \R} \set{1 - \frac{t}{\Delta} (2n + 1 - m) : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+        \Lambda_p \ge \max_{t \in \R} \set{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
 
     We now prove the upper bound.
@@ -500,22 +513,22 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
 \end{proposition}
 
 \begin{proof}
-    If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2{\Delta}$.
+    If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2(\Delta)$.
     Therefore, Lemma~\ref{lem:lambda-p} directly provides the desired result~$\Lambda_2 = 1$.
     We now focus on the case with~$n + 2 \le m < 2n + 1$.
 
-    According to Theorem~\ref{thm:lambda-p},~$\Lambda_2$ is lower bounded by the right-hand side of~\ref{eq:lambda-p-2}.
+    According to Theorem~\ref{thm:lambda-p},~$\Lambda_2$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
     Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_2$, using the formulation in Lemma~\ref{lem:lambda-p}.
 
-    For any~$x \in \mathcal{B}_2{\Delta}$, we have
+    For any~$x \in \mathcal{B}_2(\Delta)$, we have
     \begin{align}
         \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j \nonumber\\
                     &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
-                    &\ge \min_{y \in \mathcal{B}_2(1)} \sum_{j = m - n}^n y_j (1 - y_j). \label{eq:lambda-p-2-p}
+                    &\ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n y_j (1 - y_j). \label{eq:lambda-p-2-p}
     \end{align}
     Let~$y^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
-    The first-order necessary condition ensures that there exists a Lagrange multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 y_j^{\ast} + 2 \lambda^{\ast} y_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
-    Therefore, the last~$(2n + 1 - m)$ components of~$y^{\ast}$ are equal, and hence,
+    The first-order necessary condition for optimality ensures that there exists a Lagrange multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 y_j^{\ast} + 2 \lambda^{\ast} y_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
+    Therefore, the last~$2n + 1 - m$ components of~$y^{\ast}$ are equal, and hence,
     \begin{align*}
         \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n y_j (1 - y_j)    & = \min_{t \in \R} \set{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
                                                                                     & = -1 - \sqrt{2n + 1 - m}.
@@ -571,12 +584,12 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     It is clear that
     \begin{equation}
         \label{eq:lambda-p-inf-p-1}
-        \max_{\norm{x}_p \le \Delta} \lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( 1 - \frac{\norm{x}_2^2}{\delta^2} \bigg) = 1.
+        \max_{\norm{x}_p \le \Delta} \lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( 1 - \frac{\norm{x}_2^2}{\Delta^2} \bigg) = 1.
     \end{equation}
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \frac{\norm{x}_2^2}{\delta^2} - 1 =
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \frac{\norm{x}_2^2}{\Delta^2} - 1 =
         \begin{cases}
             0,                          & \quad \text{if~$p \le 2$,}\\
             n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
@@ -604,6 +617,15 @@ One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case
 \section{Conclusion}
 
 \fxnote*{Write down the conclusion}{To do.}
+
+% \paragraph*{Acknowledgements}
+% Prof.\ X. Chen.
+
+\paragraph*{Disclosure statement}
+The authors report there are no competing interests to declare.
+
+\paragraph*{Funding}
+This work was supported by the University Grants Committee of Hong Kong under Grants PF18-24698 (Hong Kong Ph.D. Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P; and The Hong Kong Polytechnic University under Grant P0009767.
 
 \bibliographystyle{amsplain}
 \bibliography{\jobname}
