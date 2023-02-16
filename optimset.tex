@@ -116,6 +116,9 @@
     \endgroup
 }
 
+% Make @ behave as per catcode 13 (active). TeXbook p. 155.
+\mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
+
 % Control sequences, macros, and definitions
 \usepackage{etoolbox}
 \usepackage{xspace}
@@ -173,7 +176,7 @@ However, such methods are required to solve the optimization problem
         \text{s.t.}         & \quad x \in \fset,
     \end{aligned}
 \end{equation}
-when classical or generalized derivatives of the objective function~$\obj : \R^n \to \R$ (and possibly the constraint functions underlying the feasible~$\fset \subseteq \R^n$) are unavailable or too expensive to evaluate.
+when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ (and possibly the constraint functions underlying the feasible~$\fset \subseteq \R^n$) are unavailable or too expensive to evaluate.
 There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
 
 Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
@@ -225,10 +228,10 @@ The latter functional is inspired by least-change property of quasi-Newton updat
 The variational problem defined by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} is known as the \emph{derivative-free symmetric Broyden update} (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
 The two underdetermined interpolation schemes assume that
 \begin{equation*}
-    n + 1 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
+    n + 1 \le \card\xpt[k] \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
 Otherwise,~$\objm[k]$ could not be uniquely defined (or even not defined at all).
-In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card(\xpt[k]) = n + 1$.
+In practice, methods that employ these schemes often enforce~$\card\xpt[k] \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card\xpt[k] = n + 1$.
 Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, model-based \gls{dfo} methods usually approximates them using similar techniques.
 
 Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab initio} at each iteration.
@@ -284,7 +287,7 @@ To formally define a measure of well-poisedness of~$\xpt$, we first need to exte
     For each~$i \in \set{1, 2, \dots, m}$, the~$i$th \emph{minimum Frobenius norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen} is the unique quadratic polynomial solving
     \begin{equation*}
         \begin{aligned}
-            \min_{Q \in \qpoly} & \quad \norm{\nabla^2 Q}_{\mathsf{F}}\\
+            \min_{Q \in \qpoly} & \quad \norm[\big]{\nabla^2 Q}_{\mathsf{F}}\\
             \text{s.t.}         & \quad Q(y^j) = \delta_{i, j}, \quad j \in \set{1, 2, \dots, m},
         \end{aligned}
     \end{equation*}
@@ -306,7 +309,7 @@ We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum F
     \label{def:lambda-p}
     The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum Frobenius norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
     \begin{equation*}
-        \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} \abs{\lagp[i](x)}.
+        \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} @@ \abs[\big]{\lagp[i](x)}.
     \end{equation*}
 \end{definition}
 
@@ -361,7 +364,7 @@ We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves th
 
 According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense with
 \begin{equation*}
-    \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)},
+    \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation*}
 where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$, as detailed in Definition~\ref{def:min-norm-lagp}.
 
@@ -374,10 +377,10 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
     \begin{equation*}
         \lagp[i](x) =
         \begin{cases}
-            \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j,  & \text{if~$i = 1$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                        & \text{if~$2 \le i \le m - n$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                         & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta},                                        & \text{otherwise.}
+            \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j,    & \text{if~$i = 1$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                                    & \text{if~$2 \le i \le m - n$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                                     & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta},                                                    & \text{otherwise.}
         \end{cases}
     \end{equation*}
     In the formulation of~$\lagp[1]$, if~$m = 2n + 1$, we define~$\sum_{j = m - n}^n x_j = 0$.
@@ -395,13 +398,13 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
     Therefore,
     \begin{equation*}
         \begin{cases}
-            \displaystyle \lagp(y^{j + 1}) = \lagp(y^1) + \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} (\nabla^2 \lagp) e_j,\\[2ex]
-            \displaystyle \lagp(y^{n + j + 1}) = \lagp(y^1) - \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} (\nabla^2 \lagp) e_j,
+            \displaystyle \lagp(y^{j + 1}) = \lagp(y^1) + \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} \big(\nabla^2 \lagp \big) e_j,\\[2ex]
+            \displaystyle \lagp(y^{n + j + 1}) = \lagp(y^1) - \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} \big(\nabla^2 \lagp \big) e_j,
         \end{cases}
     \end{equation*}
     and hence,
     \begin{equation*}
-        e_j^{\T} (\nabla^2 \lagp) e_j = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2}.
+        e_j^{\T} \big(\nabla^2 \lagp \big) e_j = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2}.
     \end{equation*}
     This fixes the first~$m - n - 1$ diagonal entries of~$\nabla^2 \lagp$, which are exactly those of~$\nabla^2 \lagp[i]$.
     Since all the other entries of~$\nabla^2 \lagp[i]$ are zero, we have
@@ -420,18 +423,18 @@ The next lemma simplifies the value of~$\Lambda_p$ for further computations.
     For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ and any~$p \in [1, \infty]$, we have
     \begin{equation}
         \label{eq:lambda-p}
-        \Lambda_p = \max_{\norm{x}_p \le \Delta} \abs{\lagp[1](x)}.
+        \Lambda_p = \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[1](x)}.
     \end{equation}
 \end{lemma}
 
 \begin{proof}
     For each~$i \in \set{2, 3, \dots, n + 1}$, according to Lemma~\ref{lem:lagp},~$\lagp[i](x)$ depends only on~$x_{i - 1}$ for all~$x \in \R^n$, and hence
     \begin{equation*}
-        \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs{\lagp[i](t e_{i - 1})} = 1.
+        \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs[\big]{\lagp[i](t e_{i - 1})} = 1.
     \end{equation*}
     Similarly, for each~$i \in \set{n + 2, n + 3, \dots, m}$, since~$\lagp[i](x)$ depends only on~$x_{i - n - 1}$ for all~$x \in \R^n$, we have
     \begin{equation*}
-        \max_{\norm{x}_p \le \Delta} \abs{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs{\lagp[i](t e_{i - n - 1})} = 1.
+        \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs[\big]{\lagp[i](t e_{i - n - 1})} = 1.
     \end{equation*}
     Noting that~$\lagp[1](y^1) = 1$ and~$y^1 \in \mathcal{B}_p(\Delta)$, this shows that~\eqref{eq:lambda-p} holds.
 \end{proof}
@@ -451,7 +454,7 @@ We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ components are zeros and whose remaining~$2n + 1 - m$ components are equal, we have
     \begin{equation*}
-        \Lambda_p \ge \max_{t \in \R} \set{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+        \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
 
     We now prove the upper bound.
@@ -459,7 +462,7 @@ We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
     Therefore, we only need to show that~$\Lambda_{\infty} \le n$.
     Considering both~$\lagp[1]$ and~$-\lagp[1]$, we obtain
     \begin{equation*}
-        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs{\lagp[1](x)} = \max \set{2n + 2 - m, n - 1} \le n.
+        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)} = \max \set{2n + 2 - m, n - 1} \le n.
     \end{equation*}
 \end{proof}
 
@@ -486,7 +489,7 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
 
     For any~$x \in \mathcal{B}_1(\Delta)$, we have
     \begin{equation*}
-        \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \abs{x_j}.
+        \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! \abs{x_j}.
     \end{equation*}
     Therefore,
     \begin{equation}
@@ -524,25 +527,25 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
 
     For any~$x \in \mathcal{B}_2(\Delta)$, we have
     \begin{align}
-        \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n x_j \nonumber\\
-                    &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
-                    &\ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n y_j (1 - y_j). \label{eq:lambda-p-2-p}
+        \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
+                    &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n \!\! x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
+                    &\ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! y_j (1 - y_j). \label{eq:lambda-p-2-p}
     \end{align}
     Let~$y^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
     The first-order necessary condition for optimality ensures that there exists a Lagrange multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 y_j^{\ast} + 2 \lambda^{\ast} y_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
     Therefore, the last~$2n + 1 - m$ components of~$y^{\ast}$ are equal, and hence,
     \begin{align*}
-        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n y_j (1 - y_j)    & = \min_{t \in \R} \set{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
-                                                                                    & = -1 - \sqrt{2n + 1 - m}.
+        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! y_j (1 - y_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
+                                                                                        & = -1 - \sqrt{2n + 1 - m}.
     \end{align*}
 
     Furthermore,
     \begin{equation*}
         \lagp[1](x) \le 1 + \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \le 1 + \sqrt{2n + 1 - m} \sum_{j = m - n}^n \frac{x_j^2}{\Delta^2} \le 1 + \sqrt{2n + 1 - m}.
     \end{equation*}
-    Therefore,~$\abs{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m}$, and hence, according to Lemma~\ref{lem:lambda-p} and Theorem~\ref{thm:lambda-p}, we have
+    Therefore,~$\abs[\big]{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m}$, and hence, according to Lemma~\ref{lem:lambda-p} and Theorem~\ref{thm:lambda-p}, we have
     \begin{equation*}
-        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs{\lagp[1](x)} = 1 + \sqrt{2n + 1 - m},
+        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs[\big]{\lagp[1](x)} = 1 + \sqrt{2n + 1 - m},
     \end{equation*}
     which concludes the proof.
 \end{proof}
@@ -553,7 +556,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     \label{lem:max-norm-pq}
     For any~$p \ge 1$ and~$q \ge 1$, we have
     \begin{subequations}
-        \begin{numcases}{\max_{\norm{x}_q \le 1} \norm{x}_p =}
+        \begin{numcases}{\max_{\norm{x}_q \le 1} @ \norm{x}_p =}
             1,                      & \text{if~$p \ge q$,} \label{eq:max-norm-pq-1}\\
             n^{\frac{q - p}{pq}},   & \text{otherwise.} \label{eq:max-norm-pq-2}
         \end{numcases}
@@ -569,7 +572,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     For~$x \in \mathcal{B}_q(1)$, define~$y = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
-        \norm{x}_p  = (e^{\T} y)^{\frac{1}{p}} \le (\norm{e}_s \norm{y}_r)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+        \norm{x}_p  = \big(e^{\T} y \big)^{\frac{1}{p}} \le \big(\norm{e}_s \norm{y}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
     \end{equation*}
     Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}e$, which proves~\eqref{eq:max-norm-pq-2}.
 \end{proof}
