@@ -19,6 +19,7 @@
 \usepackage[dvipsnames]{xcolor}
 \definecolor{ORCIDGreen}{HTML}{A6CE39}
 \definecolor{LinkedInBlue}{HTML}{0077B5}
+\definecolor{TwitterBlue}{HTML}{1DA1F2}
 
 % Cross-referencing
 \usepackage{textgreek}
@@ -43,6 +44,7 @@
 \newcommand*{\linkedin}[1]{\textcolor{LinkedInBlue}{\faIcon{linkedin}} \href{https://www.linkedin.com/in/#1/}{#1}}
 \newcommand*{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
 \newcommand*{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
+\newcommand*{\twitter}[1]{\textcolor{TwitterBlue}{\faIcon{twitter}} \href{https://twitter.com/#1/}{#1}}
 \newcommand*{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
 
 % Glossaries
@@ -613,7 +615,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \frac{\norm{x}_2^2}{\Delta^2} - 1 =
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( \frac{\norm{x}_2^2}{\Delta^2} - 1 \bigg) =
         \begin{cases}
             0,                          & \quad \text{if~$p \le 2$,}\\
             n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
