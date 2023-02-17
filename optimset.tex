@@ -3,9 +3,10 @@
 \documentclass[draft]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper]{geometry}
+\usepackage[british]{babel}
 \usepackage{microtype}
 
-% Font and font encoding
+% Font and encoding
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 
@@ -17,6 +18,7 @@
 \usepackage{fontawesome5}
 \usepackage[dvipsnames]{xcolor}
 \definecolor{ORCIDGreen}{HTML}{A6CE39}
+\definecolor{LinkedInBlue}{HTML}{0077B5}
 
 % Cross-referencing
 \usepackage{textgreek}
@@ -38,8 +40,9 @@
     urlcolor=black,
 }
 \newcommand*{\email}[2][inbox]{\faIcon{#1} \href{mailto:#2}{#2}}
-\newcommand*{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
+\newcommand*{\linkedin}[1]{\textcolor{LinkedInBlue}{\faIcon{linkedin}} \href{https://www.linkedin.com/in/#1/}{#1}}
 \newcommand*{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
+\newcommand*{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
 \newcommand*{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
 
 % Glossaries
@@ -84,37 +87,56 @@
 }
 \pagestyle{plain}
 
-% Exceptions for American English hyphenation patterns
-\input{ushyphex}
-
 % Mathematical environments (theorems, proofs, ...)
 \usepackage{amsthm}
 \theoremstyle{definition}
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{condition}{Condition}[section]
 \newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{hypothesis}{Hypothesis}[section]
+\newtheorem{problem}{Problem}[section]
+\newtheorem{property}{Property}[section]
+\newtheorem{question}{Question}[section]
 \theoremstyle{plain}
+\newtheorem{assertion}{Assertion}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}{Conjecture}[section]
 \newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{criterion}{Criterion}[section]
+\theoremstyle{remark}
+\newtheorem*{acknowledgment}{Acknowledgment}
+\newtheorem*{annotation}{Annotation}
+\newtheorem*{case}{case}
+\newtheorem*{claim}{Claim}
+\newtheorem*{conclusion}{Conclusion}
+\newtheorem*{notation}{Notation}
+\newtheorem*{note}{Note}
+\newtheorem*{remark}{Remark}
+\newtheorem*{summary}{Summary}
 
 % `\keywords' and `\msc' commands
-% TODO: The two commands below can be abstracted into a single command
-\newcommand*{\keywords}[1]{
-    \begingroup
-    \def\and{ ; }
-    \hypersetup{pdfkeywords={#1}}
-    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
-    \paragraph*{Keywords} #1
-    \endgroup
+\newcommand{\createlist}[3]{
+    \expandafter\newcommand\expandafter{\csname #1\endcsname}[1]{
+        \begingroup
+        \def\and{ ; }
+        \hypersetup{#2={##1}}
+        \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
+        \paragraph*{#3} ##1
+        \endgroup
+    }
 }
-\newcommand*{\msc}[1]{
-    \begingroup
-    \def\and{ ; }
-    \hypersetup{pdfsubject={#1}}
-    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
-    \paragraph*{Mathematics Subject Classification (2010)} #1
-    \endgroup
-}
+\createlist{keywords}{pdfkeywords}{Keywords}
+\createlist{msc}{pdfsubject}{Mathematics Subject Classification (2010)}
+
+% Checks page or column breaks for issues with widow or orphan lines
+\usepackage[prevent-all]{widows-and-orphans}
+
+% Prevent footnotes from running to the next page
+\interfootnotelinepenalty=10000
 
 % Make @ behave as per catcode 13 (active). TeXbook p. 155.
 \mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
@@ -142,11 +164,12 @@
 \author{
     Tom M. Ragonneau\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com}
+        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com} \quad \linkedin{tom-m-ragonneau-11958a12b}
     }\orcid{0000-0003-2717-2876} \and
     Zaikun Zhang\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net}
+        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net}\\
+        Corresponding author
     }\orcid{0000-0001-8934-8190}
 }
 \date{\today}
@@ -171,10 +194,7 @@ It is challenging to develop \gls{dfo} methods, i.e., optimization methods that 
 However, such methods are required to solve the optimization problem
 \begin{equation}
     \label{eq:nlp}
-    \begin{aligned}
-        \min_{x \in \R^n}   & \quad \obj(x)\\
-        \text{s.t.}         & \quad x \in \fset,
-    \end{aligned}
+    \min_{x \in \fset \subseteq \R^n} \obj(x)\\
 \end{equation}
 when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ (and possibly the constraint functions underlying the feasible~$\fset \subseteq \R^n$) are unavailable or too expensive to evaluate.
 There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
@@ -185,7 +205,7 @@ Examples of famous direct-search methods include the Hooke-Jeeves method~\cite{H
 Meanwhile, model-based methods~\cite[Part~4]{Audet_Hare_2017} approximate the objective and constraint functions by simple models around the current iterate, and select the next iterate by examining these approximations.
 Since these approximations are local, the methods are embedded in globalization strategies to ensure convergence.
 The trust-region framework~\cite{Conn_Gould_Toint_2000} is a popular choice for this purpose, and is the one under consideration in this paper.
-Examples of well-known trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+Examples of trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 
 Model-based \gls{dfo} methods and in particular trust-region \gls{dfo} methods often employ polynomial interpolation schemes to approximate the objective and constraint functions.
 These methods maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
@@ -195,15 +215,14 @@ These methods maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ 
 \end{equation}
 We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
 Such models are often employed in practice, for example by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
-Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each others and
+Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each others,~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
-    \card\xpt[k] = \dim\qpoly = \frac{1}{2} (n + 1) (n + 2),
+    \card\xpt[k] = \dim\qpoly = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-then~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond}.
-This scheme, referred to as \emph{fully-determined interpolation}, is the one employed by \solvername{uobyqa}.
+This scheme, referred to as fully-determined interpolation, is the one employed by \solvername{uobyqa}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
 This is impracticable in practice unless~$n$ is small.
-Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called \emph{underdetermined interpolation}.
+Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called underdetermined interpolation.
 To uniquely define~$\objm[k]$ in this case, it is frequently set to a solution to a variational problem of the form
 \begin{equation}
     \label{eq:intp-var}
@@ -225,7 +244,7 @@ where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm, and \solvername{ne
 \end{equation}
 with~$\objm[-1] = 0$.
 The latter functional is inspired by least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
-The variational problem defined by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} is known as the \emph{derivative-free symmetric Broyden update} (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
+The variational problem defined by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} is known as the derivative-free symmetric Broyden update (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
 The two underdetermined interpolation schemes assume that
 \begin{equation*}
     n + 1 \le \card\xpt[k] \le \frac{1}{2} (n + 1) (n + 2).
@@ -237,7 +256,7 @@ Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqr
 Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab initio} at each iteration.
 Instead, they build an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to build~$\xpt[k + 1]$.
 For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
-This mechanism prevents the methods from performing unnecessary function evaluations, which are often considered as the principal measure of complexity of \gls{dfo} methods.
+This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered as the principal measure of complexity of \gls{dfo} methods.
 However, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for many iterations.
 In the unconstrained case, i.e., when~$\fset = \R^n$ in~\eqref{eq:nlp}, Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, including \solvername{uobyqa}, \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
 This paper shows that this interpolation set is optimal in a well-poisedness sense detailed in Section~\ref{sec:well-poisedness}.
@@ -265,7 +284,7 @@ In other words,~$\objm$ is also obtained by the derivative-free symmetric Broyde
 The following definition guarantees that the interpolation problem is always well-posed.
 
 \begin{definition}[Poisedness]
-    The set~$\xpt$ is \emph{poised} in the minimum Frobenius norm sense if the solution to problem~\eqref{eq:intp-var} exists and is unique for any real-valued function~$\obj$.
+    The set~$\xpt$ is \emph{poised} in the minimum-norm sense if the solution to problem~\eqref{eq:intp-var} exists and is unique for any real-valued function~$\obj$.
 \end{definition}
 
 As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
@@ -275,16 +294,16 @@ As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
 Moreover, observe that the KKT system for the variational problem~\eqref{eq:intp-var} is linear with respect to the coefficient of~$\objm$.
 Hence, the poisedness of~$\xpt$ is related to the nonsingularity of the coefficient matrix of this KKT system.
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this matrix is well-conditioned.
-To formalize this intuition, we first introduce the notion of minimum Frobenius norm Lagrange polynomials.
+To formalize this intuition, we first introduce the notion of minimum-norm Lagrange polynomials.
 
-\subsection{Minimum Frobenius norm Lagrange polynomials}
+\subsection{Minimum-norm Lagrange polynomials}
 
 We assume that the interpolation set~$\xpt$ is poised.
 To formally define a measure of well-poisedness of~$\xpt$, we first need to extend the classical definition of the Lagrange polynomials as follows.
 
-\begin{definition}[Minimum Frobenius norm Lagrange polynomials]
+\begin{definition}[Minimum-norm Lagrange polynomials~{\cite[Definition~5.1]{Conn_Scheinberg_Vicente_2009}}]
     \label{def:min-norm-lagp}
-    For each~$i \in \set{1, 2, \dots, m}$, the~$i$th \emph{minimum Frobenius norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen} is the unique quadratic polynomial solving
+    The~$i$th \emph{minimum-norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen}, with~$i \in \set{1, 2, \dots, m}$, is the unique quadratic polynomial that solves
     \begin{equation*}
         \begin{aligned}
             \min_{Q \in \qpoly} & \quad \norm[\big]{\nabla^2 Q}_{\mathsf{F}}\\
@@ -299,21 +318,21 @@ Moveover, it can be shown that~$\objm$ is given by
 \begin{equation*}
     \objm(x) = \sum_{i = 1}^m \obj(y^i) \lagp[i](x),
 \end{equation*}
-for any~$x \in \R^n$.
+for any~$x \in \R^n$~\cite[Lemma~5.2]{Conn_Scheinberg_Vicente_2009}.
 
-\subsection{Well-poisedness in the minimum Frobenius norm sense}
+\subsection{Well-poisedness in the minimum-norm sense}
 
-We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
+We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum-norm sense.
 
-\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Definition~5.6]{Conn_Scheinberg_Vicente_2009}}]
+\begin{definition}[$\Lambda$-poisedness in the minimum-norm sense~{\cite[Definition~5.6]{Conn_Scheinberg_Vicente_2009}}]
     \label{def:lambda-p}
-    The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum Frobenius norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
+    The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum-norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
     \begin{equation*}
         \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} @@ \abs[\big]{\lagp[i](x)}.
     \end{equation*}
 \end{definition}
 
-If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$ for all~$\Lambda \ge \Lambda_0$.
+If~$\xpt$ is~$\Lambda_0$-poised in the minimum-norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the minimum-norm sense in~$\mathcal{C}$ for all~$\Lambda \ge \Lambda_0$.
 Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
 Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
 
@@ -321,7 +340,7 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 \label{sec:main-result}
 
 Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods and in particular trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and in the unconstrained case, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
-This section first presents this interpolation set, and then shows that it is optimal in term of the least constant of~$\Lambda$-poisedness.
+This section first presents this interpolation set, and then shows that it is optimal in terms of the constant of~$\Lambda$-poisedness.
 
 \subsection{Description of the initial interpolation set}
 
@@ -343,9 +362,9 @@ The initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n
     \label{eq:set-def-m}
     \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
 \end{equation}
-The default value for~$m$ proposed by Powell is~$2n + 1$, i.e.,~$\xpt[0] = \xpt[0]_{2n + 1}$.
+The default value for~$m$ proposed by Powell is~$2n + 1$, i.e., he employs~$\xpt[0] = \xpt[0]_{2n + 1}$.
 This is a natural choice, as the corresponding interpolation set is geometrically appealing.
-It consist indeed of the origin and equidistant points to the origin on the positive and negative coordinate directions.
+It consists indeed of the origin and equidistant points to the origin on the positive and negative coordinate directions.
 In what follows, we provide a theory that justifies this natural choice.
 
 \subsection{Optimality of the interpolation set}
@@ -362,11 +381,11 @@ We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves th
 
 \subsubsection{Formulation of the Lagrange polynomials}
 
-According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense with
+According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum-norm sense with
 \begin{equation*}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation*}
-where~$\lagp[i]$ is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$ (see Definition~\ref{def:min-norm-lagp}) for~$i \in \set{1, 2, \dots, m}$.
+where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ (see Definition~\ref{def:min-norm-lagp}) for~$i \in \set{1, 2, \dots, m}$.
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
 These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
@@ -416,7 +435,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
 
 \subsubsection{Bounds for the~\texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
 
-The next lemma simplifies the value of~$\Lambda_p$ for further computations.
+The next lemma simplifies the expression of~$\Lambda_p$ for further computations.
 
 \begin{lemma}
     \label{lem:lambda-p}
@@ -623,9 +642,6 @@ One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case
 
 This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
 In particular, we showed that an interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of~$\Lambda$-poisedness in the initial trust region.
-
-% \paragraph*{Acknowledgements}
-% Prof.\ X. Chen.
 
 \paragraph*{Disclosure statement}
 The authors report there are no competing interests to declare.
