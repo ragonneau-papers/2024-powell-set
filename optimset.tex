@@ -171,9 +171,10 @@
 \maketitle
 
 \begin{abstract}
-    This paper shows that an interpolation set proposed by Powell and employed by numerous derivative-free trust-region optimization methods based on underdetermined quadratic interpolation is optimal in the sense that it minimizes the least constant of~$\Lambda$-poisedness in the initial trust region.
-    Indeed, no other interpolation set can achieve a lower constant of~$\Lambda$-poisedness in the initial trust region.
-    This analysis justifies a natural choice for the default number of interpolation points employed by many derivative-free optimization solvers, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
+    This paper shows the optimality of an interpolation set proposed by Powell for derivative-free trust-region methods.
+    This set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in the initial trust region.
+    It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
+    Our analysis justifies this choice.
 \end{abstract}
 
 \keywords{Derivative-free optimization \and Model-based methods \and Underdetermined quadratic interpolation \and Derivative-free symmetric Broyden update \and \texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
@@ -209,7 +210,7 @@ We assume in what follows that the models~$\objm[k]$ are quadratic, and we denot
 Such models are often employed in practice, for example, by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
 Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other,~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
-    \card\xpt[k] = \dim\qpoly = \frac{1}{2} (n + 1) (n + 2).
+    \card(\xpt[k]) = \dim(\qpoly) = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
 This scheme, referred to as fully-determined interpolation, is employed by \solvername{uobyqa}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
@@ -239,10 +240,10 @@ The latter functional is inspired by the least-change property of quasi-Newton u
 The variational problem defined by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} is known as the derivative-free symmetric Broyden update (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
 The two underdetermined interpolation schemes assume that
 \begin{equation*}
-    n + 1 \le \card\xpt[k] \le \frac{1}{2} (n + 1) (n + 2).
+    n + 1 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
 Otherwise,~$\objm[k]$ could not be uniquely defined (or even not defined at all).
-In practice, methods that employ these schemes often enforce~$\card\xpt[k] \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card\xpt[k] = n + 1$.
+In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card(\xpt[k]) = n + 1$.
 Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, model-based \gls{dfo} methods usually approximate them using similar techniques.
 
 Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab initio} at each iteration.
