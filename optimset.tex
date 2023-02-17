@@ -79,16 +79,6 @@
 \usepackage{titling}
 \setlength{\thanksmargin}{0pt}
 
-% Page headers and footers
-\usepackage{fancyhdr}
-\usepackage{lastpage}
-\fancypagestyle{plain}{
-    \fancyhf{}
-    \renewcommand{\headrulewidth}{0pt}
-    \fancyfoot[C]{Page \thepage\ of \pageref*{LastPage}}
-}
-\pagestyle{plain}
-
 % Mathematical environments (theorems, proofs, ...)
 \usepackage{amsthm}
 \theoremstyle{definition}
@@ -166,11 +156,11 @@
 \author{
     Tom M. Ragonneau\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com} \quad \linkedin{tom-m-ragonneau-11958a12b}
+        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com}
     }\orcid{0000-0003-2717-2876} \and
     Zaikun Zhang\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net} \quad \twitter{zaikunzhang}\\
+        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net}\\
         Corresponding author
     }\orcid{0000-0001-8934-8190}
 }
@@ -624,7 +614,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
 
-\subsubsection{Concluding remarks}
+\subsubsection{Remarks}
 
 Note that~$\Lambda_p \ge 1$ for any~$p \ge 1$.
 Proposition~\ref{prop:lambda-p-opt} shows that~$\Lambda_p = 1$ for all~$p \in [1, 2]$.
