@@ -291,15 +291,15 @@ This problem covers~\eqref{eq:intp-var}--\eqref{eq:mnh}, and also covers~\eqref{
 % The following definition guarantees that the interpolation problem is always well-posed and that~$\objm$ exists and is unique.
 
 \begin{definition}[Poisedness]
-    The set~$\xpt$ is \emph{poised} in the minimum Frobenius norm sense if the solution to problem~\eqref{eq:intp-cond-gen} exists and is unique for any real-valued function~$\obj$.
+    The set~$\xpt$ is \emph{poised} in the minimum Frobenius norm sense if problem~\eqref{eq:intp-cond-gen} has a unique solution for any real-valued function~$\obj$.
 \end{definition}
 
 % As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
 % \begin{equation*}
 %     n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
 % \end{equation*}
-Observe that the KKT system for the variational problem~\eqref{eq:intp-cond-gen} is a linear system,
-because this is an equality-constrained quadratic programming problem.
+Observe that the variational problem~\eqref{eq:intp-cond-gen} is an equality-constrained quadratic
+programming problem with respect to the coefficients of~$Q$. Thus its KKT system is a linear system,
 The exact formulation of this system can be found in~\cite{Powell_2004a,Powell_2004b}.
 The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}}and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
