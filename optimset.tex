@@ -570,35 +570,25 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
 \end{proposition}
 
 \begin{proof}
-    If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2(\Delta)$.
-    Therefore, Lemma~\ref{lem:lambda-p} provides the desired result~$\Lambda_2 = 1$.
-    We now focus on the case with~$n + 2 \le m < 2n + 1$.
-
+    %If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2(\Delta)$.
+    %Therefore, Lemma~\ref{lem:lambda-p} provides the desired result~$\Lambda_2 = 1$.
+    %We now focus on the case with~$n + 2 \le m < 2n + 1$.
     According to Theorem~\ref{thm:lambda-p},~$\Lambda_2$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
     Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_2$, using Lemma~\ref{lem:lambda-p}.
 
-    For any~$x \in \mathcal{B}_2(\Delta)$, we have
+    For any~$x \in \mathcal{B}_2(\Delta)$, according to Lemma~\ref{lem:lagp} and the Cauchy-Schwartz inequality, we have
     \begin{align}
-        \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
-                    &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n \!\! x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
-                    &\ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j). \label{eq:lambda-p-2-p}
+        -\lagp[1](x) &= -1 + \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
+                    &\le -1 + \frac{1}{\Delta^2}\norm{x}_2^2 + \frac{1}{\Delta} \sqrt{2n+1-m}\,\norm{x}_2 \nonumber \\
+                    & \le \sqrt{2n+1-m} \nonumber. % \label{eq:lambda-p-2-p}
     \end{align}
-    Let~$z^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
-    The first-order necessary condition for optimality ensures that there exists a Lagrange
-    multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 z_j^{\ast} + 2 \lambda^{\ast} z_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
-    Therefore, the last~$2n + 1 - m$ entries of~$z^{\ast}$ are equal, and hence,
-    \begin{align*}
-        \lagp[1](x) \ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
-                                                                                        & = -1 - \sqrt{2n + 1 - m}.
-    \end{align*}
-
-    Furthermore,
+    Similarly,
     \begin{equation*}
-        \lagp[1](x) \le 1 + \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \le 1 + \sqrt{2n + 1 - m} \sum_{j = m - n}^n \frac{x_j^2}{\Delta^2} \le 1 + \sqrt{2n + 1 - m}.
+        \lagp[1](x) \le 1 + \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \le 1 + \frac{1}{\Delta} \sqrt{2n + 1 - m} \,\norm{x}_2 \le 1 + \sqrt{2n + 1 - m}.
     \end{equation*}
-    Therefore,~$\abs[\big]{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m}$, and according to Lemma~\ref{lem:lambda-p} and Theorem~\ref{thm:lambda-p}, we have
+    Therefore, according to Lemma~\ref{lem:lambda-p}, we have
     \begin{equation*}
-        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs[\big]{\lagp[1](x)} = 1 + \sqrt{2n + 1 - m},
+        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs[\big]{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m},
     \end{equation*}
     which concludes the proof.
 \end{proof}
