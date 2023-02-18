@@ -1,6 +1,6 @@
 %% optimset.tex
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
-\documentclass{article}
+\documentclass[draft]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper]{geometry}
 \usepackage[british]{babel}
@@ -61,17 +61,18 @@
 % Line numbering in draft mode
 \usepackage{lineno}
 \usepackage{ifdraft}
-\renewcommand{\linenumberfont}{\normalfont\scriptsize\sffamily\color{gray}}
+\newcommand{\marginfont}{\scriptsize\sffamily\color{gray}}
+\renewcommand{\linenumberfont}{\normalfont\marginfont}
 \ifdraft{\linenumbers}{}
 
 % Show labels in draft mode
 \ifdraft{}{\PassOptionsToPackage{final}{showlabels}}
 \usepackage{showlabels}
-\renewcommand{\showlabelfont}{\linespread{1}\scriptsize\sffamily\color{gray}}
+\renewcommand{\showlabelfont}{\linespread{1}\marginfont}
 
 % To-do notes in draft mode
 \usepackage[
-    marginface=\linespread{1}\scriptsize\sffamily\color{gray},
+    marginface=\linespread{1}\marginfont,
     author={},
 ]{fixme}
 
@@ -183,8 +184,7 @@
 
 \section{Introduction}
 
-It is challenging to develop \gls{dfo} methods, i.e., optimization methods that do not rely on derivatives of the problems they solve.
-However, such methods are required to solve the optimization problem
+\Gls{dfo} methods, i.e., optimization methods that do not rely on derivative information, are required to solve the optimization problem
 \begin{equation}
     \label{eq:nlp}
     \min_{x \in \fset \subseteq \R^n} \obj(x)\\
@@ -251,7 +251,7 @@ Instead, they build an initial interpolation set~$\xpt[0]$ and then  update~$\xp
 For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
 This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered the principal measure of complexity of \gls{dfo} methods.
 However, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for many iterations.
-In the unconstrained case, i.e., when~$\fset = \R^n$ in~\eqref{eq:nlp}, Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, including \solvername{uobyqa}, \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
+Powell proposed an interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, including \solvername{uobyqa}, \solvername{newuoa}, and if there are no constraints, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
 This paper shows that this interpolation set is optimal in a well-poisedness sense, detailed in Section~\ref{sec:well-poisedness}.
 
 This paper is organized as follows.
@@ -337,7 +337,7 @@ This section first presents this interpolation set and then shows that it is opt
 
 \subsection{Description of the initial interpolation set}
 
-The initial interpolation set for unconstrained optimization proposed by Powell is defined as follows.
+The interpolation set proposed by Powell is defined as follows.
 Without loss of generality, we assume that the calculations are shifted to the origin.
 Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \in \R^n$ be
 \begin{equation}
