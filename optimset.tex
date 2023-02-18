@@ -369,7 +369,7 @@ For~$i \in \set{1, 2, \dots, 2n + 1}$, define
 where~$e_i \in \R^n$ denotes the $i$th canonical coordinate vector in~$\R^n$.
 Let~$m$ be the number of interpolation points. We focus on the case that~$n+2 \le m \le 2n+1$
 following Powell's suggestion.\footnote{
-Powell's \solvername{bobyqa} code contains a comment that ``choices that exceed $2n+1$ are not recommended''.
+Powell's \solvername{bobyqa} code contains a comment that `choices that exceed $2n+1$ are not recommended'.
 }
 The initial interpolation set is then chosen to be
 \begin{equation}
@@ -400,9 +400,10 @@ or linear constraints are present, and $p=1$ or~$p=\infty$ will become more rele
 %We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
 
 According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B} _p(\Delta)$ in the minimum-norm sense~with
-\begin{equation*}
+\begin{equation}
+    \label{eq:Lambdap}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
-\end{equation*}
+\end{equation}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
 We refer to~$\Lambda_p$ as the constant of~$\Lambda$-poisedness of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
 
@@ -461,7 +462,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
 
 \subsubsection{Bounds for the~\texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
 
-The next lemma simplifies the expression of~$\Lambda_p$ for further computations.
+The next lemma simplifies the expression of~$\Lambda_p$ defined in~\eqref{eq:Lambdap} for further computations.
 
 \begin{lemma}
     \label{lem:lambda-p}
@@ -473,15 +474,19 @@ The next lemma simplifies the expression of~$\Lambda_p$ for further computations
 \end{lemma}
 
 \begin{proof}
-    For each~$i \in \set{2, 3, \dots, n + 1}$, according to Lemma~\ref{lem:lagp},~$\lagp[i](x)$ only depends on~$x_{i - 1}$ for all~$x \in \R^n$, and hence
+    According to Lemma~\ref{lem:lagp}, for each~$i \in \set{2, 3, \dots, n + 1}$,~$\lagp[i](x)$ only depends on~$x_{i - 1}$ for all~$x \in \R^n$, and hence
     \begin{equation*}
         \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs[\big]{\lagp[i](t e_{i - 1})} = 1.
     \end{equation*}
-    For each~$i \in \set{n + 2, n + 3, \dots, m}$, since~$\lagp[i](x)$ only depends on~$x_{i - n - 1}$ for all~$x \in \R^n$, we have
+    Similarly, for each~$i \in \set{n + 2, n + 3, \dots, m}$, since~$\lagp[i](x)$ only depends on~$x_{i - n - 1}$ for all~$x \in \R^n$, we have
     \begin{equation*}
         \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)} = \max_{t \in [-\Delta, \Delta]} \abs[\big]{\lagp[i](t e_{i - n - 1})} = 1.
     \end{equation*}
-    Noting that~$\lagp[1](y^1) = 1$ and~$y^1 \in \mathcal{B}_p(\Delta)$, this shows that~\eqref{eq:lambda-p} holds.
+    Meanwhile, since~$\lagp[1](y^1) = 1$ and~$y^1 \in \mathcal{B}_p(\Delta)$, we have
+    \begin{equation*}
+        \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[1](x)} \ge \lagp[1](y^1) = 1.
+    \end{equation*}
+    Hence~\eqref{eq:lambda-p} holds according to the definition of~$\Lambda_p$ in~\eqref{eq:Lambdap}.
 \end{proof}
 
 We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
@@ -576,12 +581,12 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
                     &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n \!\! x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
                     &\ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j). \label{eq:lambda-p-2-p}
     \end{align}
-    Let~$y^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
+    Let~$z^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
     The first-order necessary condition for optimality ensures that there exists a Lagrange
     multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 z_j^{\ast} + 2 \lambda^{\ast} z_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
-    Therefore, the last~$2n + 1 - m$ components of~$y^{\ast}$ are equal, and hence,
+    Therefore, the last~$2n + 1 - m$ components of~$z^{\ast}$ are equal, and hence,
     \begin{align*}
-        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
+        \lagp[1](x) \ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
                                                                                         & = -1 - \sqrt{2n + 1 - m}.
     \end{align*}
 
@@ -615,10 +620,10 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
 
     We now consider the case where~$p < q$.
     Let~$\ones \in \R^n$ denote the vector with all entries being one,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
-    For~$x \in \mathcal{B}_q(1)$, define~$y = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
+    For~$x \in \mathcal{B}_q(1)$, define~$z = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
-        \norm{x}_p  = \big(\ones^{\T} y \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{y}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+        \norm{x}_p  = \big(\ones^{\T} z \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{z}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
     \end{equation*}
     Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq-2}.
 \end{proof}
