@@ -584,7 +584,7 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
     \end{align}
     Similarly,
     \begin{equation*}
-        \lagp[1](x) \le 1 + \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \le 1 + \frac{1}{\Delta} \sqrt{2n + 1 - m} \,\norm{x}_2 \le 1 + \sqrt{2n + 1 - m}.
+        \lagp[1](x) \le 1 + \frac{1}{\Delta}\sum_{j = m - n}^n \abs{x_j} \le 1 + \frac{1}{\Delta} \sqrt{2n + 1 - m} \,\norm{x}_2 \le 1 + \sqrt{2n + 1 - m}.
     \end{equation*}
     Therefore, according to Lemma~\ref{lem:lambda-p}, we have
     \begin{equation*}
@@ -617,7 +617,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     \begin{equation*}
         \norm{x}_p  = \big(\ones^{\T} z \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{z}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
     \end{equation*}
-    Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq-2}.
+    Moreover, this bound is attained at~$x^\ast = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq-2}.
 \end{proof}
 
 \begin{proposition}
