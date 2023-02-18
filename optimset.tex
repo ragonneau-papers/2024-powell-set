@@ -175,7 +175,7 @@
 
 \begin{abstract}
     This paper shows the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
-    This set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in a ball centered at the starting point.
+    This set is optimal in the sense that it minimizes the constant of poisedness in a ball centered at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis justifies this choice.
 \end{abstract}
@@ -197,7 +197,7 @@ Examples of such problems arise from many areas, such as reinforcement learning~
 The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-We show that this interpolation set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in a ball centered at the starting point.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of poisedness in a ball centered at the starting point.
 
 % Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 % Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
@@ -267,7 +267,7 @@ This paper contributes such an analysis, showing that no other interpolation set
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the notion of $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
 This notion is then employed in Section~\ref{sec:main-result} to study initial interpolation sets proposed by Powell.
-Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of~$\Lambda$-poisedness of the interpolation set under study.
+Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of poisedness of the interpolation set under study.
 
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
@@ -299,7 +299,7 @@ This problem covers~\eqref{eq:intp-var}--\eqref{eq:mnh}, and also covers~\eqref{
 %     n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
 % \end{equation*}
 Observe that the variational problem~\eqref{eq:intp-cond-gen} is an equality-constrained quadratic
-programming problem with respect to the coefficients of~$Q$. Thus its KKT system is a linear system,
+programming problem with respect to the coefficients of~$Q$. Thus its KKT system is a linear system.
 The exact formulation of this system can be found in~\cite{Powell_2004a,Powell_2004b}.
 The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}}and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
@@ -350,7 +350,7 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 \label{sec:main-result}
 
 % Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and also \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} if there are no constraints.
-This section first presents the initial interpolation set devised by Powell for his methods and then shows that it is optimal in terms of the constant of~$\Lambda$-poisedness.
+This section first presents the initial interpolation set devised by Powell for his methods and then shows that it is optimal in terms of the constant of poisedness.
 
 \subsection{Description of the initial interpolation set}
 \label{subsec:powell-set}
@@ -399,7 +399,8 @@ Powell's methods define the trust region by the Euclidean norm, so the case with
 interesting. However, it can be beneficial to define the trust region by polyhedral norms when bound
 or linear constraints are present, and $p=1$ or~$p=\infty$ will become more relevant.
 %In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
-%We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
+%We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible
+%constant of poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
 
 According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense~with
 \begin{equation}
@@ -407,7 +408,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
-We refer to~$\Lambda_p$ as the constant of~$\Lambda$-poisedness of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+We refer to~$\Lambda_p$ as the constant of poisedness of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
 
 \subsubsection{Formulation of the Lagrange polynomials}
 
@@ -649,9 +650,13 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
 
+Now we can show that~$\xpt[0]_{2n+1}$ attains the minimal constant of poisedness in~$\mathcal{B}_p(\Delta)$ among all interpolation sets that contain the origin, provided that~$1 \le p\le 2$.
+In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$.
+Indeed, the upper bound for~$p$ can be slightly larger than~$2$, as is detailed in Theorem~\ref{th:optimset}.
+Recall that~$p=2$ is of interest concerning Powell's methods.
 \begin{theorem}
     \label{th:optimset}
-    Assume that~$m=2n+1$, and either~$n\le 2$ or
+    Assume that~$m=2n+1$, and that either~$n\le 2$ or
     \[
         1 \le p \le \frac{2\log n}{\log (n/2)}.
     \]
@@ -664,15 +669,13 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     have~$\Lambda \ge 1$, because the Lagrange polynomial corresponding to~$0$ takes the value~$1$ at~$0$.
     Thus the theorem holds.
 \end{proof}
+It is worth noting that Propositions~\ref{prop:lambda-p-1} and~\ref{prop:lambda-p-2} also imply that~$\xpt[0]_{2n+1}$ renders~$\Lambda_p = 1$ for~$p \in \set{1, 2}$.
+This equality turns out to be true for a larger range of~$p$.
 
 
 
 \subsubsection{Remarks}
 
-Note that~$\Lambda_p \ge 1$ for any~$p \ge 1$.
-Proposition~\ref{prop:lambda-p-opt} shows that~$\Lambda_p = 1$ for all~$p \in [1, 2]$.
-In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$ because~$\Lambda_p$ attains its lower bound.
-The fact that~$\Lambda_p = 1$ for~$p \in \set{1, 2}$ is, in fact, shown also by Propositions~\ref{prop:lambda-p-1} and~\ref{prop:lambda-p-2}.
 
 In addition,~$m = 2n + 1$ is optimal for~$\xpt[0]_m$ in the sense that~$\Lambda_p$ attains the lower bound~$1$ in such a case when~$p \in [1, 2]$.
 We conjecture that~$\Lambda_p$ is minimized at the value~$m = 2n + 1$ for any~$p \ge 1$, but we do not have any proof of such a statement yet.
@@ -686,7 +689,7 @@ One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case
 \section{Conclusion}
 
 This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
-In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of~$\Lambda$-poisedness in a ball centered at the starting point.
+In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of poisedness in a ball centered at the starting point.
 
 \paragraph*{Disclosure statement}
 The authors report that there are no competing interests to declare.
