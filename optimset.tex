@@ -506,12 +506,15 @@ We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
     \begin{equation*}
         \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
-    We now prove the upper bound.
+    We now establish the upper bound.
     For any~$p \ge 1$, we have~$\mathcal{B}_p(\Delta) \subseteq \mathcal{B}_{\infty}(\Delta)$, so that~$\Lambda_p \le \Lambda_{\infty}$.
     Therefore, we only need to show that~$\Lambda_{\infty} \le n$.
-    Considering both~$\lagp[1]$ and~$-\lagp[1]$, we obtain
+    This is true because
     \begin{equation*}
-        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)} = \max \set{2n + 2 - m, n - 1} \le n.
+        \Lambda_{\infty} =
+        \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)}
+        = \max\bigg\{\max_{\norm{x}_{\infty} \le \Delta} \lagp[1](x), \,\max_{\norm{x}_{\infty} \le \Delta} -\lagp[1](x) \bigg\}
+        = \max \set{2n + 2 - m, n - 1} \le n.
     \end{equation*}
 \end{proof}
 
@@ -527,16 +530,16 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
         \Lambda_1 =
         \begin{cases}
             2,  & \text{if~$n + 2 \le m \le 2n$,}\\
-            1,  & \text{otherwise.}
+            1,  & \text{if $m = 2n+1$.}
         \end{cases}
     \end{equation}
 \end{proposition}
 
 \begin{proof}
     According to Theorem~\ref{thm:lambda-p},~$\Lambda_1$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-1}.
-    Therefore, we only need to prove that this right-hand side is also a lower bound for~$\Lambda_1$, using Lemma~\ref{lem:lambda-p}.
+    Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_1$, using Lemma~\ref{lem:lambda-p}.
 
-    For any~$x \in \mathcal{B}_1(\Delta)$, we have
+    For any~$x \in \mathcal{B}_1(\Delta)$, according to Lemma~\ref{lem:lagp}, we have
     \begin{equation*}
         \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! \abs{x_j}.
     \end{equation*}
@@ -546,7 +549,7 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
         \lagp[1](x) \le
         \begin{cases}
             2,  & \quad \text{if~$n + 2 \le m \le 2n$,}\\
-            1,  & \quad \text{otherwise.}
+            1,  & \quad \text{if~$m = 2n+1$.}
         \end{cases}
     \end{equation}
     On the other hand,
