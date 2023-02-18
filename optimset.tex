@@ -272,34 +272,36 @@ Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result o
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
 
-In this section, we denote by
+In this section, we consider an interpolation set
 \begin{equation*}
-    \xpt = \set{y^1, y^2, \dots, y^m} \subseteq \R^n,
+    \xpt = \set{y^1, y^2, \dots, y^m} \subseteq \R^n
 \end{equation*}
-a set, and we interpolate the function~$\obj$ by a quadratic polynomial~$\objm$ on~$\xpt$, i.e.,
+and the interpolation problem
 \begin{equation}
     \label{eq:intp-cond-gen}
-    \objm(y^i) = \obj(y^i), \quad i \in \set{1, 2, \dots, m}.
+    \begin{aligned}
+        \min_{Q \in \qpoly} & \quad \norm{\nabla^2 Q}_\textsf{F}\\
+        \text{s.t.}         & \quad Q(y) = \obj(y), \quad y \in \xpt.
+    \end{aligned}
 \end{equation}
-More precisely, we let~$\objm$ solve~\eqref{eq:intp-var}--\eqref{eq:mnh}, with~$\xpt[k] = \xpt$.
-If~\eqref{eq:df-psb} is of interest, the interpolation problem can be reformulated into~\eqref{eq:intp-var}--\eqref{eq:mnh} by a simple change of variable.
+This problem covers~\eqref{eq:intp-var}--\eqref{eq:mnh}, and also covers~\eqref{eq:intp-var} with~\eqref{eq:df-psb} by a simple change of variable.
 % Note that if~$\xpt$ is seen as an initial interpolation set~$\xpt[0]$, then~$\objm$ denotes the initial model~$\objm[0]$, and the functional~$\mathcal{F}^k = \mathcal{F}^0$ is equivalent to the one defined by~\eqref{eq:df-psb}.
 % In other words,~$\objm$ is also obtained by the derivative-free symmetric Broyden update.
 
 % The following definition guarantees that the interpolation problem is always well-posed and that~$\objm$ exists and is unique.
 
 \begin{definition}[Poisedness]
-    The set~$\xpt$ is \emph{poised} in the minimum-norm sense if the solution to problem~\eqref{eq:intp-var} exists and is unique for any real-valued function~$\obj$.
+    The set~$\xpt$ is \emph{poised} in the minimum Frobenius norm sense if the solution to problem~\eqref{eq:intp-cond-gen} exists and is unique for any real-valued function~$\obj$.
 \end{definition}
 
 % As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
 % \begin{equation*}
 %     n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
 % \end{equation*}
-Observe that the KKT system for the variational problem~\eqref{eq:intp-var}--\eqref{eq:mnh} is linear with respect to the coefficients of~$\objm$.
-This is because it is an equality-constrained quadratic programming problem.
-The exact formulation of this system can be found in~\cite{Powell_2004b,Powell_2006}.
-The set~$\xpt$ is poised if this KKT system is uniquely solvable (see~\cite[\S~2]{Powell_2004a} and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
+Observe that the KKT system for the variational problem~\eqref{eq:intp-cond-gen} is a linear system,
+because this is an equality-constrained quadratic programming problem.
+The exact formulation of this system can be found in~\cite{Powell_2004a,Powell_2004b}.
+The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}}and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
 This intuition will be formalized in the sequel.
 % To formalize this intuition, we first introduce the notion of minimum-norm Lagrange polynomials.
@@ -322,25 +324,25 @@ To formally define a measure of well-poisedness of~$\xpt$, we first need to exte
 \end{definition}
 
 Remark that if~$m = (n + 1) (n + 2) / 2$, then Definition~\ref{def:min-norm-lagp} reduces to the classical definition of the Lagrange polynomials.
-Moveover, it can be shown that~$\objm$ is given by
+Morveover, it can be shown that the solution~$\objm$ to problem~\eqref{eq:intp-cond-gen} is given by
 \begin{equation*}
-    \objm(x) = \sum_{i = 1}^m \obj(y^i) \lagp[i](x),
+    \objm(x) = \sum_{i = 1}^m \obj(y^i) \lagp[i](x)
 \end{equation*}
 for any~$x \in \R^n$~\cite[Lemma~5.2]{Conn_Scheinberg_Vicente_2009}.
 
-\subsection{Well-poisedness in the minimum-norm sense}
+\subsection{Well-poisedness in the minimum Frobenius norm sense}
 
-We are now equiped to define the notion of~$\Lambda$-poisedness in the minimum-norm sense.
+We are now equipped to define the notion of~$\Lambda$-poisedness in the minimum Frobenius norm sense.
 
-\begin{definition}[$\Lambda$-poisedness in the minimum-norm sense~{\cite[Definition~5.6]{Conn_Scheinberg_Vicente_2009}}]
+\begin{definition}[$\Lambda$-poisedness in the minimum Frobenius norm sense~{\cite[Definition~5.6]{Conn_Scheinberg_Vicente_2009}}]
     \label{def:lambda-p}
-    The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum-norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
+    The poised interpolation set~$\xpt$ is said to be~\emph{$\Lambda$-poised in the minimum Frobenius norm sense} in a compact set~$\mathcal{C} \subseteq \R^n$, for some~$\Lambda > 0$, if
     \begin{equation*}
         \Lambda \ge \max_{1 \le i \le m} \max_{x \in \mathcal{C}} @@ \abs[\big]{\lagp[i](x)}.
     \end{equation*}
 \end{definition}
 
-If~$\xpt$ is~$\Lambda_0$-poised in the minimum-norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the minimum-norm sense in~$\mathcal{C}$ for all~$\Lambda \ge \Lambda_0$.
+If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in same sense for all~$\Lambda \ge \Lambda_0$.
 Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
 Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
 
@@ -399,7 +401,7 @@ or linear constraints are present, and $p=1$ or~$p=\infty$ will become more rele
 %In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
 %We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
 
-According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B} _p(\Delta)$ in the minimum-norm sense~with
+According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense~with
 \begin{equation}
     \label{eq:Lambdap}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
@@ -647,12 +649,30 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
 
+\begin{theorem}
+    \label{th:optimset}
+    Assume that~$m=2n+1$, and either~$n\le 2$ or
+    \[
+        1 \le p \le \frac{2\log n}{\log (n/2)}.
+    \]
+    If an interpolation set containing~$0$ is~$\Lambda$-poised in~$\mathcal{B}_p(\Delta)$, then~$\Lambda \ge \Lambda_p$.
+\end{theorem}
+
+\begin{proof}
+    Under the assumptions, we have~$\Lambda_p = 1$ according to Proposition~\ref{prop:lambda-p-opt}.
+    If an interpolation set containing~$0$ is~$\Lambda$-poised in~$\mathcal{B}_p(\Delta)$, then we
+    have~$\Lambda \ge 1$, because the Lagrange polynomial corresponding to~$0$ takes the value~$1$ at~$0$.
+    Thus the theorem holds.
+\end{proof}
+
+
+
 \subsubsection{Remarks}
 
 Note that~$\Lambda_p \ge 1$ for any~$p \ge 1$.
 Proposition~\ref{prop:lambda-p-opt} shows that~$\Lambda_p = 1$ for all~$p \in [1, 2]$.
 In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$ because~$\Lambda_p$ attains its lower bound.
-The fact that~$\Lambda_p = 1$ for all~$p \in \set{1, 2}$ is, in fact, shown also by Propositions~\ref{prop:lambda-p-1} and~\ref{prop:lambda-p-2}.
+The fact that~$\Lambda_p = 1$ for~$p \in \set{1, 2}$ is, in fact, shown also by Propositions~\ref{prop:lambda-p-1} and~\ref{prop:lambda-p-2}.
 
 In addition,~$m = 2n + 1$ is optimal for~$\xpt[0]_m$ in the sense that~$\Lambda_p$ attains the lower bound~$1$ in such a case when~$p \in [1, 2]$.
 We conjecture that~$\Lambda_p$ is minimized at the value~$m = 2n + 1$ for any~$p \ge 1$, but we do not have any proof of such a statement yet.
