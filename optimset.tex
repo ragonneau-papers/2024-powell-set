@@ -179,13 +179,13 @@
 \maketitle
 
 \begin{abstract}
-    This paper shows the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
-    This set is optimal in the sense that it minimizes the constant of poisedness in a ball centered at the starting point.
+    This paper demonstrates the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
+    This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centered at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
-    Our analysis justifies this choice.
+    Our analysis provides a theoretical justification for this choice.
 \end{abstract}
 
-\keywords{Derivative-free optimization \and Model-based methods \and Underdetermined quadratic interpolation \and Derivative-free symmetric Broyden update \and \texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
+\keywords{Derivative-free optimization \and Model-based methods \and Underdetermined quadratic interpolation \and Derivative-free symmetric Broyden update \and Well-poisedness}
 
 \msc{90C56 \and 41A10 \and 65K05 \and 90C30}
 
@@ -202,7 +202,7 @@ Examples of such problems arise from many areas, such as reinforcement learning~
 The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-We show that this interpolation set is optimal in the sense that it minimizes the constant of poisedness in a ball centered at the starting point.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centered at the starting point, which is detailed in Theorem~\ref{th:optimset}.
 
 % Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 % Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
@@ -213,7 +213,7 @@ We show that this interpolation set is optimal in the sense that it minimizes th
 % Examples of derivative-free trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009,Ragonneau_Zhang_2021}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 %
 % Model-based \gls{dfo} methods, and particularly derivative-free trust-region methods, often employ polynomial interpolation schemes to approximate the objective and constraint functions.
-The methods we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a quadratic model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
+The \gls{dfo} methods we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a quadratic model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
 \begin{equation}
     \label{eq:intp-cond}
     \objm[k](y) = \obj(y), \quad y \in \xpt[k].
@@ -267,12 +267,11 @@ In this case, it is clear that the initial interpolation set~$\xpt[0]$ must be c
 Powell devised an initial interpolation set~$\xpt[0]$ for his methods, described in Subsection~\ref{subsec:powell-set}.
 Although the design of this set is natural, no theoretical analysis has been provided to justify its choice.
 This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense.
-% This paper shows that this interpolation set is optimal in a well-poisedness sense, detailed in Section~\ref{sec:well-poisedness}.
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the notion of $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
 This notion is then employed in Section~\ref{sec:main-result} to study initial interpolation sets proposed by Powell.
-Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of poisedness of the interpolation set under study.
+Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of well-poisedness of the interpolation set under study.
 
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
@@ -356,8 +355,8 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 
 % Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and also \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} if there are no constraints.
 This section first presents the initial interpolation set devised by Powell for his trust-region \gls{dfo} methods, and then analyzes its well-poisedness.
-We develop bounds on its constant of poisedness, and evaluate this constant in some special cases.
-Finally, we point out that the set is is optimal in terms of the poisedness in a ball centered at the starting point.
+We establish bounds on its constant of well-poisedness, and evaluate this constant in some special cases.
+Finally, we point out that the default setting in Powell's methods renders an optimal interpolation set in terms of the well-poisedness in a ball centered at the starting point.
 
 \subsection{Description of the initial interpolation set}
 \label{subsec:powell-set}
@@ -405,9 +404,6 @@ Note that we allow~$p = \infty$, and that~$\mathcal{B}_p(\Delta)$ is also the sm
 Powell's methods define the trust region by the Euclidean norm, so the case with~$p=2$ is the most
 interesting. However, it can be beneficial to define the trust region by polyhedral norms when bound
 or linear constraints are present, and $p=1$ or~$p=\infty$ will become more relevant.
-%In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
-%We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible
-%constant of poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
 
 According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum Frobenius norm sense~with
 \begin{equation}
@@ -415,7 +411,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
-We refer to~$\Lambda_p$ as the constant of poisedness of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+We refer to~$\Lambda_p$ as the \emph{constant of well-poisedness} of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
 
 \subsubsection{Formulation of the Lagrange polynomials}
 
@@ -657,7 +653,7 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
 
-Now we can show that~$\xpt[0]_{2n+1}$ attains the minimal constant of poisedness in~$\mathcal{B}_p(\Delta)$ among all interpolation sets that contain the origin, provided that~$1 \le p\le 2$.
+Now we can show that~$\xpt[0]_{2n+1}$ attains the minimal constant of well-poisedness in~$\mathcal{B}_p(\Delta)$ among all interpolation sets that contain the origin, provided that~$1 \le p\le 2$.
 In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$.
 Indeed, the upper bound for~$p$ can be slightly larger than~$2$, as is detailed in Theorem~\ref{th:optimset}.
 Recall that~$p=2$ is of interest concerning Powell's methods.
@@ -701,8 +697,15 @@ based on sufficient decrease. While proving nothing surprising, this kind of inv
 
 \section{Conclusion}
 
-This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
-In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of poisedness in a ball centered at the starting point.
+%This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
+%In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of well-poisedness in a ball centered at the starting point.
+We have analyzed the well-poisedness of an interpolation set employed in many trust-region \gls{dfo} methods, particularly those by Powell.
+This set is proved to be optimal under the default setting recommended by Powell, because it minimizes the constant of well-poisedness in a ball centered at the starting point.
+Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
+
+\paragraph*{Acknowledgment}
+This paper corresponds to Section~2.5 of the first author's Ph.D.~thesis~\cite{Ragonneau_2022}, co-supervised by the second author and Professor Xiaojun Chen from The Hong Kong Polytechnic University.
+Both authors are grateful to Professor Chen for her support, encouragement, and guidance during the thesis.
 
 \paragraph*{Disclosure statement}
 The authors report that there are no competing interests to declare.
