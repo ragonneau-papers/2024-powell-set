@@ -47,11 +47,6 @@
 \newcommand*{\twitter}[1]{\textcolor{TwitterBlue}{\faIcon{twitter}} \href{https://twitter.com/#1/}{@#1}}
 \newcommand*{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
 
-% Glossaries
-\usepackage[acronym]{glossaries}
-\glsdisablehyper
-\newacronym{dfo}{DFO}{derivative-free optimization}
-
 % Mathematics
 \usepackage{mathtools}
 \usepackage{cases}
@@ -134,6 +129,11 @@
 % Make @ behave as per catcode 13 (active). TeXbook p. 155.
 \mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
 
+% Glossaries
+\usepackage[acronym]{glossaries}
+\glsdisablehyper
+\newacronym{dfo}{DFO}{derivative-free optimization}
+
 % Control sequences, macros, and definitions
 \usepackage{etoolbox}
 \usepackage{xspace}
@@ -172,7 +172,7 @@
 \maketitle
 
 \begin{abstract}
-    This paper shows the optimality of an interpolation set proposed by Powell for derivative-free trust-region methods.
+    This paper shows the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
     This set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in the initial trust region.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis justifies this choice.
@@ -184,35 +184,41 @@
 
 \section{Introduction}
 
-\Gls{dfo} methods, i.e., optimization methods that do not rely on derivative information, are required to solve the optimization problem
+\Gls{dfo} methods solve the optimization problem
 \begin{equation}
     \label{eq:nlp}
     \min_{x \in \fset \subseteq \R^n} \obj(x)\\
 \end{equation}
-when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ (and possibly the constraint functions underlying the feasible~$\fset \subseteq \R^n$) are unavailable or too expensive to evaluate.
-There are many examples of applications of this kind, such as machine learning~\cite{Ghanbari_Scheinberg_2017}, reinforcement learning~\cite{Qian_Yu_2021}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
+based on function evaluations, without relying on derivative information.
+They are needed when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ are unavailable or too expensive to evaluate, which may also be the case for the constraint functions underlying the feasible set~$\fset \subseteq \R^n$.
+Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
+The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
-Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
-Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
-Examples of famous direct-search methods include the Hooke-Jeeves method~\cite{Hooke_Jeeves_1961}, the Nelder-Mead method~\cite{Nelder_Mead_1965}, the \solvername{gps} method~\cite{Booker_Etal_1999}, the \solvername{mads} method~\cite{Audet_Dennis_2006}, and \solvername{bfo}~\cite{Porcelli_Toint_2017,Porcelli_Toint_2022}.
-Meanwhile, model-based methods~\cite[Part~4]{Audet_Hare_2017} approximate the objective and constraint functions using simple models around the current iterate and select the next one by examining these approximations.
-Since these approximations are local, the methods are embedded in globalization strategies to ensure convergence.
-The trust-region framework~\cite{Conn_Gould_Toint_2000} is a popular choice for this purpose and is the one under consideration in this paper.
-Examples of trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's \gls{dfo} methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in the initial trust region.
 
-Model-based \gls{dfo} methods, and particularly trust-region \gls{dfo} methods, often employ polynomial interpolation schemes to approximate the objective and constraint functions.
-These methods maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
+% Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
+% Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
+% Examples of direct-search methods include the Hooke-Jeeves method~\cite{Hooke_Jeeves_1961}, the Nelder-Mead method~\cite{Nelder_Mead_1965}, the \solvername{gps} method~\cite{Booker_Etal_1999}, the \solvername{mads} method~\cite{Audet_Dennis_2006}, and \solvername{bfo}~\cite{Porcelli_Toint_2017,Porcelli_Toint_2022}.
+% Meanwhile, model-based methods~\cite[Part~4]{Audet_Hare_2017} approximate the objective and constraint functions using simple models around the current iterate and select the next one based on these approximations.
+% Since these approximations are local, globalization strategies are needed to ensure global convergence.
+% The trust-region framework~\cite{Conn_Gould_Toint_2000} is a popular choice for this purpose and is the one under consideration in this paper, but the line-search framework~\cite[Chapter~3]{Nocedal_Wright_2006} is also applicable~\cite{Berahas_Byrd_Nocedal_2019}.
+% Examples of derivative-free trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009,Ragonneau_Zhang_2021}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+%
+% Model-based \gls{dfo} methods, and particularly derivative-free trust-region methods, often employ polynomial interpolation schemes to approximate the objective and constraint functions.
+The methods we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a quadratic model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
 \begin{equation}
     \label{eq:intp-cond}
     \objm[k](y) = \obj(y), \quad y \in \xpt[k].
 \end{equation}
-We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
-Such models are often employed in practice, for example, by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
+% We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
+In what follows, we denote by~$\qpoly$ the space of polynomials of degree at most two.
+% Such models are often employed in practice, for example, by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
 Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other,~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
     \card(\xpt[k]) = \dim(\qpoly) = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-This scheme, referred to as fully-determined interpolation, is employed by \solvername{uobyqa}.
+This scheme, referred to as fully-determined interpolation, is employed by \solvername{uobyqa}~\cite{Powell_2002}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
 This is impracticable in practice unless~$n$ is small.
 Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called underdetermined interpolation.
@@ -225,7 +231,7 @@ To uniquely define~$\objm[k]$ in this case, it is frequently set to a solution t
     \end{aligned}
 \end{equation}
 where~$\mathcal{F}^k$ is a functional that promotes a desired regularity of~$\objm[k]$.
-For example, \solvername{mnh} employs
+For example, \solvername{dfo}~\cite{Conn_Scheinberg_Toint_1998} and \solvername{mnh}~\cite{Wild_2008} employ
 \begin{equation}
     \label{eq:mnh}
     \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q}_{\mathsf{F}}^2,
@@ -236,28 +242,31 @@ where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm, and \solvername{ne
     \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\mathsf{F}}^2,
 \end{equation}
 with~$\objm[-1] = 0$.
-The latter functional is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
-The variational problem defined by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} is known as the derivative-free symmetric Broyden update (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
-The two underdetermined interpolation schemes assume that
+There are other functionals based on the~$\ell_1$-norm~\cite{Bandeira_Scheinberg_Vicente_2012} or Sobolev seminorms of quadratic polynomials~\cite{Zhang_2014,Xie_Yuan_2022}.
+The functional~\eqref{eq:df-psb} is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
+The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the derivative-free symmetric Broyden update proposed by Powell (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
+To ensure that~$\objm[k]$ is uniquely defined and include quadratic information, we assume that
 \begin{equation*}
-    n + 1 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
+    n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-Otherwise,~$\objm[k]$ could not be uniquely defined (or even not defined at all).
-In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card(\xpt[k]) = n + 1$.
-Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, model-based \gls{dfo} methods usually approximate them using similar techniques.
+% Otherwise,~$\objm[k]$ could not be uniquely defined (or even not defined at all).
+% In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card(\xpt[k]) = n + 1$.
+Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, we can approximate them using similar techniques, which is the case for \solvername{cobyqa}.
 
-Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab initio} at each iteration.
-Instead, they build an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to build~$\xpt[k + 1]$.
+Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
+Instead, they choose an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to obtain~$\xpt[k + 1]$.
 For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
-This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered the principal measure of complexity of \gls{dfo} methods.
-However, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for many iterations.
-Powell proposed an interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, including \solvername{uobyqa}, \solvername{newuoa}, and if there are no constraints, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
-This paper shows that this interpolation set is optimal in a well-poisedness sense, detailed in Section~\ref{sec:well-poisedness}.
+This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered the principal cost of \gls{dfo} methods.
+In this case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for the subsequent iterations.
+Powell devised an initial interpolation set~$\xpt[0]$ for his methods, described in Subsection~\ref{subsec:powell-set}.
+Although the design of this set is natural, no theoretical analysis has been provided to justify its choice.
+This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense.
+% This paper shows that this interpolation set is optimal in a well-poisedness sense, detailed in Section~\ref{sec:well-poisedness}.
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the notion of $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
 This notion is then employed in Section~\ref{sec:main-result} to study initial interpolation sets proposed by Powell.
-Theorem~\ref{thm:lambda-p} is the main result of this paper and provides explicit bounds for the constant of~$\Lambda$-poisedness of the interpolation set under study.
+Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of~$\Lambda$-poisedness of the interpolation set under study.
 
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
@@ -271,31 +280,36 @@ a set, and we interpolate the function~$\obj$ by a quadratic polynomial~$\objm$ 
     \label{eq:intp-cond-gen}
     \objm(y^i) = \obj(y^i), \quad i \in \set{1, 2, \dots, m}.
 \end{equation}
-More precisely, we let~$\objm$ solve~\eqref{eq:intp-var}, where~$\mathcal{F}^k$ is defined by~\eqref{eq:mnh}.
-Note that if~$\xpt$ is seen as an initial interpolation set~$\xpt[0]$, then~$\objm$ denotes the initial model~$\objm[0]$, and the functional~$\mathcal{F}^k = \mathcal{F}^0$ is equivalent to the one defined by~\eqref{eq:df-psb}.
-In other words,~$\objm$ is also obtained by the derivative-free symmetric Broyden update.
-The following definition guarantees that the interpolation problem is always well-posed and that~$\objm$ exists and is unique.
+More precisely, we let~$\objm$ solve~\eqref{eq:intp-var}--\eqref{eq:mnh}, with~$\xpt[k] = \xpt$.
+If~\eqref{eq:df-psb} is of interest, the interpolation problem can be reformulated into~\eqref{eq:intp-var}--\eqref{eq:mnh} by a simple change of variable.
+% Note that if~$\xpt$ is seen as an initial interpolation set~$\xpt[0]$, then~$\objm$ denotes the initial model~$\objm[0]$, and the functional~$\mathcal{F}^k = \mathcal{F}^0$ is equivalent to the one defined by~\eqref{eq:df-psb}.
+% In other words,~$\objm$ is also obtained by the derivative-free symmetric Broyden update.
+
+% The following definition guarantees that the interpolation problem is always well-posed and that~$\objm$ exists and is unique.
 
 \begin{definition}[Poisedness]
     The set~$\xpt$ is \emph{poised} in the minimum-norm sense if the solution to problem~\eqref{eq:intp-var} exists and is unique for any real-valued function~$\obj$.
 \end{definition}
 
-As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
-\begin{equation*}
-    n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
-\end{equation*}
-Moreover, observe that the KKT system for the variational problem~\eqref{eq:intp-var} is linear with respect to the coefficients of~$\objm$.
-Hence, the poisedness of~$\xpt$ is related to the nonsingularity of the coefficient matrix of this KKT system.
-Intuitively, the interpolation set~$\xpt$ can be said well-poised if this matrix is well-conditioned.
-To formalize this intuition, we first introduce the notion of minimum-norm Lagrange polynomials.
+% As we mentioned earlier, a necessary condition for~$\xpt$ to be poised is
+% \begin{equation*}
+%     n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
+% \end{equation*}
+Observe that the KKT system for the variational problem~\eqref{eq:intp-var}--\eqref{eq:mnh} is linear with respect to the coefficients of~$\objm$.
+This is because it is an equality-constrained quadratic programming problem.
+The exact formulation of this system can be found in~\cite{Powell_2004b,Powell_2006}.
+The set~$\xpt$ is poised if this KKT system is uniquely solvable (see~\cite[\S~2]{Powell_2004a} and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
+Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
+This intuition will be formalized in the sequel.
+% To formalize this intuition, we first introduce the notion of minimum-norm Lagrange polynomials.
 
 \subsection{Minimum-norm Lagrange polynomials}
 
-We assume that the interpolation set~$\xpt$ is poised.
 To formally define a measure of well-poisedness of~$\xpt$, we first need to extend the classical definition of the Lagrange polynomials as follows.
 
 \begin{definition}[Minimum-norm Lagrange polynomials~{\cite[Definition~5.1]{Conn_Scheinberg_Vicente_2009}}]
     \label{def:min-norm-lagp}
+    Assume that the interpolation set~$\xpt$ is poised.
     The~$i$th \emph{minimum-norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen}, with~$i \in \set{1, 2, \dots, m}$, is the unique quadratic polynomial that solves
     \begin{equation*}
         \begin{aligned}
@@ -332,10 +346,11 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 \section{Optimality of Powell's initial interpolation set}
 \label{sec:main-result}
 
-Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, and particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and in the unconstrained case, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
-This section first presents this interpolation set and then shows that it is optimal in terms of the constant of~$\Lambda$-poisedness.
+% Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and also \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} if there are no constraints.
+This section first presents the initial interpolation set devised by Powell for his methods and then shows that it is optimal in terms of the constant of~$\Lambda$-poisedness.
 
 \subsection{Description of the initial interpolation set}
+\label{subsec:powell-set}
 
 The interpolation set proposed by Powell is defined as follows.
 Without loss of generality, we assume that the calculations are shifted to the origin.
@@ -379,6 +394,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation*}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
+We refer to~$\Lambda_p$ as the constant of~$\Lambda_p$-poisedness of~$\xpt[0]_m$.
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
 These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
