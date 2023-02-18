@@ -137,6 +137,7 @@
 % Control sequences, macros, and definitions
 \usepackage{etoolbox}
 \usepackage{xspace}
+\usepackage{bbm}
 \DeclareMathOperator{\bigo}{\mathcal{O}}
 \DeclareMathOperator{\card}{card}
 \newcommand*{\abs}[2][]{#1\lvert#2#1\rvert}
@@ -151,6 +152,7 @@
 \newcommand*{\solvername}[1]{\textsc{#1}\xspace}
 \newcommand*{\T}{\mathsf{T}}
 \newcommand*{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
+\newcommand{\ones}{\mathbbm{1}}
 
 % Document metadata
 \title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
@@ -173,7 +175,7 @@
 
 \begin{abstract}
     This paper shows the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
-    This set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in the initial trust region.
+    This set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in a ball centered at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis justifies this choice.
 \end{abstract}
@@ -195,7 +197,7 @@ Examples of such problems arise from many areas, such as reinforcement learning~
 The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-We show that this interpolation set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in the initial trust region.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of~$\Lambda$-poisedness in a ball centered at the starting point.
 
 % Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 % Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
@@ -212,7 +214,7 @@ The methods we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$, 
     \objm[k](y) = \obj(y), \quad y \in \xpt[k].
 \end{equation}
 % We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
-In what follows, we denote by~$\qpoly$ the space of polynomials of degree at most two.
+In what follows, we denote by~$\qpoly$ the space of polynomials of degree at most two, which will be referred to as quadratic polynomials for simplicity.
 % Such models are often employed in practice, for example, by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
 Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other,~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
@@ -244,18 +246,17 @@ where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm, and \solvername{ne
 with~$\objm[-1] = 0$.
 There are other functionals based on the~$\ell_1$-norm~\cite{Bandeira_Scheinberg_Vicente_2012} or Sobolev seminorms of quadratic polynomials~\cite{Zhang_2014,Xie_Yuan_2022}.
 The functional~\eqref{eq:df-psb} is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
-The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the derivative-free symmetric Broyden update proposed by Powell (see~\cite{Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
-To ensure that~$\objm[k]$ is uniquely defined and include quadratic information, we assume that
+The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the derivative-free symmetric
+Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
+To ensure that~$\objm[k]$ is uniquely defined and include second-order information, we assume that
 \begin{equation*}
     n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-% Otherwise,~$\objm[k]$ could not be uniquely defined (or even not defined at all).
-% In practice, methods that employ these schemes often enforce~$\card(\xpt[k]) \ge n + 2$ as all the models~$\objm[k]$ would be linear if~$\card(\xpt[k]) = n + 1$.
 Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, we can approximate them using similar techniques, which is the case for \solvername{cobyqa}.
 
 Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
 Instead, they choose an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to obtain~$\xpt[k + 1]$.
-For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
+For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's trust-region \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
 This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered the principal cost of \gls{dfo} methods.
 In this case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for the subsequent iterations.
 Powell devised an initial interpolation set~$\xpt[0]$ for his methods, described in Subsection~\ref{subsec:powell-set}.
@@ -352,9 +353,10 @@ This section first presents the initial interpolation set devised by Powell for 
 \subsection{Description of the initial interpolation set}
 \label{subsec:powell-set}
 
-The interpolation set proposed by Powell is defined as follows.
-Without loss of generality, we assume that the calculations are shifted to the origin.
-Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \in \R^n$ be
+The initial interpolation that Powell designed for his trust-region \gls{dfo} methods is as follows.
+Without loss of generality, we assume that the starting point is at the origin.
+Suppose that~$\Delta > 0$ is the initial trust-region radius.
+For~$i \in \set{1, 2, \dots, 2n + 1}$, define
 \begin{equation}
     \label{eq:set-def}
     y^i =
@@ -364,37 +366,47 @@ Let~$\Delta > 0$ be fixed and for~$i \in \set{1, 2, \dots, 2n + 1}$, let~$y^i \i
         -\Delta e_{i - n - 1},  & \text{otherwise},
     \end{cases}
 \end{equation}
-where~$e_i \in \R^n$ denotes the $i$th standard coordinate vector in~$\R^n$.
-The initial interpolation sets~$\xpt[0]_m \subseteq \R^n$ for each~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ are then defined by
+where~$e_i \in \R^n$ denotes the $i$th canonical coordinate vector in~$\R^n$.
+Let~$m$ be the number of interpolation points. We focus on the case that~$n+2 \le m \le 2n+1$
+following Powell's suggestion.\footnote{
+Powell's \solvername{bobyqa} code contains a comment that ``choices that exceed $2n+1$ are not recommended''.
+}
+The initial interpolation set is then chosen to be
 \begin{equation}
     \label{eq:set-def-m}
-    \xpt[0]_m = \set{y^1, y^2, \dots, y^m}.
+    \xpt[0]_m = \set{y^1, y^2, \dots, y^m},
 \end{equation}
-The default value for~$m$ proposed by Powell is~$2n + 1$, i.e., he employs~$\xpt[0] = \xpt[0]_{2n + 1}$.
+which can be found in~\cite[eq.~(3.2)]{Powell_2006}.
+The default value for~$m$ proposed by Powell is~$2n + 1$, i.e., the default initial interpolation
+set is~$\xpt[0] = \xpt[0]_{2n + 1}$.
 This is a natural choice, as the corresponding interpolation set is geometrically appealing.
-It consists indeed of the origin and equidistant points to the origin in the positive and negative coordinate directions.
-In what follows, we provide a theory that justifies this natural choice.
+It consists of the origin and equidistant points to the origin in the positive and negative coordinate directions.
+In what follows, we provide a theory that justifies this natural choice, showing that~$\xpt[0]_{2n + 1}$
+is indeed optimal in terms of well-poisedness.
 
-\subsection{Optimality of the interpolation set}
+\subsection{Well-poisedness of the interpolation set}
 
-All the methods presented above that use the initial interpolation set~$\xpt[0]_{2n + 1}$ are trust-region methods, and~$\Delta$ denotes the initial trust-region radius.
-Therefore, it is legitimate to study the properties of~$\xpt[0]_m$ for different values of~$m$ in the closed~$\ell_p$-norm ball of radius~$\Delta$, namely
+Now we investigate the $\Lambda$-poisedness~$\xpt[0]_m$ for different values of~$m \in \{n+2, n+3, \dots, 2n+1\}$.
+We will do this in the closed~$\ell_p$-norm ball of radius~$\Delta$ centered at the origin, namely
 \begin{equation*}
     \mathcal{B}_p(\Delta) = \set{x \in \R^n : \norm{x}_p \le \Delta},
 \end{equation*}
 with~$p \in [1, \infty]$.
-Note that we allow~$p = \infty$.
-In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
-We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
+Note that we allow~$p = \infty$, and that~$\mathcal{B}_p(\Delta)$ is also the smallest~$\ell_p$-norm ball enclosing~$\xpt[0]_m$.
+Powell's methods define the trust region by the Euclidean norm, so the case with~$p=2$ is the most
+interesting. However, it can be beneficial to define the trust region by polyhedral norms when bound
+or linear constraints are present, and $p=1$ or~$p=\infty$ will become more relevant.
+%In the sequel, we study the~$\Lambda$-poisedness of the set~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+%We will show that~$\xpt[0]_{2n + 1}$ is optimal in the sense that it achieves the least possible constant of~$\Lambda$-poisedness in~$\mathcal{B}_p(\Delta)$ for all~$p \in [1, 2]$.
 
-\subsubsection{Formulation of the Lagrange polynomials}
-
-According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B}_p(\Delta)$ in the minimum-norm sense with
+According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-poised in~$\mathcal{B} _p(\Delta)$ in the minimum-norm sense~with
 \begin{equation*}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[i](x)},
 \end{equation*}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
-We refer to~$\Lambda_p$ as the constant of~$\Lambda_p$-poisedness of~$\xpt[0]_m$.
+We refer to~$\Lambda_p$ as the constant of~$\Lambda$-poisedness of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+
+\subsubsection{Formulation of the Lagrange polynomials}
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
 These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
@@ -407,11 +419,13 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
         \begin{cases}
             \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j,    & \text{if~$i = 1$,}\\[2ex]
             \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                                    & \text{if~$2 \le i \le m - n$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                                     & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} - \frac{x_{i - 1}}{2\Delta},                                                    & \text{otherwise.}
+            \displaystyle \frac{x_{i -n - 1}^2}{2\Delta^2} - \frac{x_{i -n- 1}}{2\Delta},                                               & \text{if~$n+2\le i \le m$,}\\[2ex]
+            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                                     & \text{if~$m - n + 1 \le i \le n + 1$.}
+            %& \text{otherwise.}
         \end{cases}
     \end{equation*}
-    In the formulation of~$\lagp[1]$, if~$m = 2n + 1$, we define~$\sum_{j = m - n}^n x_j = 0$.
+    Here, $x_j$ denotes the~$j$th entry of~$x$ for each~$j\in\{1,2, \dots, n\}$, and we define~$\sum_{j = m - n}^n x_j = 0$ in the
+    formulation of~$\lagp[1]$ if~$m = 2n+1$.
 \end{lemma}
 
 \begin{proof}
@@ -421,21 +435,24 @@ These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
         \lagp(y^j) = \delta_{i, j}, \quad j \in \set{1, 2, \dots, m}.
     \end{equation}
     First, it is straightforward to verify that~$\lagp[i]$ satisfies the interpolation conditions~\eqref{eq:lagp-p}.
-    Hence, it suffices to show that the Frobenius norm of its Hessian matrix is least.
-    According to the equation~\eqref{eq:set-def}, we have~$y^1 = 0$, and for any~$j \in \set{1, 2, \dots, m - n - 1}$, we have~$y^{j + 1} = \Delta e_j$ and~$y^{n + j + 1} = -\Delta e_j$.
-    Therefore,
+    Hence, it suffices to show that~$\|\nabla^2 \lagp[i]\|_\mathsf{F} \le \|\nabla^2 \lagp\|_\mathsf{F}$.
+
+    Consider any~$j\in\{1,2,\dots, m-n-1\}$.
+    Denote the $j$th diagonal entries of~$\nabla^2 \lagp$ and~$\nabla^2 \lagp[i]$ by~$(\nabla^2\lagp)_{j,j}$ and~$(\nabla^2\lagp[i])_{j,j}$, respectively.
+    According to equation~\eqref{eq:set-def}, we have
     \begin{equation*}
-        \begin{cases}
-            \displaystyle \lagp(y^{j + 1}) = \lagp(y^1) + \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} \big(\nabla^2 \lagp \big) e_j,\\[2ex]
-            \displaystyle \lagp(y^{n + j + 1}) = \lagp(y^1) - \Delta \nabla \lagp(y^1)^{\T} e_j + \frac{\Delta^2}{2} e_j^{\T} \big(\nabla^2 \lagp \big) e_j,
-        \end{cases}
+        %\label{eq:}
+        y^1 = 0, \quad y^{j + 1} = \Delta e_j, \quad \text{and} \quad~y^{n + j + 1} = -\Delta e_j.
     \end{equation*}
-    and hence,
+    Since~$\lagp$ and~$\lagp[j]$ are quadratic polynomials sharing the same values on~$\{y^1, y^{j+1},
+    y^{n+j+1}\}$, we have
     \begin{equation*}
-        e_j^{\T} \big(\nabla^2 \lagp \big) e_j = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2}.
+        \big(\nabla^2 \lagp \big)_{j,j}
+        = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2}
+        = \big(\nabla^2 \lagp[i] \big)_{j,j}.
     \end{equation*}
-    This fixes the first~$m - n - 1$ diagonal entries of~$\nabla^2 \lagp$, which are exactly those of~$\nabla^2 \lagp[i]$.
-    Since all the other entries of~$\nabla^2 \lagp[i]$ are zero, we have
+    On the other hand, it is easy to check that all the entries of~$\nabla^2 \lagp[i]$ are zero
+    except for the first~$m-n-1$ diagonal entries. Therefore,
     \begin{equation*}
         \norm[\big]{\nabla^2 \lagp[i]}_{\mathsf{F}}^2 \le \norm[\big]{\nabla^2 \lagp}_{\mathsf{F}}^2,
     \end{equation*}
@@ -557,13 +574,14 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
     \begin{align}
         \lagp[1](x) &= 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
                     &\ge 1 - \frac{1}{\Delta^2} \bigg( \Delta^2 - \sum_{j = m - n}^n \!\! x_j^2 \bigg) - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j = \sum_{j = m - n}^n \frac{x_j}{\Delta} \bigg( 1 - \frac{x_j}{\Delta} \bigg) \nonumber\\
-                    &\ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! y_j (1 - y_j). \label{eq:lambda-p-2-p}
+                    &\ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j). \label{eq:lambda-p-2-p}
     \end{align}
     Let~$y^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
-    The first-order necessary condition for optimality ensures that there exists a Lagrange multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 y_j^{\ast} + 2 \lambda^{\ast} y_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
+    The first-order necessary condition for optimality ensures that there exists a Lagrange
+    multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 z_j^{\ast} + 2 \lambda^{\ast} z_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
     Therefore, the last~$2n + 1 - m$ components of~$y^{\ast}$ are equal, and hence,
     \begin{align*}
-        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! y_j (1 - y_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
+        \lagp[1](x) \ge \min_{\norm{y}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
                                                                                         & = -1 - \sqrt{2n + 1 - m}.
     \end{align*}
 
@@ -596,13 +614,13 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq-1} holds.
 
     We now consider the case where~$p < q$.
-    Let~$e \in \R^n$ denote the all-ones vector,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
+    Let~$\ones \in \R^n$ denote the vector with all entries being one,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
     For~$x \in \mathcal{B}_q(1)$, define~$y = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
-        \norm{x}_p  = \big(e^{\T} y \big)^{\frac{1}{p}} \le \big(\norm{e}_s \norm{y}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+        \norm{x}_p  = \big(\ones^{\T} y \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{y}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
     \end{equation*}
-    Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}e$, which proves~\eqref{eq:max-norm-pq-2}.
+    Moreover, this bound is attained by~$x = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq-2}.
 \end{proof}
 
 \begin{proposition}
@@ -650,7 +668,7 @@ One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold in the case
 \section{Conclusion}
 
 This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
-In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of~$\Lambda$-poisedness in the initial trust region.
+In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of~$\Lambda$-poisedness in a ball centered at the starting point.
 
 \paragraph*{Disclosure statement}
 The authors report that there are no competing interests to declare.
