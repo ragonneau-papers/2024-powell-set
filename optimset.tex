@@ -355,12 +355,14 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 \label{sec:main-result}
 
 % Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and also \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} if there are no constraints.
-This section first presents the initial interpolation set devised by Powell for his methods and then shows that it is optimal in terms of the constant of poisedness.
+This section first presents the initial interpolation set devised by Powell for his trust-region \gls{dfo} methods, and then analyzes its well-poisedness.
+We develop bounds on its constant of poisedness, and evaluate this constant in some special cases.
+Finally, we point out that the set is is optimal in terms of the poisedness in a ball centered at the starting point.
 
 \subsection{Description of the initial interpolation set}
 \label{subsec:powell-set}
 
-The initial interpolation that Powell designed for his trust-region \gls{dfo} methods is as follows.
+The initial interpolation that Powell designed for his methods is as follows.
 Without loss of generality, we assume that the starting point is at the origin.
 Suppose that~$\Delta > 0$ is the initial trust-region radius.
 For~$i \in \set{1, 2, \dots, 2n + 1}$, define
@@ -693,7 +695,7 @@ It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p
 We leave this problem open and expect the analysis to be more challenging than what we have done.
 One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involving.
 
-The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, where it is proved that a widely used direction set is indeed optimal for directional direct search methods
+The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
 based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding about certain algorithmic strategies that we often employ but rarely ask why.
 
 
