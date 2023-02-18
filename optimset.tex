@@ -629,15 +629,16 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
 \end{proposition}
 
 \begin{proof}
-    It is clear that
+    Since~$m = 2n+1$, we have~$L_1(x) = 1- \Delta^{-2}\norm{x}_2^2$ according to Lemma~\ref{lem:lagp}.
+    Then it is clear that
     \begin{equation}
         \label{eq:lambda-p-inf-p-1}
-        \max_{\norm{x}_p \le \Delta} \lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( 1 - \frac{\norm{x}_2^2}{\Delta^2} \bigg) = 1.
+        \max_{\norm{x}_p \le \Delta} \lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( 1 - \Delta^{-2}{\norm{x}_2^2} \big) = 1.
     \end{equation}
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \bigg( \frac{\norm{x}_2^2}{\Delta^2} - 1 \bigg) =
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( \Delta^{-2} {\norm{x}_2^2} - 1 \big) =
         \begin{cases}
             0,                          & \quad \text{if~$p \le 2$,}\\
             n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
