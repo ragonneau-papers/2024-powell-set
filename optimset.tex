@@ -1,6 +1,6 @@
 %% optimset.tex
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
-\documentclass[draft]{article}
+\documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper]{geometry}
 \usepackage[british]{babel}
@@ -40,12 +40,8 @@
     runcolor=black,
     urlcolor=black,
 }
-\newcommand*{\email}[2][inbox]{\faIcon{#1} \href{mailto:#2}{#2}}
-\newcommand*{\linkedin}[1]{\textcolor{LinkedInBlue}{\faIcon{linkedin}} \href{https://www.linkedin.com/in/#1/}{#1}}
-\newcommand*{\orcid}[1]{\texorpdfstring{\hspace{1.5ex}\href{https://orcid.org/#1}{\textcolor{ORCIDGreen}{\faIcon{orcid}}}}{}}
-\newcommand*{\phone}[2][phone]{\faIcon{#1} \href{tel:#2}{#2}}
-\newcommand*{\twitter}[1]{\textcolor{TwitterBlue}{\faIcon{twitter}} \href{https://twitter.com/#1/}{@#1}}
-\newcommand*{\website}[2][globe]{\faIcon{#1} \href{https://#2/}{#2}}
+\newcommand*{\email}[2][inbox]{Email: \href{mailto:#2}{#2}}
+\newcommand*{\orcid}[1]{ORCID: \href{https://orcid.org/#1}{#1}}
 
 % Mathematics
 \usepackage{mathtools}
@@ -164,13 +160,13 @@
 \author{
     Tom M. Ragonneau\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{tom.ragonneau@polyu.edu.hk} \quad \website[globe-asia]{www.tomragonneau.com}
-    }\orcid{0000-0003-2717-2876} \and
+        \email{tom.ragonneau@polyu.edu.hk}; \orcid{0000-0003-2717-2876}
+    } \and
     Zaikun Zhang\thanks{
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        \email{zaikun.zhang@polyu.edu.hk} \quad \website[globe-asia]{www.zhangzk.net}\\
+        \email{zaikun.zhang@polyu.edu.hk}; \orcid{0000-0001-8934-8190}\\
         Corresponding author
-    }\orcid{0000-0001-8934-8190}
+    }
 }
 \date{\today}
 
@@ -180,7 +176,7 @@
 
 \begin{abstract}
     This paper demonstrates the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
-    This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centered at the starting point.
+    This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis provides a theoretical justification for this choice.
 \end{abstract}
@@ -196,13 +192,13 @@
     \label{eq:nlp}
     \min_{x \in \fset \subseteq \R^n} \obj(x)\\
 \end{equation}
-based on function evaluations, without relying on derivative information.
+based on function evaluations without relying on derivative information.
 They are needed when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ are unavailable or too expensive to evaluate, which may also be the case for the constraint functions underlying the feasible set~$\fset \subseteq \R^n$.
 Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
 The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
-This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centered at the starting point, which is detailed in Theorem~\ref{th:optimset}.
+This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{th:optimset}.
 
 % Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 % Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
@@ -305,7 +301,7 @@ This problem covers~\eqref{eq:intp-var}--\eqref{eq:mnh}, and also covers~\eqref{
 Observe that the variational problem~\eqref{eq:intp-cond-gen} is an equality-constrained quadratic
 programming problem with respect to the coefficients of~$Q$. Thus its KKT system is a linear system.
 The exact formulation of this system can be found in~\cite{Powell_2004a,Powell_2004b}.
-The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}}and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
+The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}} and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
 This intuition will be formalized in the sequel.
 % To formalize this intuition, we first introduce the notion of minimum-norm Lagrange polynomials.
@@ -356,7 +352,7 @@ Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of
 % Recall that Powell proposed an initial interpolation set~$\xpt[0]$ that is employed by many interpolation-based \gls{dfo} methods, particularly trust-region methods, including \solvername{uobyqa}, \solvername{newuoa}, and also \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} if there are no constraints.
 This section first presents the initial interpolation set devised by Powell for his trust-region \gls{dfo} methods, and then analyzes its well-poisedness.
 We establish bounds on its constant of well-poisedness, and evaluate this constant in some special cases.
-Finally, we point out that the default setting in Powell's methods renders an optimal interpolation set in terms of the well-poisedness in a ball centered at the starting point.
+Finally, we point out that the default setting in Powell's methods renders an optimal interpolation set in terms of the well-poisedness in a ball centred at the starting point.
 
 \subsection{Description of the initial interpolation set}
 \label{subsec:powell-set}
@@ -394,8 +390,8 @@ is indeed optimal in terms of well-poisedness.
 
 \subsection{Well-poisedness of the interpolation set}
 
-Now we investigate the $\Lambda$-poisedness~$\xpt[0]_m$ for different values of~$m \in \{n+2, n+3, \dots, 2n+1\}$.
-We will do this in the closed~$\ell_p$-norm ball of radius~$\Delta$ centered at the origin, namely
+We now investigate the $\Lambda$-poisedness~$\xpt[0]_m$ for different values of~$m \in \{n+2, n+3, \dots, 2n+1\}$.
+We will do this in the closed~$\ell_p$-norm ball of radius~$\Delta$ centred at the origin, namely
 \begin{equation*}
     \mathcal{B}_p(\Delta) = \set{x \in \R^n : \norm{x}_p \le \Delta},
 \end{equation*}
@@ -692,15 +688,15 @@ We leave this problem open and expect the analysis to be more challenging than w
 One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involving.
 
 The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
-based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding about certain algorithmic strategies that we often employ but rarely ask why.
+based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding of certain algorithmic strategies that we often employ but rarely ask why.
 
 
 \section{Conclusion}
 
 %This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
-%In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of well-poisedness in a ball centered at the starting point.
+%In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of well-poisedness in a ball centred at the starting point.
 We have analyzed the well-poisedness of an interpolation set employed in many trust-region \gls{dfo} methods, particularly those by Powell.
-This set is proved to be optimal under the default setting recommended by Powell, because it minimizes the constant of well-poisedness in a ball centered at the starting point.
+This set is proved to be optimal under the default setting recommended by Powell, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
 Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
 
 \paragraph*{Acknowledgment}
