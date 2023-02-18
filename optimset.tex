@@ -497,16 +497,15 @@ We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
     \begin{equation*}
         1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n,
     \end{equation*}
-    where we assume that~$0^0 = 0$ and that the lower bound is~$2n + 2 - m$ for~$p = \infty$.
+    where we define~$0^0 = 0$ and~$\infty/\infty = 1$.% the lower bound is~$2n + 2 - m$ for~$p = \infty$.
 \end{theorem}
 
 \begin{proof}
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
-    For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ components are zeros and whose remaining~$2n + 1 - m$ components are equal, we have
+    For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ entries are zeros and whose remaining~$2n + 1 - m$ entries are equal, we have
     \begin{equation*}
         \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
-
     We now prove the upper bound.
     For any~$p \ge 1$, we have~$\mathcal{B}_p(\Delta) \subseteq \mathcal{B}_{\infty}(\Delta)$, so that~$\Lambda_p \le \Lambda_{\infty}$.
     Therefore, we only need to show that~$\Lambda_{\infty} \le n$.
@@ -584,7 +583,7 @@ We now calculate the exact value of~$\Lambda_p$ in some special cases.
     Let~$z^{\ast} \in \mathcal{B}_2(1)$ be a minimizer in~\eqref{eq:lambda-p-2-p}.
     The first-order necessary condition for optimality ensures that there exists a Lagrange
     multiplier~$\lambda^{\ast} \ge 0$ such that~$1 - 2 z_j^{\ast} + 2 \lambda^{\ast} z_j^{\ast} = 0$ for all~$j \in \set{m - n, \dots, n}$.
-    Therefore, the last~$2n + 1 - m$ components of~$z^{\ast}$ are equal, and hence,
+    Therefore, the last~$2n + 1 - m$ entries of~$z^{\ast}$ are equal, and hence,
     \begin{align*}
         \lagp[1](x) \ge \min_{\norm{z}_2 \le 1} \sum_{j = m - n}^n \!\! z_j (1 - z_j)   & = \min_{t \in \R} \set[\big]{(2n + 1 - m) t (1 - t) : (2n + 1 - m) t^2 \le 1}\\
                                                                                         & = -1 - \sqrt{2n + 1 - m}.
