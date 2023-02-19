@@ -174,7 +174,7 @@
 \maketitle
 
 \begin{abstract}
-    This paper demonstrates the optimality of an interpolation set in derivative-free trust-region methods.
+    This paper demonstrates the optimality of an interpolation set employed in derivative-free trust-region methods.
     This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis provides a theoretical justification for this choice.
@@ -248,7 +248,7 @@ There are other functionals based on the~$\ell_1$-norm~\cite{Bandeira_Scheinberg
 The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the derivative-free symmetric
 Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012},
 and~\cite[\S~2.4.2]{Ragonneau_2022}),
-and the functional~\eqref{eq:df-psb} is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
+with the functional~\eqref{eq:df-psb} being inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
 To ensure that~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-var} and include second-order information, one normally requires that
 \begin{equation*}
     n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
@@ -266,7 +266,7 @@ This paper contributes such an analysis, showing that no other interpolation set
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
-This notion is then employed in Section~\ref{sec:main-result} to study the initial interpolation set proposed by Powell.
+This notion is then employed in Section~\ref{sec:main-result} to study the initial interpolation set used by Powell.
 \textcolor{red}{Theorem~\ref{thm:bounds}\fxnote{This is not true anymore} is the main result of this paper
     and provides explicit bounds for the constant of well-poisedness of the interpolation set under
 study.}
