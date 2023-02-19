@@ -232,7 +232,7 @@ To uniquely define~$\objm[k]$ in this case, it is common to solve an interpolati
         \text{s.t.}         & \quad Q(y) = \obj(y), \quad y \in \xpt[k],
     \end{aligned}
 \end{equation}
-where~$\mathcal{F}^k$ is a functional that promotes a desired regularity of~$\objm[k]$.
+where~$\mathcal{F}^k$ is a functional that promotes certain desired regularity of~$\objm[k]$.
 For example, \solvername{dfo}~\cite{Conn_Scheinberg_Toint_1998} and \solvername{mnh}~\cite{Wild_2008} employ
 \begin{equation}
     \label{eq:mnh}
@@ -249,7 +249,7 @@ The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the deriv
 Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012},
 and~\cite[\S~2.4.2]{Ragonneau_2022}),
 with the functional~\eqref{eq:df-psb} being inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
-To ensure that~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-var} and include second-order information, one normally requires that
+To ensure that~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-var} and includes second-order information, one normally requires that
 \begin{equation*}
     n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
@@ -304,7 +304,7 @@ This problem covers~\eqref{eq:intp-var}--\eqref{eq:mnh}, and also covers~\eqref{
 %     n + 1 \le m \le \frac{1}{2} (n + 1) (n + 2).
 % \end{equation*}
 Observe that the variational problem~\eqref{eq:intp-cond-gen} is an equality-constrained quadratic
-programming problem with respect to the coefficients of~$Q$. Thus its KKT system is a linear system.
+programming problem with respect to the coefficients of~$Q$. Thus its KKT system is linear.
 The exact formulation of this system can be found in~\cite{Powell_2004a,Powell_2004b}.
 The set~$\xpt$ is poised if this KKT system is uniquely solvable~(see~\mbox{\cite[\S~2]{Powell_2004a}} and~\cite[\S~5.3]{Conn_Scheinberg_Vicente_2009}).
 Intuitively, the interpolation set~$\xpt$ can be said well-poised if this system is well-conditioned.
@@ -347,7 +347,7 @@ We are now equipped to define the notion of~$\Lambda$-poisedness in the minimum 
     \end{equation*}
 \end{definition}
 
-If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in same sense for all~$\Lambda \ge \Lambda_0$.
+If~$\xpt$ is~$\Lambda_0$-poised in the minimum Frobenius norm sense in~$\mathcal{C}$, it is obviously~$\Lambda$-poised in the same sense for all~$\Lambda \ge \Lambda_0$.
 Moreover, one can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
 Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
 
@@ -417,7 +417,7 @@ We refer to~$\Lambda_p$ as the \emph{constant of well-poisedness} of~$\xpt[0]_m$
 \subsubsection{Formulation of the Lagrange polynomials}
 
 To study~$\Lambda_p$, we first present explicit formulae for~$\lagp[i]$ for all~$i \in \set{1, 2, \dots, m}$.
-These formulae are given in~\cite[\S~3]{Powell_2006}, without a proof.
+These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
 
 \begin{lemma}
     \label{lem:lagp}
@@ -718,7 +718,7 @@ an extension of~$\xpt[0]_m$ for~$m>2n+1$.
 With such an extension, we can define~$\Lambda_p$ by~\eqref{eq:Lambdap} for any~$m \in \{n+2, n+3, \dots, (n+1)(n+2)/2\}$.
 It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p \ge 1$. %, which seems to be true according to some numerical experiments.
 We expect the analysis to be more challenging than what we have done.
-One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involving.
+One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involved.
 
 Another interesting question is whether any interpolation set containing the origin can be~\mbox{$\Lambda$-poised} in~$\mathcal{B}_p(\Delta)$ with~$\Lambda < \Lambda_p$.
 Theorem~\ref{thm:optimset} provides a negative answer when~$p$ satisfies~\eqref{eq:pineq}.
