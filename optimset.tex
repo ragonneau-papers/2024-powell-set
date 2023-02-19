@@ -174,7 +174,7 @@
 \maketitle
 
 \begin{abstract}
-    This paper demonstrates the optimality of an interpolation set employed by Powell in derivative-free trust-region methods.
+    This paper demonstrates the optimality of an interpolation set in derivative-free trust-region methods.
     This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point.
     It is chosen as the default initial interpolation set by many derivative-free trust-region optimization methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
     Our analysis provides a theoretical justification for this choice.
@@ -194,10 +194,10 @@
 based on function evaluations without relying on derivative information.
 They are needed when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ are unavailable or too expensive to evaluate, which may also be the case for the constraint functions underlying the feasible set~$\fset \subseteq \R^n$.
 Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
-The \gls{dfo} litterature is vast, and for comprehensive overview, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
+The \gls{dfo} litterature is vast. For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{th:optimset}.
+We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{thm:optimset}.
 
 % Broadly speaking, \gls{dfo} methods can be divided into two categories: direct-search and model-based methods~\cite{Conn_Scheinberg_Vicente_2009}.
 % Direct-search methods~\cite{Kolda_Lewis_Torczon_2003} generate sample points in the search space around the current iterate and select the next iterate among these points based on simple comparisons.
@@ -208,23 +208,23 @@ We show that this interpolation set is optimal in the sense that it minimizes th
 % Examples of derivative-free trust-region methods include the method of Conn and Toint~\cite{Conn_Toint_1996}, \solvername{mnh}~\cite{Wild_2008}, Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009,Ragonneau_Zhang_2021}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 %
 % Model-based \gls{dfo} methods, and particularly derivative-free trust-region methods, often employ polynomial interpolation schemes to approximate the objective and constraint functions.
-The \gls{dfo} methods we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$, where~$k$ denotes the iteration number, and build a quadratic model~$\objm[k]$ of~$\obj$ according to the interpolation conditions
+In what follows, we denote by~$\qpoly$ the space of polynomials on~$\R^n$ of degree at most two, which will be referred to as quadratic polynomials for simplicity.
+The \gls{dfo} methods that we consider maintain an interpolation set~$\xpt[k] \subseteq \R^n$ at iteration~$k$, and build a model~$\objm[k]\in\qpoly$ for~$\obj$ according to the interpolation conditions
 \begin{equation}
     \label{eq:intp-cond}
     \objm[k](y) = \obj(y), \quad y \in \xpt[k].
 \end{equation}
 % We assume in what follows that the models~$\objm[k]$ are quadratic, and we denote by~$\qpoly$ the space of quadratic polynomials.
-In what follows, we denote by~$\qpoly$ the space of polynomials of degree at most two, which will be referred to as quadratic polynomials for simplicity.
 % Such models are often employed in practice, for example, by \solvername{uobyqa}~\cite{Powell_2002}, \solvername{newuoa}~\cite{Powell_2006}, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, \solvername{mnh}, and \solvername{cobyqa}.
 Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other,~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
     \card(\xpt[k]) = \dim(\qpoly) = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-This scheme, referred to as fully-determined interpolation, is employed by \solvername{uobyqa}~\cite{Powell_2002}.
+Such a scheme, referred to as fully-determined quadratic interpolation, is employed by \solvername{uobyqa}~\cite{Powell_2002}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
 This is impracticable in practice unless~$n$ is small.
-Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called underdetermined interpolation.
-To uniquely define~$\objm[k]$ in this case, it is frequently set to a solution to a problem of the form
+Therefore, modern interpolation-based \gls{dfo} methods employ fewer interpolation points, giving rise to so-called underdetermined quadratic interpolation.
+To uniquely define~$\objm[k]$ in this case, it is common to solve an interpolation problem of the form
 \begin{equation}
     \label{eq:intp-var}
     \begin{aligned}
@@ -238,35 +238,38 @@ For example, \solvername{dfo}~\cite{Conn_Scheinberg_Toint_1998} and \solvername{
     \label{eq:mnh}
     \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q}_{\mathsf{F}}^2,
 \end{equation}
-where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm, and \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} employ
+where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm. In contrast, \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} employ
 \begin{equation}
     \label{eq:df-psb}
-    \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\mathsf{F}}^2,
+    \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\mathsf{F}}^2
 \end{equation}
 with~$\objm[-1] = 0$.
 There are other functionals based on the~$\ell_1$-norm~\cite{Bandeira_Scheinberg_Vicente_2012} or Sobolev seminorms of quadratic polynomials~\cite{Zhang_2014,Xie_Yuan_2022}.
-The functional~\eqref{eq:df-psb} is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
 The variational problem~\eqref{eq:intp-var}--\eqref{eq:df-psb} defines the derivative-free symmetric
-Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}).
-To ensure that~$\objm[k]$ is uniquely defined and include second-order information, we assume that
+Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012},
+and~\cite[\S~2.4.2]{Ragonneau_2022}),
+and the functional~\eqref{eq:df-psb} is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
+To ensure that~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-var} and include second-order information, one normally requires that
 \begin{equation*}
     n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
 Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, we can approximate them using similar techniques, which is the case for \solvername{cobyqa}.
 
-Normally, interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
+Most interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
 Instead, they choose an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to obtain~$\xpt[k + 1]$.
 For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's trust-region \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
 This mechanism prevents the methods from performing unnecessary function evaluations, which are normally considered the principal cost of \gls{dfo} methods.
 In this case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for the subsequent iterations.
 Powell devised an initial interpolation set~$\xpt[0]$ for his methods, described in Subsection~\ref{subsec:powell-set}.
-Although the design of this set is natural, no theoretical analysis has been provided to justify its choice.
+Although the design of this set is natural, no theoretical analysis has been provided to justify its configuration.
 This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense.
 
 This paper is organized as follows.
-Section~\ref{sec:well-poisedness} introduces the notion of $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
-This notion is then employed in Section~\ref{sec:main-result} to study initial interpolation sets proposed by Powell.
-Theorem~\ref{thm:lambda-p}\fxnote{This is not true anymore} is the main result of this paper and provides explicit bounds for the constant of well-poisedness of the interpolation set under study.
+Section~\ref{sec:well-poisedness} introduces the $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
+This notion is then employed in Section~\ref{sec:main-result} to study the initial interpolation set proposed by Powell.
+\textcolor{red}{Theorem~\ref{thm:bounds}\fxnote{This is not true anymore} is the main result of this paper
+    and provides explicit bounds for the constant of well-poisedness of the interpolation set under
+study.}
 
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
@@ -490,140 +493,167 @@ The next lemma simplifies the expression of~$\Lambda_p$ defined in~\eqref{eq:Lam
     Hence~\eqref{eq:lambda-p} holds according to the definition of~$\Lambda_p$ in~\eqref{eq:Lambdap}.
 \end{proof}
 
-We are now equipped to develop bounds on~$\Lambda_p$ in the general case.
+We are now equipped to develop lower and upper bounds for~$\Lambda_p$. For convince, we define
+henceforth
+\begin{equation*}
+    %\label{eq:}
+    0^0 = 0 \quad \text{and} \quad \frac{\infty}{\infty} = 1.
+\end{equation*}
+
 
 \begin{theorem}
-    \label{thm:lambda-p}
+    \label{thm:bounds}
     For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ and any~$p \in [1, \infty]$, we have
-    \begin{equation*}
-        1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n,
-    \end{equation*}
-    where we define~$0^0 = 0$ and~$\infty/\infty = 1$.% the lower bound is~$2n + 2 - m$ for~$p = \infty$.
+    \begin{equation}
+    \label{eq:bounds}
+        1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n.
+    \end{equation}
+    %where we define~$0^0 = 0$ and~$\infty/\infty = 1$.% the lower bound is~$2n + 2 - m$ for~$p = \infty$.
 \end{theorem}
 
 \begin{proof}
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ entries are zeros and whose remaining~$2n + 1 - m$ entries are equal, we have
     \begin{equation*}
-        \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m) \abs{t}^p \le \Delta^p} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+        \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
+
     We now establish the upper bound.
     For any~$p \ge 1$, we have~$\mathcal{B}_p(\Delta) \subseteq \mathcal{B}_{\infty}(\Delta)$, so that~$\Lambda_p \le \Lambda_{\infty}$.
-    Therefore, we only need to show that~$\Lambda_{\infty} \le n$.
-    This is true because
+    Therefore, we only need to show that~$\Lambda_{\infty} \le n$. For any~$x \in \mathcal{B}_{\infty}(\Delta)$,
+    \begin{equation*}
+        -\lagp[1](x) = -1 + \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le n-1,
+    \end{equation*}
+    and
+    \begin{equation*}
+        \lagp[1](x) = 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j
+        \le 1 -  \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 2n-m+2 \le n.
+    \end{equation*}
+    Thus
     \begin{equation*}
         \Lambda_{\infty} =
-        \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)}
-        = \max\bigg\{\max_{\norm{x}_{\infty} \le \Delta} \lagp[1](x), \,\max_{\norm{x}_{\infty} \le \Delta} -\lagp[1](x) \bigg\}
-        = \max \set{2n + 2 - m, n - 1} \le n.
+        \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)} \le n,
     \end{equation*}
+    which completes the proof.
 \end{proof}
 
 \subsubsection{Some special cases}
 
-We now calculate the exact value of~$\Lambda_p$ in some special cases.
+Examining the second part of the proof for Theorem~\ref{thm:bounds}, we can see that~$\Lambda_\infty = n$, attaining the upper bound in~\eqref{eq:bounds}.
+There are more cases where we can calculate the exact value of~$\Lambda_p$, as will be elaborated in the following.
 
-\begin{proposition}
-    \label{prop:lambda-p-1}
-    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$, we have
-    \begin{equation}
-        \label{eq:lambda-p-1}
-        \Lambda_1 =
-        \begin{cases}
-            2,  & \text{if~$n + 2 \le m \le 2n$,}\\
-            1,  & \text{if $m = 2n+1$.}
-        \end{cases}
-    \end{equation}
-\end{proposition}
+First, when~$1\le p\le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref{eq:bounds}.
 
-\begin{proof}
-    According to Theorem~\ref{thm:lambda-p},~$\Lambda_1$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-1}.
-    Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_1$, using Lemma~\ref{lem:lambda-p}.
+%\begin{proposition}
+%    \label{prop:lambda-p-1}
+%    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$, we have
+%    \begin{equation}
+%        \label{eq:lambda-p-1}
+%        \Lambda_1 =
+%        \begin{cases}
+%            2,  & \text{if~$n + 2 \le m \le 2n$,}\\
+%            1,  & \text{if $m = 2n+1$.}
+%        \end{cases}
+%    \end{equation}
+%\end{proposition}
 
-    For any~$x \in \mathcal{B}_1(\Delta)$, according to Lemma~\ref{lem:lagp}, we have
-    \begin{equation*}
-        \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! \abs{x_j}.
-    \end{equation*}
-    Therefore,
-    \begin{equation}
-        \label{eq:lambda-p-1-p-1}
-        \lagp[1](x) \le
-        \begin{cases}
-            2,  & \quad \text{if~$n + 2 \le m \le 2n$,}\\
-            1,  & \quad \text{if~$m = 2n+1$.}
-        \end{cases}
-    \end{equation}
-    On the other hand,
-    \begin{equation}
-        \label{eq:lambda-p-1-p-2}
-        \lagp[1](x) = 1 - \sum_{j = 1}^{m - n - 1} \frac{x_j^2}{\Delta^2} - \sum_{j = m - n}^n \frac{x_j}{\Delta} \ge 1 - \sum_{j = 1}^{m - n - 1} \frac{\abs{x_j}}{\Delta} - \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \ge 1 - \frac{\norm{x}_1}{\Delta} \ge 0.
-    \end{equation}
-    We conclude the proof by combining~\eqref{eq:lambda-p-1-p-1} and~\eqref{eq:lambda-p-1-p-2} with Lemma~\ref{lem:lambda-p}.
-\end{proof}
+%\begin{proof}
+%    According to Theorem~\ref{thm:bounds},~$\Lambda_1$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-1}.
+%    Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_1$, using Lemma~\ref{lem:lambda-p}.
+
+%    For any~$x \in \mathcal{B}_1(\Delta)$, according to Lemma~\ref{lem:lagp}, we have
+%    \begin{equation*}
+%        \lagp[1](x) \le 1 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! \abs{x_j}.
+%    \end{equation*}
+%    Therefore,
+%    \begin{equation}
+%        \label{eq:lambda-p-1-p-1}
+%        \lagp[1](x) \le
+%        \begin{cases}
+%            2,  & \quad \text{if~$n + 2 \le m \le 2n$,}\\
+%            1,  & \quad \text{if~$m = 2n+1$.}
+%        \end{cases}
+%    \end{equation}
+%    On the other hand,
+%    \begin{equation}
+%        \label{eq:lambda-p-1-p-2}
+%        \lagp[1](x) = 1 - \sum_{j = 1}^{m - n - 1} \frac{x_j^2}{\Delta^2} - \sum_{j = m - n}^n \frac{x_j}{\Delta} \ge 1 - \sum_{j = 1}^{m - n - 1} \frac{\abs{x_j}}{\Delta} - \sum_{j = m - n}^n \frac{\abs{x_j}}{\Delta} \ge 1 - \frac{\norm{x}_1}{\Delta} \ge 0.
+%    \end{equation}
+%    We conclude the proof by combining~\eqref{eq:lambda-p-1-p-1} and~\eqref{eq:lambda-p-1-p-2} with Lemma~\ref{lem:lambda-p}.
+%\end{proof}
 
 \begin{proposition}
     \label{prop:lambda-p-2}
-    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$, we have
+    For any~$m \in \set{n + 2, n + 3, \dots, 2n + 1}$ and any~$p\in[1,2]$, we have
     \begin{equation}
         \label{eq:lambda-p-2}
-        \Lambda_2 = 1 + \sqrt{2n + 1 - m}.
+        \Lambda_p = 1 + (2n + 1 - m)^{\frac{p-1}{p}}.
     \end{equation}
 \end{proposition}
 
 \begin{proof}
-    %If~$m = 2n + 1$, Lemma~\ref{lem:lagp} tells us that~$\lagp[1](x) = 1 - \norm{x}_2^2 / \Delta^2$ for~$x \in \mathcal{B}_2(\Delta)$.
-    %Therefore, Lemma~\ref{lem:lambda-p} provides the desired result~$\Lambda_2 = 1$.
-    %We now focus on the case with~$n + 2 \le m < 2n + 1$.
-    According to Theorem~\ref{thm:lambda-p},~$\Lambda_2$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
-    Therefore, we only need to prove that this right-hand side is also an upper bound for~$\Lambda_2$, using Lemma~\ref{lem:lambda-p}.
+    According to Theorem~\ref{thm:bounds},~$\Lambda_p$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
+    Therefore, we only need to prove that the right-hand side is also an upper bound for~$\Lambda_p$, using Lemma~\ref{lem:lambda-p}.
 
-    For any~$x \in \mathcal{B}_2(\Delta)$, according to Lemma~\ref{lem:lagp} and the Cauchy-Schwartz inequality, we have
+    Consider any~$x \in \mathcal{B}_p(\Delta)$. Note that~$\norm{x}_2 \le\norm{x}_p \le \Delta $ for~$p\in[1,2]$.
+    According to Lemma~\ref{lem:lagp} and the Cauchy-Schwartz inequality, we have
     \begin{align}
         -\lagp[1](x) &= -1 + \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
-                    &\le -1 + \frac{1}{\Delta^2}\norm{x}_2^2 + \frac{1}{\Delta} \sqrt{2n+1-m}\,\norm{x}_2 \nonumber \\
-                    & \le \sqrt{2n+1-m} \nonumber. % \label{eq:lambda-p-2-p}
+        &\le -1 + \frac{1}{\Delta^2}\norm{x}_2^2 + \frac{1}{\Delta} (2n+1-m)^{\frac{p-1}{p}}\, \norm{x}_p \nonumber \\
+        & \le (2n+1-m)^{\frac{p-1}{p}} \nonumber. % \label{eq:lambda-p-2-p}
     \end{align}
     Similarly,
     \begin{equation*}
-        \lagp[1](x) \le 1 + \frac{1}{\Delta}\sum_{j = m - n}^n \abs{x_j} \le 1 + \frac{1}{\Delta} \sqrt{2n + 1 - m} \,\norm{x}_2 \le 1 + \sqrt{2n + 1 - m}.
+        \lagp[1](x) \le 1 + \frac{1}{\Delta}\sum_{j = m - n}^n \abs{x_j} \le 1 + \frac{1}{\Delta}
+        (2n + 1 - m)^{\frac{p-1}{p}} \,\norm{x}_p \le 1 + (2n + 1 - m)^{\frac{p-1}{p}}.
     \end{equation*}
-    Therefore, according to Lemma~\ref{lem:lambda-p}, we have
+    Therefore, invoking Lemma~\ref{lem:lambda-p}, we have
     \begin{equation*}
-        \Lambda_2 = \max_{\norm{x}_2 \le \Delta} \abs[\big]{\lagp[1](x)} \le 1 + \sqrt{2n + 1 - m},
+        \Lambda_p = \max_{\norm{x}_p \le \Delta} \abs[\big]{\lagp[1](x)} \le 1 + (2n + 1 - m)^{\frac{p-1}{p}},
     \end{equation*}
     which concludes the proof.
 \end{proof}
 
-Before developing the last special value of~$\Lambda_p$ we introduce the following elementary lemma.
+Before presenting the next special value of~$\Lambda_p$, we recall the following elementary fact.
 
 \begin{lemma}
     \label{lem:max-norm-pq}
-    For any~$p \ge 1$ and~$q \ge 1$, we have
-    \begin{subequations}
-        \begin{numcases}{\max_{\norm{x}_q \le 1} @ \norm{x}_p =}
-            1,                      & \text{if~$p \ge q$,} \label{eq:max-norm-pq-1}\\
-            n^{\frac{q - p}{pq}},   & \text{otherwise.} \label{eq:max-norm-pq-2}
-        \end{numcases}
-    \end{subequations}
+    For any~$p\in[1,\infty]$ and $q \in [1,\infty]$, we have
+    \begin{equation}
+        \label{eq:max-norm-pq}
+        \max_{\norm{x}_q \le 1} @ \norm{x}_p= \max\{1, n^{\frac{1}{p}-\frac{1}{q}}\}.
+    \end{equation}
+%    \begin{subequations}
+%        \begin{numcases}{\max_{\norm{x}_q \le 1} @ \norm{x}_p =}
+%            1,                      & \text{if~$p \ge q$,} \label{eq:max-norm-pq-1}\\
+%            n^{\frac{q - p}{pq}},   & \text{otherwise.} \label{eq:max-norm-pq-2}
+%        \end{numcases}
+%    \end{subequations}
 \end{lemma}
 
 \begin{proof}
-    Let us first consider the case where~$p \ge q$.
-    For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq-1} holds.
+    If~$p$ or~$q$ is infinity, then~\eqref{eq:max-norm-pq} is straightforward to verify. So we
+    assume that both of them are finite.
 
-    We now consider the case where~$p < q$.
+    Consider the case where~$p \ge q$.
+    For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le \norm{x}_q \le 1$, and this bound is attained at the
+    first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq} holds in this
+    case.
+
+    We now suppose that~$p < q$.
     Let~$\ones \in \R^n$ denote the vector with all entries being one,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
     For~$x \in \mathcal{B}_q(1)$, define~$z = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
-        \norm{x}_p  = \big(\ones^{\T} z \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{z}_r \big)^{\frac{1}{p}} = n^{\frac{q - p}{pq}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+        \norm{x}_p  = \big(\ones^{\T} z \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{z}_r \big)
+        ^{\frac{1}{p}} = n^{\frac{1}{sp}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
     \end{equation*}
-    Moreover, this bound is attained at~$x^\ast = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq-2}.
+    Moreover, this bound is attained at~$x^\ast = n^{-\frac{1}{q}}\ones$, which proves~\eqref{eq:max-norm-pq} for~$p<q$.
 \end{proof}
 
 \begin{proposition}
     \label{prop:lambda-p-opt}
-    For any~$p \ge 1$, if~$m = 2n + 1$, then
+    For any~$p \in [1,\infty]$, if~$m = 2n + 1$, then
     \begin{equation*}
         \Lambda_p = \max \set[\big]{1, n^{\frac{p - 2}{p}} - 1}.
     \end{equation*}
@@ -639,21 +669,22 @@ Before developing the last special value of~$\Lambda_p$ we introduce the followi
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( \Delta^{-2} {\norm{x}_2^2} - 1 \big) =
-        \begin{cases}
-            0,                          & \quad \text{if~$p \le 2$,}\\
-            n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
-        \end{cases}
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( \Delta^{-2}
+        {\norm{x}_2^2} - 1 \big) = \max\{0, n^{\frac{p - 2}{p}} - 1\}.
+        %\begin{cases}
+        %    0,                          & \quad \text{if~$p \le 2$,}\\
+        %    n^{\frac{p - 2}{p}} - 1,    & \quad \text{otherwise.}
+        %\end{cases}
     \end{equation}
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
 
 Now we can show that~$\xpt[0]_{2n+1}$ attains the minimal constant of well-poisedness in~$\mathcal{B}_p(\Delta)$ among all interpolation sets that contain the origin, provided that~$1 \le p\le 2$.
 In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$.
-Indeed, the upper bound for~$p$ can be slightly larger than~$2$, as is detailed in Theorem~\ref{th:optimset}.
-Recall that~$p=2$ is of interest concerning Powell's methods.
+Indeed, the upper bound for~$p$ can be slightly larger than~$2$, as is detailed in Theorem~\ref{thm:optimset}.
+For most trust-region \gls{dfo} methods, $p=2$ is of interest, which is the case for the methods of Powell.
 \begin{theorem}
-    \label{th:optimset}
+    \label{thm:optimset}
     Assume that~$m=2n+1$, and that either~$n\le 2$ or
     \begin{equation}
         \label{eq:pineq}
@@ -668,23 +699,27 @@ Recall that~$p=2$ is of interest concerning Powell's methods.
     have~$\Lambda \ge 1$, because the Lagrange polynomial corresponding to~$0$ takes the value~$1$ at~$0$.
     Thus the theorem holds.
 \end{proof}
-It is worth mentioning that Propositions~\ref{prop:lambda-p-1} and~\ref{prop:lambda-p-2} also imply that~$\xpt[0]_{2n+1}$ renders~$\Lambda_p = 1$ for~$p \in \set{1, 2}$.
+It is worth mentioning that Proposition~\ref{prop:lambda-p-2} also implies that~$\xpt[0]_{2n+1}$ renders~$\Lambda_p = 1$ for~$p \in [1, 2]$.
 This equality turns out to be true for a larger range of~$p$.
 
 
 
 \subsubsection{Remarks and open questions}
 
-Note that~$\Lambda_p$ can be regarded as a function of~$m$. Theorem~\ref{th:optimset} implies that~$m^\ast = 2n+1$ minimizes this function if $p$ satisfies inequality~\eqref{eq:pineq}.
-We conjecture that~$2n+1$ minimizes~$\Lambda_p$ for any~$p \ge 1$, but we do not have any proof for such a statement yet.
+Note that~$\Lambda_p$ can be regarded as a function of~$m$. Theorem~\ref{thm:optimset} implies that~$m^\ast = 2n+1$ minimizes this function if $p$ satisfies inequality~\eqref{eq:pineq}.
+Thus it is natural to ask whether~$2n+1$ minimizes~$\Lambda_p$ for any~$p \ge 1$, to which we do not have an answer yet.
 
 The definition of~$\xpt[0]_m$ in~\eqref{eq:set-def} and~\eqref{eq:set-def-m} assumes that~$m \le 2n + 1$.
 Even though larger values of~$m$ are not recommended in practice, Powell~\cite{Powell_2006} proposed
 an extension of~$\xpt[0]_m$ for~$m>2n+1$.
 With such an extension, we can define~$\Lambda_p$ by~\eqref{eq:Lambdap} for any~$m \in \{n+2, n+3, \dots, (n+1)(n+2)/2\}$.
-It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p \ge 1$, which seems to be true according to some numerical experiments.
-We leave this problem open and expect the analysis to be more challenging than what we have done.
+It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p \ge 1$. %, which seems to be true according to some numerical experiments.
+We expect the analysis to be more challenging than what we have done.
 One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involving.
+
+Another interesting question is whether any interpolation set containing the origin can be~\mbox{$\Lambda$-poised} in~$\mathcal{B}_p(\Delta)$ with~$\Lambda < \Lambda_p$.
+Theorem~\ref{thm:optimset} provides a negative answer when~$p$ satisfies~\eqref{eq:pineq}.
+If the answer is negative for all~$p\ge 1$, then the optimality of~$2n+1$ mentioned in the above two paragraphs is true, and~$\xpt[0]_{2n+1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for any~$p\ge 1$.
 
 The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
 based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding of certain algorithmic strategies that we often employ but rarely ask why.
