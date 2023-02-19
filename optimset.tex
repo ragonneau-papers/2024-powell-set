@@ -347,8 +347,8 @@ We are now equipped to define the notion of~$\Lambda$-poisedness in the minimum 
     \end{equation*}
 \end{definition}
 
-One can show that~$\xpt$ is~$\Lambda$-poised if and only if the condition number of the coefficient matrix of the KKT system of~\eqref{eq:intp-var} is bounded by some terms proportional to~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
-Therefore, the notion of~$\Lambda$-poisedness formalizes the intuitive notion of well-poisedness mentioned above.
+One can show that~$\xpt$ is~$\Lambda$-poised in the unit ball if and only if the condition number of the KKT system of~\eqref{eq:intp-var} is bounded by some polynomials of~$\Lambda$~\cite[Theorem~5.8]{Conn_Scheinberg_Vicente_2009}.
+Therefore, the notion of~$\Lambda$-poisedness formalizes the intuition about well-poisedness mentioned above.
 
 If~$\xpt$ is a poised interpolation set and~$\mathcal{C}\subseteq \R^n$ is compact, then we will refer to
 \[
@@ -381,7 +381,7 @@ For~$i \in \set{1, 2, \dots, 2n + 1}$, define
     \end{cases}
 \end{equation}
 where~$e_i \in \R^n$ denotes the $i$th canonical coordinate vector in~$\R^n$.
-Let~$m$ be the number of interpolation points. We focus on the case that~$n+2 \le m \le 2n+1$
+Let~$m$ be the number of interpolation points. We focus on the case with~$n+2 \le m \le 2n+1$
 following Powell's suggestion.\footnote{
 Powell's \solvername{bobyqa} code contains a comment that `choices that exceed $2n+1$ are not recommended'.
 }
@@ -391,7 +391,7 @@ The initial interpolation set is then chosen to be
     \xpt[0]_m = \set{y^1, y^2, \dots, y^m},
 \end{equation}
 which can be found in~\cite[eq.~(3.2)]{Powell_2006}.
-The default value for~$m$ proposed by Powell is~$2n + 1$, i.e., the default initial interpolation
+The default value for~$m$ proposed by Powell is~$2n + 1$. In other words, the default initial interpolation
 set is~$\xpt[0] = \xpt[0]_{2n + 1}$.
 This is a natural choice, as the corresponding interpolation set is geometrically appealing.
 It consists of the origin and equidistant points to the origin in the positive and negative coordinate directions.
@@ -400,14 +400,14 @@ is indeed optimal in terms of well-poisedness.
 
 \subsection{Well-poisedness of the interpolation set}
 
-We now investigate the $\Lambda$-poisedness~$\xpt[0]_m$ for different values of~$m \in \{n+2, n+3, \dots, 2n+1\}$.
+We now investigate the $\Lambda$-poisedness~$\xpt[0]_m$. % for different values of~$m \in \{n+2, n+3, \dots, 2n+1\}$.
 We will do this in the closed~$\ell_p$-norm ball of radius~$\Delta$ centred at the origin, namely
 \begin{equation*}
     \mathcal{B}_p(\Delta) = \set{x \in \R^n : \norm{x}_p \le \Delta},
 \end{equation*}
 with~$p \in [1, \infty]$.
 Note that we allow~$p = \infty$, and that~$\mathcal{B}_p(\Delta)$ is also the smallest~$\ell_p$-norm ball enclosing~$\xpt[0]_m$.
-Powell's methods define the trust region by the Euclidean norm, so the case with~$p=2$ is the most
+Trust-region \gls{dfo} methods usually define the trust region by the Euclidean norm, so the case with~$p=2$ is the most
 interesting. However, it can be beneficial to define the trust region by polyhedral norms when bound
 or linear constraints are present, and $p=1$ or~$p=\infty$ will become more relevant.
 
@@ -418,6 +418,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
 \end{equation}
 where~$\lagp[i]$ is the~$i$th minimum-norm Lagrange polynomial associated with~$\xpt[0]_m$ for~$i \in \set{1, 2, \dots, m}$.
 Indeed, $\Lambda_p$ is the {constant of well-poisedness} of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
+We will focus on this constant in what follows.
 
 \subsubsection{Formulation of the Lagrange polynomials}
 
@@ -442,7 +443,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
 \end{lemma}
 
 \begin{proof}
-    Let~$i \in \set{1, 2, \dots, m}$ be fixed and let~$\lagp$ be a quadratic polynomial that satisfies
+    Let~$i \in \set{1, 2, \dots, m}$ be fixed and let~$\lagp$ be a quadratic polynomial satisfying
     \begin{equation}
         \label{eq:lagp-p}
         \lagp(y^j) = \delta_{i, j}, \quad j \in \set{1, 2, \dots, m}.
@@ -472,7 +473,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
     which completes the proof.
 \end{proof}
 
-\subsubsection{Bounds for the~\texorpdfstring{$\Lambda$}{\textLambda}-poisedness}
+\subsubsection{Bounds for the constant of well-poisedness}
 
 The next lemma simplifies the expression of~$\Lambda_p$ defined in~\eqref{eq:Lambdap} for further computations.
 
@@ -523,7 +524,7 @@ henceforth
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ entries are zeros and whose remaining~$2n + 1 - m$ entries are equal, we have
     \begin{equation*}
-        \Lambda_p \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+        \Lambda_p = \max_{\|x\|_p\le \Delta}|\lagp[1](x)| \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
 
     We now establish the upper bound.
@@ -548,7 +549,7 @@ henceforth
 \subsubsection{Some special cases}
 
 Examining the second part of the proof for Theorem~\ref{thm:bounds}, we can see that~$\Lambda_\infty = n$, attaining the upper bound in~\eqref{eq:bounds}.
-There are more cases where we can calculate the exact value of~$\Lambda_p$, as will be elaborated in the following.
+There are more cases where we can calculate the exact value of~$\Lambda_p$, as will be detailed in the following.
 
 First, when~$1\le p\le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref{eq:bounds}.
 
@@ -600,8 +601,8 @@ First, when~$1\le p\le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref
 \end{proposition}
 
 \begin{proof}
-    According to Theorem~\ref{thm:bounds},~$\Lambda_p$ is lower bounded by the right-hand side of~\eqref{eq:lambda-p-2}.
-    Therefore, we only need to prove that the right-hand side is also an upper bound for~$\Lambda_p$, using Lemma~\ref{lem:lambda-p}.
+    According to Theorem~\ref{thm:bounds}, it suffices to show that the right-hand side of~\eqref{eq:lambda-p-2} is an upper bound for~$\Lambda_p$.
+    We will prove this using Lemma~\ref{lem:lambda-p}.
 
     Consider any~$x \in \mathcal{B}_p(\Delta)$. Note that~$\norm{x}_2 \le\norm{x}_p \le \Delta $ for~$p\in[1,2]$.
     According to Lemma~\ref{lem:lagp} and the Cauchy-Schwartz inequality, we have
@@ -622,7 +623,8 @@ First, when~$1\le p\le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref
     which concludes the proof.
 \end{proof}
 
-Before presenting the next special value of~$\Lambda_p$, we recall the following elementary fact.
+We can also evaluate~$\Lambda_p$ under the default and natural setting~$m = 2n+1$ recommended by Powell.
+To this end, recall the following elementary fact.
 
 \begin{lemma}
     \label{lem:max-norm-pq}
@@ -690,7 +692,7 @@ Before presenting the next special value of~$\Lambda_p$, we recall the following
 Now we can show that~$\xpt[0]_{2n+1}$ attains the minimal constant of well-poisedness in~$\mathcal{B}_p(\Delta)$ among all interpolation sets that contain the origin, provided that~$1 \le p\le 2$.
 In this sense,~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for~$p \in [1, 2]$.
 Indeed, the upper bound for~$p$ can be slightly larger than~$2$, as is detailed in Theorem~\ref{thm:optimset}.
-For most trust-region \gls{dfo} methods, $p=2$ is of interest, which is the case for the methods of Powell.
+Recall that $p=2$ is of interest for most trust-region \gls{dfo} methods, including those by Powell.
 \begin{theorem}
     \label{thm:optimset}
     Assume that~$m=2n+1$, and that either~$n\le 2$ or
@@ -721,13 +723,14 @@ The definition of~$\xpt[0]_m$ in~\eqref{eq:set-def} and~\eqref{eq:set-def-m} ass
 Even though larger values of~$m$ are not recommended in practice, Powell~\cite{Powell_2006} proposed
 an extension of~$\xpt[0]_m$ for~$m>2n+1$.
 With such an extension, we can define~$\Lambda_p$ by~\eqref{eq:Lambdap} for any~$m \in \{n+2, n+3, \dots, (n+1)(n+2)/2\}$.
-It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p \ge 1$. %, which seems to be true according to some numerical experiments.
-We expect the analysis to be more challenging than what we have done.
+It is interesting to ask whether~$2n + 1$ still minimizes~$\Lambda_p$ for any~$p \ge 1$ after the extension. %, which seems to be true according to some numerical experiments.
+We expect that the analysis will be more challenging than what we have done.
 One of the challenges is that Lemma~\ref{lem:lambda-p} does not hold when~$m > 2n + 1$, and hence, the estimations of~$\Lambda_p$ will become more involved.
 
 Another interesting question is whether any interpolation set containing the origin can be~\mbox{$\Lambda$-poised} in~$\mathcal{B}_p(\Delta)$ with~$\Lambda < \Lambda_p$.
 Theorem~\ref{thm:optimset} provides a negative answer when~$p$ satisfies~\eqref{eq:pineq}.
-If the answer is negative for all~$p\ge 1$, then the optimality of~$2n+1$ mentioned in the above two paragraphs is true, and~$\xpt[0]_{2n+1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for any~$p\ge 1$.
+If the answer is negative for all~$p\ge 1$, then the optimality of~$2n+1$ mentioned in the above two
+paragraphs is true, and~$\xpt[0]_{2n+1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for all~$p\ge 1$.
 
 
 
@@ -736,8 +739,8 @@ If the answer is negative for all~$p\ge 1$, then the optimality of~$2n+1$ mentio
 
 %This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
 %In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of well-poisedness in a ball centred at the starting point.
-We have analyzed the well-poisedness of an interpolation set employed in many trust-region \gls{dfo} methods, particularly those by Powell.
-This set is proved to be optimal under the default setting recommended by Powell, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
+We have analyzed the well-poisedness of an interpolation set that appears in many trust-region \gls{dfo} methods, particularly those by Powell.
+It is proved to be an optimal interpolation set under the default setting, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
 Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
 
 The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
