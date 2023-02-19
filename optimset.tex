@@ -449,7 +449,7 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
         \lagp(y^j) = \delta_{i, j}, \quad j \in \set{1, 2, \dots, m}.
     \end{equation}
     First, it is straightforward to verify that~$\lagp[i]$ satisfies the interpolation conditions~\eqref{eq:lagp-p}.
-    Hence, it suffices to show that~$\|\nabla^2 \lagp[i]\|_\mathsf{F} \le \|\nabla^2 \lagp\|_\mathsf{F}$.
+    Hence, it suffices to show that~$\norm{\nabla^2 \lagp[i]}_\mathsf{F} \le \norm{\nabla^2 \lagp}_\mathsf{F}$.
 
     Consider any~$j\in\{1,2,\dots, m-n-1\}$.
     Denote the $j$th diagonal entries of~$\nabla^2 \lagp$ and~$\nabla^2 \lagp[i]$ by~$(\nabla^2\lagp)_{j,j}$ and~$(\nabla^2\lagp[i])_{j,j}$, respectively.
@@ -524,7 +524,7 @@ henceforth
     We will establish the bounds using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ entries are zeros and whose remaining~$2n + 1 - m$ entries are equal, we have
     \begin{equation*}
-        \Lambda_p = \max_{\|x\|_p\le \Delta}|\lagp[1](x)| \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
+        \Lambda_p = \max_{\norm{x}_p\le \Delta}\abs{\lagp[1](x)} \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
 
     We now establish the upper bound.
@@ -605,7 +605,7 @@ First, when~$1\le p\le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref
     We will prove this using Lemma~\ref{lem:lambda-p}.
 
     Consider any~$x \in \mathcal{B}_p(\Delta)$. Note that~$\norm{x}_2 \le\norm{x}_p \le \Delta $ for~$p\in[1,2]$.
-    According to Lemma~\ref{lem:lagp} and the Cauchy-Schwartz inequality, we have
+    According to Lemma~\ref{lem:lagp} and the H\"older inequality, we have
     \begin{align}
         -\lagp[1](x) &= -1 + \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 + \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \nonumber\\
         &\le -1 + \frac{1}{\Delta^2}\norm{x}_2^2 + \frac{1}{\Delta} (2n+1-m)^{\frac{p-1}{p}}\, \norm{x}_p \nonumber \\
