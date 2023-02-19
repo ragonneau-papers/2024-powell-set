@@ -262,14 +262,17 @@ This mechanism prevents the methods from performing unnecessary function evaluat
 In this case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for the subsequent iterations.
 Powell devised an initial interpolation set~$\xpt[0]$ for his methods, described in Subsection~\ref{subsec:powell-set}.
 Although the design of this set is natural, no theoretical analysis has been provided to justify its configuration.
-This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense.
+This paper contributes such an analysis, showing that no other interpolation set is better in
+a well-poisedness~sense.
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the $\Lambda$-poisedness of interpolation sets in the underdetermined sense.
-This notion is then employed in Section~\ref{sec:main-result} to study the initial interpolation set used by Powell.
-\textcolor{red}{Theorem~\ref{thm:bounds}\fxnote{This is not true anymore} is the main result of this paper
-    and provides explicit bounds for the constant of well-poisedness of the interpolation set under
-study.}
+Section~\ref{sec:main-result} then employs this notion to study the initial interpolation set used by Powell.
+We provide lower and upper bounds for the constant of well-poisedness of the set,
+evaluate this constant in a few special cases,
+and then demonstrate the optimality of this set under the default setting recommended by Powell.
+In addition, we raise some open questions motivated by our results.
+Section~\ref{sec:conclusion} concludes this paper.
 
 \section{Well-poisedness of interpolation sets}
 \label{sec:well-poisedness}
@@ -721,17 +724,19 @@ Another interesting question is whether any interpolation set containing the ori
 Theorem~\ref{thm:optimset} provides a negative answer when~$p$ satisfies~\eqref{eq:pineq}.
 If the answer is negative for all~$p\ge 1$, then the optimality of~$2n+1$ mentioned in the above two paragraphs is true, and~$\xpt[0]_{2n+1}$ is an optimal interpolation set in~$\mathcal{B}_p(\Delta)$ for any~$p\ge 1$.
 
-The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
-based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding of certain algorithmic strategies that we often employ but rarely ask why.
 
 
 \section{Conclusion}
+\label{sec:conclusion}
 
 %This paper demonstrated that a natural choice made by Powell when designing \solvername{newuoa} is supported by the interpolation theory.
 %In particular, we showed that the interpolation set he proposed for \solvername{newuoa} is optimal in the sense that it minimizes its constant of well-poisedness in a ball centred at the starting point.
 We have analyzed the well-poisedness of an interpolation set employed in many trust-region \gls{dfo} methods, particularly those by Powell.
 This set is proved to be optimal under the default setting recommended by Powell, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
 Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
+
+The spirit of our analysis is similar to that of~\cite{Dodangeh_Vicente_Zhang_2016}, which proves that a widely used direction set is indeed optimal for directional direct search methods
+based on sufficient decrease. While proving nothing surprising, this kind of investigation deepens our understanding of certain algorithmic strategies that we often employ but rarely ask why.
 
 \paragraph*{Acknowledgement}
 This paper corresponds to Section~2.5 of the first author's Ph.D.~thesis~\cite{Ragonneau_2022}, co-supervised by the second author and Professor Xiaojun Chen from The Hong Kong Polytechnic University.
