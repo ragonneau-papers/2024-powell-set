@@ -194,7 +194,7 @@
 based on function evaluations without relying on derivative information.
 They are needed when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ are unavailable or too expensive to evaluate, which may also be the case for the constraint functions underlying the feasible set~$\fset \subseteq \R^n$.
 Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
-The \gls{dfo} litterature is vast. For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
+The \gls{dfo} literature is vast. For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{thm:optimset}.
@@ -258,8 +258,8 @@ Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqr
 Most interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
 Instead, they choose an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to obtain~$\xpt[k + 1]$.
 For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's trust-region \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
-This mechanism tries to make the best of the function evaluations, which are normally considered as the principal cost of \gls{dfo} methods.
-In such a case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for the subsequent iterations.
+This mechanism tries to make the best of the function evaluations, which are normally considered the principal cost of \gls{dfo} methods.
+In such a case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for subsequent iterations.
 Powell devised an initial interpolation set for his methods, described in Subsection~\ref{subsec:powell-set}.
 Although the design of this set is natural, no theoretical analysis has been provided to justify its configuration.
 This paper contributes such an analysis, showing that no other interpolation set is better in
