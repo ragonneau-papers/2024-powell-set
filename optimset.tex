@@ -38,9 +38,9 @@
 
 % Mathematics
 \usepackage{mathtools}
-\usepackage{cases}
-\usepackage[bb=dsfontserif]{mathalfa}
+\usepackage{amssymb}
 \usepackage{bbm}
+\usepackage{cases}
 \numberwithin{equation}{section}
 
 % Line numbering in draft mode
@@ -191,7 +191,7 @@ Examples of such problems arise from many areas, such as reinforcement learning~
 The \gls{dfo} literature is vast.
 For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
-This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods~\cite{Conn_Gould_Toint_2000,Yuan_2015} based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{thm:optimset}.
 
 In what follows, we denote by~$\qpoly$ the space of polynomials on~$\R^n$ of degree at most two, which will be referred to as quadratic polynomials for simplicity.
