@@ -45,20 +45,20 @@
 % Line numbering in draft mode
 \usepackage{lineno}
 \usepackage{ifdraft}
-\newcommand{\marginfont}{\scriptsize\sffamily\color{gray}}
-\renewcommand{\linenumberfont}{\normalfont\marginfont}
-\ifdraft{\linenumbers}{}
+\DeclareTextFontCommand{\marginfont}{\scriptsize\sffamily\color{gray}}
+\ifdraft{
+    \renewcommand{\linenumberfont}{\normalfont\marginfont}
+    \linenumbers
+}{}
 
 % Show labels in draft mode
 \ifdraft{}{\PassOptionsToPackage{final}{showlabels}}
 \usepackage{showlabels}
-\renewcommand{\showlabelfont}{\marginfont}
+\ifdraft{\renewcommand{\showlabelfont}{\marginfont}}{}
 
 % To-do notes in draft mode
-\usepackage[
-    marginface=\linespread{1}\marginfont,
-    author={},
-]{fixme}
+\usepackage[author={}]{fixme}
+\ifdraft{\fxsetup{marginface=\linespread{1}\marginfont}}{}
 
 % Modify the typesets of the `\maketitle' and `\thanks' commands
 \usepackage{titling}
