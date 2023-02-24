@@ -46,19 +46,17 @@
 \usepackage{lineno}
 \usepackage{ifdraft}
 \DeclareTextFontCommand{\marginfont}{\scriptsize\sffamily\color{gray}}
-\ifdraft{
-    \renewcommand{\linenumberfont}{\normalfont\marginfont}
-    \linenumbers
-}{}
+\renewcommand{\linenumberfont}{\normalfont\marginfont}
+\ifdraft{\linenumbers}{}
 
 % Show labels in draft mode
 \ifdraft{}{\PassOptionsToPackage{final}{showlabels}}
 \usepackage{showlabels}
-\ifdraft{\renewcommand{\showlabelfont}{\marginfont}}{}
+\renewcommand{\showlabelfont}{\marginfont}
 
 % To-do notes in draft mode
 \usepackage[author={}]{fixme}
-\ifdraft{\fxsetup{marginface=\linespread{1}\marginfont}}{}
+\fxsetup{marginface=\linespread{1}\marginfont}
 
 % Modify the typesets of the `\maketitle' and `\thanks' commands
 \usepackage{titling}
@@ -148,14 +146,15 @@
 \newcommand*{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 
 % Document metadata
+% Note: using `\\' in `\thanks` breaks when compiling with Tex Live 2020.
 \title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
     Tom M. Ragonneau\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\newline
         \email{tom.ragonneau@polyu.edu.hk}; \orcid{0000-0003-2717-2876}.
     } \and
     Zaikun Zhang\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\newline
         \email{zaikun.zhang@polyu.edu.hk}; \orcid{0000-0001-8934-8190}.
         Corresponding author.
     }
@@ -655,6 +654,6 @@ This paper corresponds to Section~2.5 of the first author's Ph.D.~thesis~\cite{R
 Both authors are very grateful to Professor Chen for her support, encouragement, and guidance during the thesis.
 
 \bibliographystyle{plain}
-\bibliography{\jobname}
+\bibliography{optimset}
 
 \end{document}
