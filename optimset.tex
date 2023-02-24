@@ -17,12 +17,11 @@
 
 % Cross-referencing
 \usepackage[
-    pdfusetitle,
+    % pdfusetitle,
     hyperfootnotes=false,
 ]{hyperref}
 \usepackage{url}
 \hypersetup{
-    final,
     colorlinks=true,
     linktoc=page,
     linkcolor=OliveGreen,
@@ -100,8 +99,8 @@
 \newcommand{\createlist}[3]{
     \expandafter\newcommand\expandafter{\csname #1\endcsname}[1]{
         \begingroup
-        \def\and{ ; }
-        \hypersetup{#2={##1}}
+        % \def\and{ ; }
+        % \hypersetup{#2={##1}}
         \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
         \paragraph*{#3} ##1
         \endgroup
