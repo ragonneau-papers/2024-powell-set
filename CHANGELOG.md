@@ -20,6 +20,6 @@ All changes to this project since 2023-02-19 (Initial submission, v1.0) will be 
 
 ### Changed
 
-- Change the em dash in the title to a colon.
+- Change the em dash in the COBYQA paper's title to a colon.
 
 ### Fixed
