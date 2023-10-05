@@ -1,39 +1,100 @@
 %% optimset.tex
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
 \documentclass{article}
-\usepackage[utf8]{inputenc}
+
+% Preliminary declarations
 \usepackage[a4paper]{geometry}
-\usepackage[british]{babel}
+\usepackage[indent]{parskip}
+\usepackage{etoolbox}
+\usepackage{ifdraft}
+
+% Colors
 \usepackage[dvipsnames]{xcolor}
-\usepackage{microtype}
+\definecolor{Basil}{HTML}{32612D}
+\definecolor{Berry}{HTML}{7A1712}
+
+% To-do notes in draft mode
+% Available commands:
+% - \fxnote[options]{<note>}
+% - \fxwarning[options]{<note>}
+% - \fxerror[options]{<note>}
+% - \fxfatal[options]{<note>}
+% Available targeted commands:
+% - \fxnote*[options]{<note>}{<text>}
+% - \fxwarning*[options]{<note>}{<text>}
+% - \fxerror*[options]{<note>}{<text>}
+% - \fxfatal*[options]{<note>}{<text>}
+\usepackage[author={}]{fixme}
+\fxsetup{marginface=\scriptsize\sffamily\color{gray}}
+
+% Add line numbers in draft mode
+\usepackage[mathlines]{lineno}
+\ifdraft{\linenumbers}{}
+\renewcommand{\linenumberfont}{\normalfont\scriptsize\sffamily\color{gray}}
+\setlength{\linenumbersep}{\marginparsep}
+
+% Manage culturally-determined typographical rules
+% N.B.: `csquotes' must be loaded after `lineno'
+\usepackage[british]{babel}
 
 % Font and encoding
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
+\usepackage[sf,bf,nobottomtitles*,]{titlesec}
+\usepackage{abstract}
+\titleformat{\section}{\normalfont\large\bfseries\sffamily}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\renewcommand\abstractnamefont{\normalfont\small\bfseries\sffamily}
 
-% Line spacing
+% Space between lines
 \usepackage[nodisplayskipstretch]{setspace}
 \onehalfspacing
 
-% Cross-referencing
-\usepackage[
-    pdfusetitle,
-    hyperfootnotes=false,
-]{hyperref}
-\usepackage{url}
-\hypersetup{
-    colorlinks=true,
-    linktoc=page,
-    linkcolor=OliveGreen,
-    anchorcolor=black,
-    citecolor=MidnightBlue,
-    filecolor=black,
-    menucolor=black,
-    runcolor=black,
-    urlcolor=black,
+% Subliminal refinements
+\usepackage{microtype}
+\usepackage[prevent-all]{widows-and-orphans}
+
+% Prevent footnotes from splitting across pages
+\interfootnotelinepenalty=10000
+
+% Prevent line breaks in inline formulas
+\binoppenalty=10000
+\relpenalty=10000
+
+% Modify the typesets of the `\maketitle' and `\thanks' commands
+\usepackage{titling}
+\pretitle{\begin{center}\begin{minipage}{0.8\textwidth}\Large\centering}
+\posttitle{\end{minipage}\end{center}\vskip 1em}
+\preauthor{\begin{center}\large \lineskip 0.5em\begin{tabular}[t]{c}}
+\postauthor{\end{tabular}\par\end{center}\vskip 1em}
+\setlength{\thanksmargin}{0pt}
+
+% Bibliography
+% N.B.: the counter `cite' is used to count the number of citations.
+\usepackage{cite}  % nosort
+\newcounter{cite}
+\preto{\cite}{\stepcounter{cite}}{}{}
+\bibliographystyle{plain}
+\NewCommandCopy{\oldbibliography}{\bibliography}
+\renewcommand{\bibliography}[1]{\ifnum\value{cite}>0\oldbibliography{#1}\fi}
+
+% `\keywords' and `\msc' commands
+\newcommand{\keywords}[1]{
+    \begingroup
+    \def\and{ ; }
+    \hypersetup{pdfkeywords={#1}}
+    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
+    \paragraph*{Keywords} #1
+    \endgroup
 }
-\newcommand*{\email}[2][inbox]{Email: \href{mailto:#2}{#2}}
-\newcommand*{\orcid}[1]{ORCID: \href{https://orcid.org/#1}{#1}}
+\newcommand{\msc}[1]{
+    \begingroup
+    \def\and{ ; }
+    \hypersetup{pdfsubject={#1}}
+    \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
+    \paragraph*{Mathematics Subject Classification (2010)} #1
+    \endgroup
+}
 
 % Mathematics
 \usepackage{mathtools}
@@ -41,26 +102,6 @@
 \usepackage{bbm}
 \usepackage{cases}
 \numberwithin{equation}{section}
-
-% Line numbering in draft mode
-\usepackage{lineno}
-\usepackage{ifdraft}
-\DeclareTextFontCommand{\marginfont}{\scriptsize\sffamily\color{gray}}
-\renewcommand{\linenumberfont}{\normalfont\marginfont}
-\ifdraft{\linenumbers}{}
-
-% Show labels in draft mode
-\ifdraft{}{\PassOptionsToPackage{final}{showlabels}}
-\usepackage{showlabels}
-\renewcommand{\showlabelfont}{\marginfont}
-
-% To-do notes in draft mode
-\usepackage[author={}]{fixme}
-\fxsetup{marginface=\linespread{1}\marginfont}
-
-% Modify the typesets of the `\maketitle' and `\thanks' commands
-\usepackage{titling}
-\setlength{\thanksmargin}{0pt}
 
 % Mathematical environments (theorems, proofs, ...)
 \usepackage{amsthm}
@@ -93,33 +134,24 @@
 \newtheorem*{remark}{Remark}
 \newtheorem*{summary}{Summary}
 
-% `\keywords' and `\msc' commands
-\newcommand{\createlist}[3]{
-    \expandafter\newcommand\expandafter{\csname #1\endcsname}[1]{
-        \begingroup
-        \def\and{ ; }
-        \hypersetup{#2={##1}}
-        \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$ }
-        \paragraph*{#3} ##1
-        \endgroup
-    }
-}
-\createlist{keywords}{pdfkeywords}{Keywords}
-\createlist{msc}{pdfsubject}{Mathematics Subject Classification (2010)}
-
-% Checks page or column breaks for issues with widow or orphan lines
-\usepackage[prevent-all]{widows-and-orphans}
-
-% No line break in inline math
-\interdisplaylinepenalty=10000
-\relpenalty=10000
-\binoppenalty=10000
-
-% Prevent footnotes from running to the next page
-\interfootnotelinepenalty=10000
-
 % Make @ behave as per catcode 13 (active). TeXbook p. 155.
 \mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
+
+% Cross-referencing
+\usepackage[
+    pdfusetitle,
+    hyperfootnotes=false,
+]{hyperref}
+\usepackage{url}
+\hypersetup{
+    final,
+    colorlinks=true,
+    linkcolor=Berry,
+    citecolor=Basil,
+    urlcolor=RedViolet,
+}
+\newcommand*{\email}[2][inbox]{Email: \href{mailto:#2}{#2}}
+\newcommand*{\orcid}[1]{ORCID: \href{https://orcid.org/#1}{#1}}
 
 % Glossaries
 \usepackage[acronym]{glossaries}
@@ -127,34 +159,33 @@
 \newacronym{dfo}{DFO}{derivative-free optimization}
 
 % Control sequences, macros, and definitions
-\usepackage{etoolbox}
-\usepackage{xspace}
 \DeclareMathOperator{\bigo}{\mathcal{O}}
 \DeclareMathOperator{\card}{card}
 \newcommand*{\abs}[2][]{#1\lvert#2#1\rvert}
-\newcommand*{\fset}{\Omega}
-\newcommand*{\lagp}[1][]{L\ifblank{#1}{}{_{#1}}}
 \newcommand*{\norm}[2][]{#1\lVert#2#1\rVert}
+\newcommand*{\set}[2][]{#1\{#2#1\}}
 \newcommand*{\obj}{f}
 \newcommand*{\objm}[1][]{\hat{\obj}\ifblank{#1}{}{^{#1}}}
+\newcommand*{\fset}{\Omega}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\T}{\mathsf{T}}
+\newcommand*{\lagp}[1][]{L\ifblank{#1}{}{_{#1}}}
+\newcommand*{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 \newcommand*{\ones}{\mathbbm{1}}
 \newcommand*{\qpoly}{\mathcal{Q}_n}
-\newcommand*{\R}{\mathbb{R}}
-\newcommand*{\set}[2][]{#1\{#2#1\}}
-\newcommand*{\solvername}[1]{\textsc{#1}\xspace}
-\newcommand*{\T}{\mathsf{T}}
-\newcommand*{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 
-% Document metadata
-% Note: using `\\' in `\thanks` breaks when compiling with Tex Live 2020.
+% Reviewing
+\newcommand{\reviewed}[1]{\textcolor{NavyBlue}{#1}}
+
+% Headings
 \title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
     Tom M. Ragonneau\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\newline
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China.\\
         \email{tom.ragonneau@polyu.edu.hk}; \orcid{0000-0003-2717-2876}.
     } \and
     Zaikun Zhang\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong.\newline
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China.\\
         \email{zaikun.zhang@polyu.edu.hk}; \orcid{0000-0001-8934-8190}.
         Corresponding author.
     }
@@ -168,7 +199,7 @@
 \begin{abstract}
     This paper demonstrates the optimality of an interpolation set employed in derivative-free trust-region methods.
     This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point.
-    It is chosen as the default initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, including \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa}.
+    It is chosen as the default initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, including NEWUOA, BOBYQA, LINCOA, and COBYQA.
     Our analysis provides a theoretical justification for this choice.
 \end{abstract}
 
@@ -185,11 +216,11 @@
 \end{equation}
 based on function evaluations without relying on derivative information.
 They are needed when classical or generalized derivatives of the objective function~$\obj \colon \R^n \to \R$ are unavailable or too expensive to evaluate, which may also be the case for the constraint functions underlying the feasible set~$\fset \subseteq \R^n$.
-Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2022}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
+Examples of such problems arise from many areas, such as reinforcement learning~\cite{Qian_Yu_2021}, hyperparameter tuning~\cite{Ghanbari_Scheinberg_2017}, particle physics~\cite{Eldred_Etal_2023}, and aircraft engineering~\cite{Gazaix_Etal_2019}.
 The \gls{dfo} literature is vast.
 For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
-This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods~\cite{Conn_Gould_Toint_2000,Yuan_2015} based on underdetermined quadratic interpolation, such as \solvername{newuoa}~\cite{Powell_2006}, and, when no constraints are present, \solvername{bobyqa}~\cite{Powell_2009}, \solvername{lincoa}, and \solvername{cobyqa}~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
+This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods~\cite{Conn_Gould_Toint_2000,Yuan_2015} based on underdetermined quadratic interpolation, such as NEWUOA~\cite{Powell_2006}, \reviewed{the method of Conejo, Karas, and Pedroso~\cite{Conejo_Karas_Pedroso_2015},} and, when no constraints are present, BOBYQA~\cite{Powell_2009}, LINCOA, and COBYQA~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
 We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{thm:optimset}.
 
 In what follows, we denote by~$\qpoly$ the space of polynomials on~$\R^n$ of degree at most two, which will be referred to as quadratic polynomials for simplicity.
@@ -202,9 +233,9 @@ Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict 
 \begin{equation*}
     \card(\xpt[k]) = \dim(\qpoly) = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-Such a scheme, referred to as the fully-determined quadratic interpolation, is used by \solvername{uobyqa}~\cite{Powell_2002}.
+Such a scheme, referred to as the fully-determined quadratic interpolation, is used by UOBYQA~\cite{Powell_2002}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[0]$.
-This is impracticable in practice unless~$n$ is small.
+This \reviewed{is impracticable} unless~$n$ is small.
 Therefore, modern interpolation-based \gls{dfo} methods work with fewer interpolation points, giving rise to the underdetermined quadratic interpolation.
 To uniquely define~$\objm[k]$ in this case, it is common to solve an interpolation problem of the form
 \begin{equation}
@@ -215,13 +246,13 @@ To uniquely define~$\objm[k]$ in this case, it is common to solve an interpolati
     \end{aligned}
 \end{equation}
 where~$\mathcal{F}^k$ is a functional that promotes certain desired regularity of~$\objm[k]$.
-For example, \solvername{dfo}~\cite{Conn_Scheinberg_Toint_1998} and \solvername{mnh}~\cite{Wild_2008} take
+For example, DFO~\cite{Conn_Scheinberg_Toint_1998} and MNH~\cite{Wild_2008} take
 \begin{equation}
     \label{eq:mnh}
     \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q}_{\mathsf{F}}^2,
 \end{equation}
 where~$\norm{\cdot}_{\mathsf{F}}$ denotes the Frobenius norm.
-In contrast, \solvername{newuoa}, \solvername{bobyqa}, \solvername{lincoa}, and \solvername{cobyqa} employ
+In contrast, NEWUOA, BOBYQA, LINCOA, and COBYQA employ
 \begin{equation}
     \label{eq:df-psb}
     \mathcal{F}^k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\mathsf{F}}^2
@@ -234,16 +265,16 @@ To ensure that~\eqref{eq:intp-var} admits a solution that includes second-order 
 \begin{equation*}
     n + 2 \le \card(\xpt[k]) \le \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, we can approximate them using similar techniques, which is the case for \solvername{cobyqa}.
+Finally, if the constraint functions underlying the feasible set~$\fset$ in~\eqref{eq:nlp} are nonlinear, we can approximate them using similar techniques, which is the case for COBYQA.
 
 Most interpolation-based \gls{dfo} methods do not build the interpolation point~$\xpt[k]$ \emph{ab~initio} at each iteration.
 Instead, they choose an initial interpolation set~$\xpt[0]$ and then  update~$\xpt[k]$ to obtain~$\xpt[k + 1]$.
-For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's trust-region \gls{dfo} methods and \solvername{cobyqa} during usual iterations.
+For example, only one point differs between~$\xpt[k]$ and~$\xpt[k + 1]$ in Powell's trust-region \gls{dfo} methods and COBYQA during usual iterations.
 This mechanism tries to make the best of the function evaluations, which are normally considered the principal cost of \gls{dfo} methods.
 In such a case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for subsequent iterations.
 Powell devised an initial interpolation set for his methods, described in Subsection~\ref{subsec:powell-set}.
 Although the design of this set is natural, no theoretical analysis has been provided to justify its configuration.
-This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness~sense.
+This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense\reviewed{~\cite[\S~3.3]{Conn_Scheinberg_Vicente_2009}}.
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the $\Lambda$-poisedness of interpolation sets in the minimum Frobenius norm sense.
@@ -350,7 +381,7 @@ For~$i \in \set{1, 2, \dots, 2n + 1}$, define
 \end{equation}
 where~$e_i \in \R^n$ denotes the $i$th canonical coordinate vector in~$\R^n$.
 Let~$m$ be the number of interpolation points.
-We focus on the case with~$n + 2 \le m \le 2n + 1$ following Powell's suggestion.\footnote{Powell's \solvername{bobyqa} code contains a comment that `choices that exceed $2n+1$ are not recommended'.}
+We focus on the case with~$n + 2 \le m \le 2n + 1$ following Powell's suggestion.\footnote{Powell's BOBYQA code contains a comment that `choices that exceed $2n+1$ are not recommended'.}
 The initial interpolation set is then chosen to be
 \begin{equation}
     \label{eq:set-def-m}
@@ -392,16 +423,17 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
 
 \begin{lemma}
     \label{lem:lagp}
-    For each~$m \in \set{n + 2, n + 3, \dots,  2n + 1}$ and all~$x \in \R^n$, we have
-    \begin{equation*}
+    \reviewed{For all~$x \in \R^n$ and~$m \in \set{n + 2, n + 3, \dots,  2n + 1}$, the expression of~$\lagp[i]$, for~$i \in \set{1, 2, \dots, m}$, is given by}
+    \begin{equation}
+        \label{eq:lagp}
         \lagp[i](x) =
         \begin{cases}
             \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j,    & \text{if~$i = 1$,}\\[2ex]
             \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                                    & \text{if~$2 \le i \le m - n$,}\\[2ex]
-            \displaystyle \frac{x_{i -n - 1}^2}{2\Delta^2} - \frac{x_{i -n- 1}}{2\Delta},                                               & \text{if~$n+2\le i \le m$,}\\[2ex]
-            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                                     & \text{if~$m - n + 1 \le i \le n + 1$.}
+            \displaystyle \reviewed{\frac{x_{i - 1}}{\Delta},}                                                                          & \text{\reviewed{if~$m - n + 1 \le i \le n + 1$,}}\\[2ex]
+            \displaystyle \reviewed{\frac{x_{i -n - 1}^2}{2\Delta^2} - \frac{x_{i -n- 1}}{2\Delta},}                                    & \text{\reviewed{if~$n+2\le i \le m$.}}
         \end{cases}
-    \end{equation*}
+    \end{equation}
     Here, $x_j$ denotes the~$j$th entry of~$x$ for each~$j\in\set{1, 2, \dots, n}$, and we define~$\sum_{j = m - n}^n x_j = 0$ in the formulation of~$\lagp[1]$ if~$m = 2n+1$.
 \end{lemma}
 
@@ -420,11 +452,11 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
     \begin{equation*}
         y^1 = 0, \quad y^{j + 1} = \Delta e_j, \quad \text{and} \quad y^{n + j + 1} = -\Delta e_j.
     \end{equation*}
-    Since~$\lagp$ and~$\lagp[j]$ are quadratic polynomials sharing the same values on~$\set{y^1, y^{j + 1}, y^{n + j + 1}}$, we have
+    Since~$\lagp$ and~$\lagp[i]$ are quadratic polynomials sharing the same values on~$\set{y^1, y^{j + 1}, y^{n + j + 1}}$, \reviewed{the Taylor expansion of the quadratic polynomial~$\lagp$ around~$y^1$ yields}
     \begin{equation*}
         \big(\nabla^2 \lagp \big)_{j, j} = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2} = \big(\nabla^2 \lagp[i] \big)_{j, j}.
     \end{equation*}
-    On the other hand, it is easy to check that all the entries of~$\nabla^2 \lagp[i]$ are zero except for the first~$m-n-1$ diagonal entries.
+    On the other hand, it is easy to check \reviewed{according to the expression in~\eqref{eq:lagp}} that all the entries of~$\nabla^2 \lagp[i]$ are zero except for the first~$m-n-1$ diagonal entries.
     Therefore,
     \begin{equation*}
         \norm[\big]{\nabla^2 \lagp[i]}_{\mathsf{F}}^2 \le \norm[\big]{\nabla^2 \lagp}_{\mathsf{F}}^2,
@@ -462,7 +494,7 @@ The next lemma simplifies the expression of~$\Lambda_p$ defined in~\eqref{eq:Lam
 \end{proof}
 
 We are now equipped to develop lower and upper bounds for~$\Lambda_p$.
-For convince, we define henceforth
+For \reviewed{convenience}, we define henceforth
 \begin{equation*}
     0^0 = 0 \quad \text{and} \quad \frac{\infty}{\infty} = 1.
 \end{equation*}
@@ -474,6 +506,7 @@ For convince, we define henceforth
     \label{eq:bounds}
         1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n.
     \end{equation}
+    \reviewed{In particular, we have~$\Lambda_{\infty} = \max \set{n - 1, 2n - m + 2}$.}
 \end{theorem}
 
 \begin{proof}
@@ -492,24 +525,19 @@ For convince, we define henceforth
     \end{equation*}
     and
     \begin{equation*}
-        \lagp[1](x) = 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 -  \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 2n-m+2 \le n.
+        \lagp[1](x) = 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 1 -  \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j \le 2n-m+2.
     \end{equation*}
-    Thus
+    \reviewed{Since both these bounds can be reached in~$\mathcal{B}_{\infty}(\Delta)$, we thus have}
     \begin{equation*}
-        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)} \le n,
+        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} \abs[\big]{\lagp[1](x)} \reviewed{= \max \set{n - 1, 2n - m + 2}} \le n,
     \end{equation*}
     which completes the proof.
 \end{proof}
 
 \subsubsection{Some special cases}
 
-Examining the second part of the proof for Theorem~\ref{thm:bounds}, we can see that
-\begin{equation*}
-    \Lambda_\infty = \max\set{n - 1, 2n - m + 2},
-\end{equation*}
-which is either~$n - 1$ or~$n$ since~$m \ge n + 2$.
+\reviewed{Remark that Theorem~\ref{thm:bounds} provides an explicit formulation of~$\Lambda_{\infty}$, which is either~$n - 1$ or~$n$ since~$m \ge n + 2$.}
 There are more cases where we can calculate the value of~$\Lambda_p$, as we will detail in the following.
-
 First, when~$1 \le p \le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref{eq:bounds}.
 
 \begin{proposition}
@@ -592,7 +620,7 @@ To this end, recall the following elementary fact.
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( \Delta^{-2} \norm{x}_2^2 - 1 \big) = \max \set{0, n^{\frac{p - 2}{p}} - 1}.
+        \max_{\norm{x}_p \le \Delta} -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} \big( \Delta^{-2} \norm{x}_2^2 - 1 \big) \reviewed{= \max_{\norm{x}_p \le 1} \norm{x}_2^2 - 1} = \max \set{0, n^{\frac{p - 2}{p}} - 1}.
     \end{equation}
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
@@ -619,7 +647,7 @@ Recall that $p = 2$ is of interest for most trust-region \gls{dfo} methods, incl
     Thus the theorem holds.
 \end{proof}
 It is worth mentioning that Proposition~\ref{prop:lambda-p-2} also implies that~$\xpt[0]_{2n + 1}$ renders~$\Lambda_p = 1$ for~$p \in [1, 2]$.
-This equality turns out to be true for a larger range of~$p$.
+\reviewed{Theorem~\ref{thm:optimset} shows that this is true for a larger range of~$p$.}
 
 \subsubsection{Remarks and open questions}
 
@@ -642,7 +670,7 @@ paragraphs is true, and~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have analyzed the well-poisedness of an interpolation set that appears in many trust-region \gls{dfo} methods, particularly those by Powell.
+We have analyzed the well-poisedness \reviewed{in the minimum Frobenius norm sense} of an interpolation set that appears in many trust-region \gls{dfo} methods, particularly those by Powell\reviewed{~\cite{Powell_2006,Powell_2009}}.
 It is proved to be an optimal interpolation set under the default setting, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
 Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
 
@@ -655,7 +683,6 @@ Both authors are very grateful to Professor Chen for her support, encouragement,
 
 \paragraph*{Funding} This work was funded by the University Grants Committee of Hong Kong under the projects PF18-24698 (Hong Kong Ph.D. Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P. It was also supported by The Hong Kong Polytechnic University under project P0009767.
 
-\bibliographystyle{plain}
 \bibliography{optimset}
 
 \end{document}

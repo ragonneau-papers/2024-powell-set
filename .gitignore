@@ -43,10 +43,12 @@
 *.pdfsync
 
 ## Build tool directories for auxiliary files
+
 ### latexrun
 latex.out/
 
-## Auxiliary and intermediate files from other packages:
+## Auxiliary and intermediate files from other packages
+
 ### algorithms
 *.alg
 *.loa
@@ -275,6 +277,7 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
+
 # Visual Studio Code
 
 ## General
@@ -290,6 +293,7 @@ TSWLatexianTemp*
 
 ## Built Visual Studio Code Extensions
 *.vsix
+
 
 # macOS
 
