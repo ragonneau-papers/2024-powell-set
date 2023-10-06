@@ -1,0 +1,118 @@
+%% report.tex
+%% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+
+% Manage culturally-determined typographical rules
+\usepackage[british]{babel}
+
+% Font and encoding
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+% Space between lines
+\usepackage[nodisplayskipstretch]{setspace}
+\singlespacing
+
+% Subliminal refinements
+\usepackage{microtype}
+\usepackage[prevent-all]{widows-and-orphans}
+
+% Modify the typesets of the `\maketitle' and `\thanks' commands
+\usepackage{titling}
+\setlength{\thanksmargin}{0pt}
+
+% Mathematics
+\usepackage{mathtools}
+\usepackage{amssymb}
+
+% Headings
+\title{Revision no.\ 1 of GOMS-2023-0041}
+\author{Tom M. Ragonneau \and Zaikun Zhang}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+We would like to thank the reviewers for their comments and suggestions.
+We have addressed the issues raised by the reviewers and have made the several changes to the manuscript.
+The changes are highlighted in the revised manuscript using a blue color.
+
+\section{Response to Reviewer no.\ 1}
+
+\begin{enumerate}
+    \item \textit{Verify the order of the citations. See, for instance, Page~2, Line~6 (should be~[1,3]) and Line~7 (should be~[5,11-13,23]).}\\
+    We have corrected the order of the citations in the manuscript.
+    \item \textit{Page~2, Line~29 : ``is impracticable'' instead of ``is impracticable in practice''.}\\
+    The suggested change has been made.
+    \item \textit{Page~6: Verify the statement of Lemma 3.1 by considering:}
+    \begin{enumerate}
+        \item \textit{The notations could be clarified after the lemma, such that~$x_j$ and~$\sum_{j \in \emptyset} x_j = 0$.}\\
+        We chose to keep the notations employed in the Lemma when stating that an empty sum equals to zero.
+        This is because we do not want to introduce new notations that are not used elsewhere in the manuscript to avoid confusion.
+        \item \textit{The statement should be: ``For all~$x \in \mathbb{R}^n$ and~$m \in \{ n + 2, \dots, 2n + 1 \}$, the expression of~$L_i$, for~$i \in \{ 1, \dots, m \}$, is given by\dots''}\\
+        The suggested change has been made.
+        \item \textit{It would be more natural to state the expression of~$L_i$ for~$m - n + 1 \le i \le n + 1$ and next for~$n + 2 \le i \le m$.}\\
+        The suggested change has been made.
+    \end{enumerate}
+    \item \textit{Page~8, Line~24: To avoid mentioning part of the proof, include the result about~$\Lambda_{\infty}$ as a particular case on the statement of Theorem~3.1.}\\
+    The theorem has been modified to include the result about~$\Lambda_{\infty}$, and the sentence mentioning the proof has been modified to reflect this change.
+    \item \textit{Page~9, Line~18: State Lemma~3.3 for~$\max_{\lVert x \rVert_p \le \Delta} \lVert x \rVert_q$, for a given~$\Delta > 0$, as it is invoked on the proof of Proposition~3.2 (Page~9, Line~44, with~$q = 2$).}\\
+    For simplicity, we decided not to modify the Lemma.
+    Instead, we explicited a change of variable in~(3.11), corresponding to the proof of Proposition~3.2.
+    With this change of variable, the Lemma is now invoked directly.
+    \item \textit{Page~12, Line~25: ``Frobenius'' instead of ``frobenius''.}
+    The suggested change has been made.
+    \item \textit{Include in the references:\\ \texttt{https://www.tandfonline.com/doi/full/10.1080/10556788.2015.1026968}\\ This article, published at Optimization Methods and Software, also uses the interpolation set as discussed here.}\\
+    A citation to this article has been added to the manuscript (see the second paragraph of the introduction).
+\end{enumerate}
+
+\section{Response to Reviewer no.\ 2}
+
+\begin{enumerate}
+    \item \textit{Pg.~3, line~24. Please add a reference to the notion of ``well-poised sense''.}\\
+    A reference to~\cite[\S~3.3]{Conn_Scheinberg_Vicente_2009} has been added.
+    \item \textit{Pg.~4, line~10. ``Minimum Frobenius norm Lagrange polynomials''? This section deals with minimum Frobenius norm, correct?}\\
+    All references to ``minimum-norm'' have been replaced by ``minimum Frobenius norm.''
+    \item \textit{Pg.~6, Lemma~3.1. I think that there is some kind of mistake here or maybe the order could be improved. The second term is related to the interval~$2 \le i \le m - 1$, but the third one goes from~$n + 1$ to~$m$. Please verify this formula and change the third and fourth lines.}\\
+    We have verified the formula and switched the third and fourth lines.
+    \item \textit{Pg.~6, line~50. $L_j$ instead of~$L_i$.}
+    The suggested change has been made.
+    \item \textit{Pg.~6, line~51. Please add the extra information that this equation comes from the Taylor expansion of the quadratic, or something similar to this.}\\
+    The suggested change has been made.
+    \item \textit{Pg.~7, line~6. Please add ``On the other hand, by (3.4)''}\\
+    The suggested change has been made.
+    \item \textit{Pg.~8, line~26. I think it should be~$\le$ here, as in the second part of Theorem~3.1 you provide an upper bound for~$L_1$ and~$-L_1$. Also, the comment on~$2n - m + 2 \le n$ could be eliminated, as it was also part of the second inequality in the Theorem.}\\
+    The equality is correct, but the proof has been improved to explain explicitely why.
+    \item \textit{Pg.~8, line~45. I was unable to obtain the second inequality. Using H{\"{o}}lder inequality, I only obtained}
+    \begin{equation*}
+        \sum x_j \le (2n + 1 - m)^{\frac{p}{p - 1}} \lVert x \rVert_p
+    \end{equation*}
+    \textit{Note that the power is different from the manuscript. The same comment applies to line~52.}\\
+    We verified thouroughly the proof of the proposition and found no mistake.
+    Let~$z \in \mathbb{R}^n$ be defined by
+    \begin{equation*}
+        z_j = \begin{cases}
+            0 & \text{if~$j \in \{ 1, \dots, m - n - 1 \}$,} \\
+            1 & \text{otherwise.}
+        \end{cases}
+    \end{equation*}
+    The H{\"{o}}lder inequality then provides
+    \begin{equation*}
+        \sum_{j = m - n}^n x_j = z^{\mathsf{T}} x \le \lVert z \rVert_{p / (p - 1)} \lVert x \rVert_p = (2n + 1 - m)^{\frac{p - 1}{p}} \lVert x \rVert_p.
+    \end{equation*}
+    \item \textit{Pg.~10, line~17. I did not understand the phrase ``This equality turns out to be true for a larger range of p.''. Why? Based on practical evidence? Please give references, if possible.}\\
+    A consequence of Theorem~3.2 is that~$\Lambda_p = 1$ if~$p \le 2 \log n / \log (n / 2)$.
+    The right-hand side of this inequality is greater than~$2$ for~$n \ge 2$.
+    We modified the sentence in the manuscript to make this more explicit.
+    \item \textit{Pg.~10, line~43. Please add ``well-poisedness in the minimum Frobenius norm sense, of an interpolation\dots''.}\\
+    The suggested change has been made.
+    \item \textit{Pg.~10, line~44. Add reference to the works of Powell.}\\
+    The references to~\cite{Powell_2006,Powell_2009} have been added.
+\end{enumerate}
+
+\bibliographystyle{plain}
+\bibliography{report}
+
+\end{document}
