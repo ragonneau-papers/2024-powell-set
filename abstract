@@ -1,3 +1,0 @@
-An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods
-
-This paper demonstrates the optimality of an interpolation set employed in derivative-free trust-region methods. This set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point. It is chosen as the default initial interpolation set by many derivative-free trust-region methods based on underdetermined quadratic interpolation, including NEWUOA, BOBYQA, LINCOA, and COBYQA. Our analysis provides a theoretical justification for this choice.
