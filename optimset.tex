@@ -36,6 +36,7 @@
 % Manage culturally-determined typographical rules
 % N.B.: `csquotes' must be loaded after `lineno'
 \usepackage[british]{babel}
+\usepackage{csquotes}
 
 % Font and encoding
 \usepackage{lmodern}
@@ -48,16 +49,14 @@
 
 % Space between lines
 \usepackage[nodisplayskipstretch]{setspace}
-\onehalfspacing
+\singlespacing
 
 % Subliminal refinements
 \usepackage{microtype}
 \usepackage[prevent-all]{widows-and-orphans}
-
-% Prevent footnotes from splitting across pages
+% prevent footnotes from splitting across pages
 \interfootnotelinepenalty=10000
-
-% Prevent line breaks in inline formulas
+% prevent line breaks in inline formulas
 \binoppenalty=10000
 \relpenalty=10000
 
@@ -147,8 +146,8 @@
     citecolor=Basil,
     urlcolor=RedViolet,
 }
-\newcommand*{\email}[2][inbox]{Email: \href{mailto:#2}{#2}}
-\newcommand*{\orcid}[1]{ORCID: \href{https://orcid.org/#1}{#1}}
+\newcommand*{\email}[2][inbox]{Email: \href{mailto:#2}{\texttt{#2}}}
+\newcommand*{\orcid}[1]{ORCID: \href{https://orcid.org/#1}{\texttt{#1}}}
 
 % Glossaries
 \usepackage[acronym]{glossaries}
@@ -171,22 +170,18 @@
 \newcommand*{\ones}{\mathbb{1}}
 \newcommand*{\qpoly}{\mathcal{Q}_n}
 
-% Reviewing
-\newcommand{\reviewed}[1]{\texorpdfstring{{\color{NavyBlue}#1}}{#1}}
-% \newcommand{\reviewed}[1]{#1}
-
 % Headings
 \title{An Optimal Interpolation Set for Model-Based Derivative-Free Optimization Methods}
 \author{
-    Tom M. Ragonneau\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\reviewed{, China}.\\
-        \email{tom.ragonneau@polyu.edu.hk}; \orcid{0000-0003-2717-2876}.
-    } \and
-    Zaikun Zhang\thanks{
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\reviewed{, China}.\\
-        \email{zaikun.zhang@polyu.edu.hk}; \orcid{0000-0001-8934-8190}.
-        Corresponding author.
-    }
+    Tom M. Ragonneau%
+    \thanks{Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China.}%
+    \thanksgap{1ex}%
+    \thanks{\email{tom.ragonneau@polyu.edu.hk}; \orcid{0000-0003-2717-2876}.}
+    \and
+    Zaikun Zhang%
+    \texorpdfstring{\thanksmark{1}}{}%
+    \thanksgap{1ex}%
+    \thanks{\email{zaikun.zhang@polyu.edu.hk}; \orcid{0000-0001-8934-8190}.}
 }
 \date{\today}
 
@@ -219,7 +214,7 @@ The \gls{dfo} literature is vast.
 For comprehensive overviews, we refer to the monographs~\cite{Conn_Scheinberg_Vicente_2009,Audet_Hare_2017}, the survey papers~\cite{Powell_1975,Powell_1998,Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
 This paper studies a set employed as the initial interpolation set by many derivative-free trust-region methods~\cite{Conn_Gould_Toint_2000,Yuan_2015} based on underdetermined quadratic interpolation, such as NEWUOA~\cite{Powell_2006}, and, when no constraints are present, BOBYQA~\cite{Powell_2009}, LINCOA, and COBYQA~\cite{Ragonneau_2022,Ragonneau_Zhang_2023}.
-\reviewed{It is also employed by~\cite{Conejo_Karas_Pedroso_2015} in a method for constrained problems.}
+It is also employed by~\cite{Conejo_Karas_Pedroso_2015} in a method for constrained problems.
 We show that this interpolation set is optimal in the sense that it minimizes the constant of well-poisedness in a ball centred at the starting point, which is detailed in Theorem~\ref{thm:optimset}.
 
 In what follows, we denote by~$\qpoly$ the space of polynomials on~$\R^n$ of degree at most two, which will be referred to as quadratic polynomials for simplicity.
@@ -228,13 +223,13 @@ The \gls{dfo} methods that we consider maintain an interpolation set~$\xpt[k] \s
     \label{eq:intp-cond}
     \objm[k](y) = \obj(y), \quad y \in \xpt[k].
 \end{equation}
-Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other, \reviewed{the model}~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
+Clearly, if the interpolation conditions~\eqref{eq:intp-cond} do not contradict each other, the model~$\objm[k]$ is uniquely defined by~\eqref{eq:intp-cond} only if
 \begin{equation*}
     \card(\xpt[k]) = \dim(\qpoly) = \frac{1}{2} (n + 1) (n + 2).
 \end{equation*}
-Such a scheme, referred to as the fully-determined quadratic interpolation, is used, \reviewed{for example,} by UOBYQA~\cite{Powell_2002}.
+Such a scheme, referred to as the fully-determined quadratic interpolation, is used, for example, by UOBYQA~\cite{Powell_2002}.
 However, the first iteration of this method requires~$\bigo(n^2)$ function evaluations to construct the initial model~$\objm[@0]$.
-This \reviewed{is impracticable} unless~$n$ is small.
+This is impracticable unless~$n$ is small.
 Therefore, modern interpolation-based \gls{dfo} methods work with fewer interpolation points, giving rise to the underdetermined quadratic interpolation.
 To uniquely define~$\objm[k]$ in this case, it is common to solve an interpolation problem of the form
 \begin{equation}
@@ -258,7 +253,7 @@ In contrast, NEWUOA, BOBYQA, LINCOA, and COBYQA employ
 \end{equation}
 with~$\objm[-1] = 0$.
 There are other functionals based on the~$\ell_1$-norm~\cite{Bandeira_Scheinberg_Vicente_2012} or Sobolev seminorms of quadratic polynomials~\cite{Zhang_2014,Xie_Yuan_2022}.
-The variational problem \reviewed{described by~\eqref{eq:intp-var} and~\eqref{eq:df-psb}} defines the derivative-free symmetric
+The variational problem described by~\eqref{eq:intp-var} and~\eqref{eq:df-psb} defines the derivative-free symmetric
 Broyden update proposed by Powell (see~\cite{Powell_2004a,Powell_2013},~\cite[\S~3.6]{Zhang_2012}, and~\cite[\S~2.4.2]{Ragonneau_2022}), with the functional~\eqref{eq:df-psb} being inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}.
 To ensure that~\eqref{eq:intp-var} admits a solution that includes second-order information, one normally requires that
 \begin{equation*}
@@ -273,7 +268,7 @@ This mechanism tries to make the best of the function evaluations, which are nor
 In such a case, it is clear that the initial interpolation set~$\xpt[0]$ must be carefully chosen, as it will impact the optimization method for subsequent iterations.
 Powell devised an initial interpolation set for his methods, described in Subsection~\ref{subsec:powell-set}.
 Although the design of this set is natural, no theoretical analysis has been provided to justify its configuration.
-This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense\reviewed{~\cite[\S~3.3]{Conn_Scheinberg_Vicente_2009}}.
+This paper contributes such an analysis, showing that no other interpolation set is better in a well-poisedness sense~\cite[\S~3.3]{Conn_Scheinberg_Vicente_2009}.
 
 This paper is organized as follows.
 Section~\ref{sec:well-poisedness} introduces the $\Lambda$-poisedness of interpolation sets in the minimum Frobenius norm sense.
@@ -310,14 +305,14 @@ The interpolation set~$\xpt$ is poised if this KKT system is uniquely solvable (
 Intuitively,~$\xpt$ can be said well-poised if this system is well-conditioned.
 This intuition will be formalized in the sequel.
 
-\subsection{\reviewed{Minimum Frobenius norm} Lagrange polynomials}
+\subsection{Minimum Frobenius norm Lagrange polynomials}
 
 To formally define a measure of well-poisedness of~$\xpt$, we first need to extend the classical definition of the Lagrange polynomials as follows.
 
-\begin{definition}[\reviewed{Minimum Frobenius norm} Lagrange polynomials~{\cite[Definition~5.1]{Conn_Scheinberg_Vicente_2009}}]
+\begin{definition}[Minimum Frobenius norm Lagrange polynomials~{\cite[Definition~5.1]{Conn_Scheinberg_Vicente_2009}}]
     \label{def:min-norm-lagp}
     Assume that the interpolation set~$\xpt$ is poised.
-    The~$i$th \emph{\reviewed{minimum Frobenius norm} Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen}, with~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is the unique quadratic polynomial that solves
+    The~$i$th \emph{minimum Frobenius norm Lagrange polynomial}~$\lagp[i]$ for the interpolation problem~\eqref{eq:intp-cond-gen}, with~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is the unique quadratic polynomial that solves
     \begin{equation*}
         \begin{aligned}
             \min_{Q \in \qpoly} & \quad \norm[\big]{\nabla^2 Q}_{\mathsf{F}}\\
@@ -381,13 +376,13 @@ For~$i \in \set{1, @@ 2, @@ \dots, @@ 2n + 1}$, define
 \end{equation}
 where~$e_i \in \R^n$ denotes the $i$th canonical coordinate vector in~$\R^n$.
 Let~$m$ be the number of interpolation points.
-We focus on the case with~$n + 2 \le m \le 2n + 1$ following Powell's suggestion.\footnote{Powell's BOBYQA code contains a comment that ``choices that exceed $2n+1$ are not recommended.''}
+We focus on the case with~$n + 2 \le m \le 2n + 1$ following Powell's suggestion.\footnote{Powell's BOBYQA code contains a comment that \textquote[][.]{choices that exceed $2n+1$ are not recommended}}
 The initial interpolation set is then chosen to be
 \begin{equation}
     \label{eq:set-def-m}
     \xpt[0]_m = \set{y^1, @@ y^2, @@ \dots, @@ y^m},
 \end{equation}
-which can be found in~\cite[eq.~(3.2)]{Powell_2006}.
+which can be found in~\cite[Equation~(3.2)]{Powell_2006}.
 The default value for~$m$ proposed by Powell is~$2n + 1$.
 In other words, the default initial interpolation set is~$\xpt[0] = \xpt[0]_{2n + 1}$.
 This is a natural choice, as the corresponding interpolation set is geometrically appealing.
@@ -412,7 +407,7 @@ According to Definition~\ref{def:lambda-p}, the set~$\xpt[0]_m$ is~$\Lambda_p$-p
     \label{eq:Lambdap}
     \Lambda_p = \max_{1 \le i \le m} \max_{\norm{x}_p \le \Delta} @@ \abs[\big]{\lagp[i](x)},
 \end{equation}
-where~$\lagp[i]$, for~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is the~$i$th \reviewed{minimum Frobenius norm} Lagrange polynomial associated with~$\xpt[0]_m$.
+where~$\lagp[i]$, for~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is the~$i$th minimum Frobenius norm Lagrange polynomial associated with~$\xpt[0]_m$.
 Indeed, $\Lambda_p$ is the {constant of well-poisedness} of~$\xpt[0]_m$ in~$\mathcal{B}_p(\Delta)$.
 We will focus on this constant in what follows.
 
@@ -423,15 +418,15 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
 
 \begin{lemma}
     \label{lem:lagp}
-    \reviewed{For all~$x \in \R^n$ and~$m \in \set{n + 2, @@ n + 3, @@ \dots,  @@ 2n + 1}$, the expression of~$\lagp[i]$, for~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is given by}
+    For all~$x \in \R^n$ and~$m \in \set{n + 2, @@ n + 3, @@ \dots,  @@ 2n + 1}$, the expression of~$\lagp[i]$, for~$i \in \set{1, @@ 2, @@ \dots, @@ m}$, is given by
     \begin{equation}
         \label{eq:lagp}
         \lagp[i](x) =
         \begin{cases}
             \displaystyle 1 - \frac{1}{\Delta^2} \sum_{j = 1}^{m - n - 1} \!\! x_j^2 - \frac{1}{\Delta} \sum_{j = m - n}^n \!\! x_j,    & \text{if~$i = 1$,}\\[2ex]
             \displaystyle \frac{x_{i - 1}^2}{2\Delta^2} + \frac{x_{i - 1}}{2\Delta},                                                    & \text{if~$2 \le i \le m - n$,}\\[2ex]
-            \displaystyle \reviewed{\frac{x_{i - 1}}{\Delta},}                                                                          & \text{\reviewed{if~$m - n + 1 \le i \le n + 1$,}}\\[2ex]
-            \displaystyle \reviewed{\frac{x_{i - n - 1}^2}{2\Delta^2} - \frac{x_{i -n- 1}}{2\Delta},}                                    & \text{\reviewed{if~$n+2\le i \le m$.}}
+            \displaystyle \frac{x_{i - 1}}{\Delta},                                                                          & \text{if~$m - n + 1 \le i \le n + 1$,}\\[2ex]
+            \displaystyle \frac{x_{i - n - 1}^2}{2\Delta^2} - \frac{x_{i -n- 1}}{2\Delta},                                    & \text{if~$n+2\le i \le m$.}
         \end{cases}
     \end{equation}
     Here, $x_j$ denotes the~$j$th entry of~$x$ for each~$j \in \set{1, @@ 2, @@ \dots, @@ n}$, and we define~$\sum_{j = m - n}^n x_j = 0$ in the formulation of~$\lagp[1]$ if~$m = 2n + 1$.
@@ -452,11 +447,11 @@ These formulae are given in~\cite[\S~3]{Powell_2006} without proof.
     \begin{equation*}
         y^1 = 0, \quad y^{j + 1} = \Delta e_j, \quad \text{and} \quad y^{n + j + 1} = -\Delta e_j.
     \end{equation*}
-    Since~$\lagp$ and~\reviewed{$\lagp[i]$} are quadratic polynomials sharing the same values on~$\set{y^1, @@ y^{j + 1}, @@ y^{n + j + 1}}$, \reviewed{Taylor expansions of the quadratic polynomial~$\lagp$ around~$y^1$ yield}
+    Since~$\lagp$ and~$\lagp[i]$ are quadratic polynomials sharing the same values on~$\set{y^1, @@ y^{j + 1}, @@ y^{n + j + 1}}$, Taylor expansions of the quadratic polynomial~$\lagp$ around~$y^1$ yield
     \begin{equation*}
         \big(\nabla^2 \lagp \big)_{j, j} = \frac{\lagp(y^{j + 1}) + \lagp(y^{n + j + 1}) - 2 \lagp(y^1)}{\Delta^2} = \big(\nabla^2 \lagp[i] \big)_{j, j}.
     \end{equation*}
-    On the other hand, it is easy to check \reviewed{according to~\eqref{eq:lagp}} that all the entries of~$\nabla^2 \lagp[i]$ are zero except for the first~$m-n-1$ diagonal entries.
+    On the other hand, it is easy to check according to~\eqref{eq:lagp} that all the entries of~$\nabla^2 \lagp[i]$ are zero except for the first~$m-n-1$ diagonal entries.
     Therefore,
     \begin{equation*}
         \norm[\big]{\nabla^2 \lagp[i]}_{\mathsf{F}}^2 \le \norm[\big]{\nabla^2 \lagp}_{\mathsf{F}}^2,
@@ -494,7 +489,7 @@ The next lemma simplifies the expression of~$\Lambda_p$ defined in~\eqref{eq:Lam
 \end{proof}
 
 We are now equipped to develop lower and upper bounds for~$\Lambda_p$.
-For \reviewed{convenience}, we define henceforth
+For convenience, we define henceforth
 \begin{equation*}
     0^0 = 0 \quad \text{and} \quad \frac{\infty}{\infty} = 1.
 \end{equation*}
@@ -506,18 +501,18 @@ For \reviewed{convenience}, we define henceforth
         \label{eq:bounds}
         1 + (2n + 1 - m)^{\frac{p - 1}{p}} \le \Lambda_p \le n.
     \end{equation}
-    \reviewed{In particular, we have~$\Lambda_{\infty} = \max @ \set{n - 1, @@ 2n - m + 2}$.}
+    In particular, we have~$\Lambda_{\infty} = \max @ \set{n - 1, @@ 2n - m + 2}$.
 \end{theorem}
 
 \begin{proof}
-    We will establish the bounds \reviewed{in~\eqref{eq:bounds}} using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
+    We will establish the bounds in~\eqref{eq:bounds} using the formulation of~$\Lambda_p$ in Lemma~\ref{lem:lambda-p}.
     For the lower bound, by considering only the points in~$\R^n$ whose leading~$m - n - 1$ entries are zeros and whose remaining~$2n + 1 - m$ entries are equal, we have
     \begin{equation*}
         \Lambda_p = \max_{\norm{x}_p \le \Delta} @@ \abs{\lagp[1](x)} \ge \max_{t \in \R} \set[\bigg]{1 - \frac{1}{\Delta} (2n + 1 - m) t : (2n + 1 - m)^{\frac{1}{p}}\abs{t} \le \Delta} = 1 + (2n + 1 - m)^{\frac{p - 1}{p}}.
     \end{equation*}
     We now establish the upper bound.
     For any~$p \ge 1$, we have~$\mathcal{B}_p(\Delta) \subseteq \mathcal{B}_{\infty}(\Delta)$, so that~$\Lambda_p \le \Lambda_{\infty}$.
-    Therefore, we only need to show that~$\Lambda_{\infty} \le \reviewed{\max @ \set{n - 1, @@ 2n - m + 2}} \le n$.
+    Therefore, we only need to show that~$\Lambda_{\infty} \le \max @ \set{n - 1, @@ 2n - m + 2} \le n$.
     For any~$x \in \mathcal{B}_{\infty}(\Delta)$,
     \begin{equation}
         \label{eq:bounds-proof-1}
@@ -530,19 +525,19 @@ For \reviewed{convenience}, we define henceforth
     \end{equation}
     Thus
     \begin{equation*}
-        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} @@ \abs[\big]{\lagp[1](x)} \le \reviewed{\max @ \set{n - 1, @@ 2n - m + 2}},
+        \Lambda_{\infty} = \max_{\norm{x}_{\infty} \le \Delta} @@ \abs[\big]{\lagp[1](x)} \le \max @ \set{n - 1, @@ 2n - m + 2},
     \end{equation*}
-    which completes the proof \reviewed{of~\eqref{eq:bounds}.
+    which completes the proof of~\eqref{eq:bounds}.
 
     Finally, remark that the right-hand side in~\eqref{eq:bounds-proof-1} is attained by the vector whose entries are all~$\Delta$.
     Moreover, the right-hand side in~\eqref{eq:bounds-proof-2} is attained by the vector whose first~$m - n - 1$ entries are zero and whose remaining entries are all~$-\Delta$.
-    Hence,~$\Lambda_{\infty} = \max @ \set{n - 1, @@ 2n - m + 2}$.}
+    Hence,~$\Lambda_{\infty} = \max @ \set{n - 1, @@ 2n - m + 2}$.
 \end{proof}
 
 \subsubsection{Some special cases}
 
-\reviewed{Theorem~\ref{thm:bounds} provides the value of~$\Lambda_{\infty}$}, which is either~$n - 1$ or~$n$ since~$m \ge n + 2$.
-There are more cases where we can \reviewed{evaluate}~$\Lambda_p$, as we will detail in the following.
+Theorem~\ref{thm:bounds} provides the value of~$\Lambda_{\infty}$, which is either~$n - 1$ or~$n$ since~$m \ge n + 2$.
+There are more cases where we can evaluate~$\Lambda_p$, as we will detail in the following.
 First, when~$1 \le p \le 2$, $\Lambda_p$ actually equals the lower bound in~\eqref{eq:bounds}.
 
 \begin{proposition}
@@ -585,7 +580,7 @@ To this end, recall the following elementary fact.
     For any~$p \in [1, \infty]$ and $q \in [1, \infty]$, we have
     \begin{equation}
         \label{eq:max-norm-pq}
-        \max_{\norm{x}_q \le 1} @@ \norm{x}_p = \max @ \set{1, @@ n^{\frac{1}{p} - \frac{1}{q}}}.
+        \max_{\norm{x}_p \le 1} @@ \norm{x}_q = \max @ \set{1, @@ n^{\frac{1}{q} - \frac{1}{p}}}.
     \end{equation}
 \end{lemma}
 
@@ -593,18 +588,18 @@ To this end, recall the following elementary fact.
     If~$p$ or~$q$ is infinity, then~\eqref{eq:max-norm-pq} is straightforward to verify.
     So, we assume that both of them are finite.
 
-    Consider the case where~$p \ge q$.
-    For~$x \in \mathcal{B}_q(1)$, we have~$\norm{x}_p \le \norm{x}_q \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_q(1)$, so that~\eqref{eq:max-norm-pq} holds in this case.
+    Consider the case where~$p \le q$.
+    For~$x \in \mathcal{B}_p(1)$, we have~$\norm{x}_q \le \norm{x}_p \le 1$, and this bound is attained at the first coordinate vector~$e_1 \in \mathcal{B}_p(1)$, so that~\eqref{eq:max-norm-pq} holds in this case.
 
-    We now suppose that~$p < q$.
-    Let~$\ones \in \R^n$ denote the vector with all entries being one,~$r = q/p$, and~$s = r / (r - 1) = q / (q - p)$.
-    For~$x \in \mathcal{B}_q(1)$, define~$z = (\abs{x_1}^p, \abs{x_2}^p, \dots, \abs{x_n}^p)$.
+    We now suppose that~$p > q$.
+    Let~$\ones \in \R^n$ denote the vector with all entries being one,~$r = p/q$, and~$s = r / (r - 1) = p / (p - q)$.
+    For~$x \in \mathcal{B}_p(1)$, define~$z = (\abs{x_1}^q, \abs{x_2}^q, \dots, \abs{x_n}^q)$.
     According to the H{\"{o}}lder inequality, we have
     \begin{equation*}
-        \norm{x}_p  = \big(\ones^{\T} z \big)^{\frac{1}{p}} \le \big(\norm{\ones}_s \norm{z}_r \big)
-        ^{\frac{1}{p}} = n^{\frac{1}{sp}} \norm{x}_q \le n^{\frac{q - p}{pq}}.
+        \norm{x}_q  = \big(\ones^{\T} z \big)^{\frac{1}{q}} \le \big(\norm{\ones}_s \norm{z}_r \big)
+        ^{\frac{1}{q}} = n^{\frac{1}{sq}} \norm{x}_p \le n^{\frac{p - q}{qp}}.
     \end{equation*}
-    Moreover, this bound is attained at~$x^\ast = n^{-\frac{1}{q}} \ones$, which proves~\eqref{eq:max-norm-pq} for~$p < q$.
+    Moreover, this bound is attained at~$x^\ast = n^{-\frac{1}{p}} \ones$, which proves~\eqref{eq:max-norm-pq} for~$p > q$.
 \end{proof}
 
 \begin{proposition}
@@ -625,7 +620,7 @@ To this end, recall the following elementary fact.
     Moreover, according to Lemma~\ref{lem:max-norm-pq}, we have
     \begin{equation}
         \label{eq:lambda-p-inf-p-2}
-        \max_{\norm{x}_p \le \Delta} @ -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} @ \big( \Delta^{-2} \norm{x}_2^2 - 1 \big) = \reviewed{\max_{\norm{z}_p \le 1} @@ \norm{z}_2^2 - 1} = \max @ \set{0, @@ n^{\frac{p - 2}{p}} - 1}.
+        \max_{\norm{x}_p \le \Delta} @ -\lagp[1](x) = \max_{\norm{x}_p \le \Delta} @ \big( \Delta^{-2} \norm{x}_2^2 - 1 \big) = \max_{\norm{z}_p \le 1} @@ \norm{z}_2^2 - 1 = \max @ \set{0, @@ n^{\frac{p - 2}{p}} - 1}.
     \end{equation}
     The desired result is obtained by combining~\eqref{eq:lambda-p-inf-p-1} and~\eqref{eq:lambda-p-inf-p-2} with Lemma~\ref{lem:lambda-p}.
 \end{proof}
@@ -652,7 +647,7 @@ Recall that $p = 2$ is of interest for most trust-region \gls{dfo} methods, incl
     Thus, the theorem holds.
 \end{proof}
 It is worth mentioning that Proposition~\ref{prop:lambda-p-2} also implies that~$\xpt[0]_{2n + 1}$ renders~$\Lambda_p = 1$ for~$p \in [1, 2]$.
-\reviewed{Theorem~\ref{thm:optimset} shows that the equality holds for a larger range of~$p$, because the right-hand side in~\eqref{eq:pineq} is greater than~$2$ when~$n > 2$.}
+Theorem~\ref{thm:optimset} shows that this equality holds for a larger range of~$p$, because the right-hand side in~\eqref{eq:pineq} is greater than~$2$ when~$n > 2$.
 
 \subsubsection{Remarks and open questions}
 
@@ -675,7 +670,7 @@ paragraphs is true, and~$\xpt[0]_{2n + 1}$ is an optimal interpolation set in~$\
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have analyzed the well-poisedness \reviewed{(in the minimum Frobenius norm sense)} of an interpolation set that appears in many trust-region \gls{dfo} methods, particularly those by Powell\reviewed{~\cite{Powell_2006,Powell_2009}}.
+We have analyzed the well-poisedness (in the minimum Frobenius norm sense) of an interpolation set that appears in many trust-region \gls{dfo} methods, particularly those by Powell~\cite{Powell_2006,Powell_2009}.
 It is proved to be an optimal interpolation set under the default setting, because it minimizes the constant of well-poisedness in a ball centred at the starting point.
 Our analysis justifies the natural configuration of this set from the viewpoint of interpolation theory.
 
@@ -685,12 +680,12 @@ While proving nothing surprising, this kind of investigation deepens our underst
 \paragraph*{Acknowledgement}
 This paper corresponds to Section~2.5 of the PhD thesis of Tom M. Ragonneau~\cite{Ragonneau_2022}, co-supervised by Zaikun Zhang and Professor Xiaojun Chen from The Hong Kong Polytechnic University.
 Both authors are very grateful to Professor Chen for her support, encouragement, and guidance during the thesis.
-\reviewed{Zaikun Zhang would like to thank the late Professor Oleg Burdakov for his friendship.}
+Zaikun Zhang would like to thank the late Professor Oleg Burdakov for his friendship.
 
 \paragraph*{Disclosure statement}
 The authors report that there are no competing interests to declare.
 
-\paragraph*{Funding} This work was funded by the University Grants Committee of Hong Kong under the projects PF18-24698 (Hong Kong PhD Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P. It was also supported by The Hong Kong Polytechnic University under project P0009767.
+\paragraph*{Funding} This work was funded by the University Grants Committee of Hong Kong under projects PF18-24698 (Hong Kong PhD Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P. It was also supported by The Hong Kong Polytechnic University under project P0009767.
 
 \bibliography{optimset}
 
