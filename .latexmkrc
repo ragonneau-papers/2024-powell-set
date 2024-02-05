@@ -1,5 +1,5 @@
 ## .latexmkrc
-## Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
+## Copyright 2024 Tom M. Ragonneau and Zaikun Zhang
 
 # Generate a PDF version of the document
 $pdf_mode = 1;
